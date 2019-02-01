@@ -1,0 +1,11 @@
+{
+    "name": "od-cocoon",
+    "version": "3.0.0",
+    "description": "",
+    "main": "framework.min.js",
+    "author": "",
+    "license": "MIT",
+    "scripts": {},
+    "dependencies": {},
+    "devDependencies": {}
+  }
