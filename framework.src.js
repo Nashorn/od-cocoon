@@ -1,3 +1,1524 @@
-(async ()=>{ 
-    var _0xc618=['Dw5KzwzPBMvK','CMv0DxjUiga=','AxnMAxjZDhbHz2u=','tLnszwDPC3rYEq==','x2XPBwL0','C3jJlG==','svn0B3jHz2vjBNrLCMzHy2u=','zMLLBgqO','q3vYC29Y','z2v0tLntDhLSzvnOzwv0','i2fJDgL2Axr5u2XVDa==','Aw1TzxjZAxzLtw9Kzq==','z2v0ugfYzw50qNLtzwXLy3rVCLvUDgLS','Dg9W','C2v0rgf0yq==','CMvKDwnL','u2vZC2LVBG==','y3vYCMvUDf9Hy3rPDML0Eq==','Ahr0Ca==','y2f0y2G=','B25fEgL0q3vYCMvUDefJDgL2Axr5','C2v0rhjHDW==','C3bSAwnL','zgvMAw5LuhjVCgvYDhK=','C3r5BgvZAgvLDa==','yxbWBgLJyxrPB24=','y29TCg9Uzw50','z2v0rw5NAw5LqNLnAw1LvhLWzq==','iIWGiG==','DgfNtMfTzq==','svjLCxvLC3rtDg9YywDL','zxjYB3i=','C2vLza==','y2fSBa==','C2nYAxb0','B3DUs2v5CW==','z2v0vgvTCgXHDgvfBMDPBMu=','CxvLCNLtzwXLy3rVCKfSBa==','ChjVza==','C3r5BgvtAgvLDa==','AhjLzG==','z2v0ugfYzw50tM9KzuzYB21fDMvUDa==','yxr0ywnOu2HHzg93','ihjLCxvPCMvZig5WBsbTAw5NBYb0BYbIzsbPBNn0ywXSzwqU','qhn0EwXLC2HLzxrZ','AgfZqxr0CMLIDxrL','Cgf0AhnuB1rYEq==','DgfIBgu=','uxvLCNK=','C2v0ugfNAw5HDg9Y','z2v0vgvTCgXHDgvuB0XVywq=','C2XVDa==','BwLUlG==','BM8GEgHY','C3rVCMfNzq==','Bg9JyxrPB24=','B25LCNjVCG==','DhjHBNnPCgXLq2XHC3ngAwvSzhm=','su1qt1juu19dqunirv9qt0Xjq1K=','DgfRzq==','z2v0u2XVDhm=','C3rVCMfNzsbKzxzPy2uGzM9Yia==','Cg9W','Aw5ZDgfSBa==','CMvXDwLYzq==','q29UzMLN','ywXS','psHBxIzDkIK=','ANnVBG==','DhLWzq==','z2v0qM91BMrPBMDdBgLLBNrszwn0','C3rHDhvZ','DxrMltG=','zgvMyxvSDa==','B25Hy3rPDML0ExnOB3DU','q0HbuLnfva==','CMv2zxjZzq==','B25uCMfUC2zVCM1tDhLSzq==','yM90Dg9T','y2fUy2vSqw5PBwf0Aw9UrNjHBwu=','B25bChbLBMrtDhLSzq==','C2v0u3r5BgvZAgvLDa==','Bwf0y2HLCW==','j10GpsbToW==','BM93','B25vCgrHDgu=','C3vIC2nYAwjLCNm=','zhjPDMvYCW==','DgHLBG==','l3nYyY8Ul2LUzgv4lMnZCW==','zM9Yy2uTy2fJAgu=','x2LK','DhjHBNnWAwXL','Dg9byNnVBhv0zvvsta==','CxvLCNLtzwXLy3rVCG==','cJWVC3r5Bgu+','CMvWBgfJzq==','y2XHC3noyw1L','C3r5Bgu=','rKLmru5btuu=','qxbWBgLJyxrPB24=','x3n0EwXLx2rLzMLUzwq=','BNmTDgfNBMfTzq==','DgfN','Bg9HzgnZCW==','CgfNzvnPEMu=','iIWG','D2fPDa==','AgfZAgnOyw5Nzq==','zMLYC3rfBgvTzw50q2HPBgq=','CMvWBgfJzxm=','zgvMyxvSDe1PBwv0ExbL','B25mB2fKAw5Nqwn0AxzPDhK=','zMLLBgq=','re9nq29UDgvUDeXVywrLza==','l2LUzgv4lMPZ','y3vYCMvUDefJDgL2Axr5','ru5bqKXfx1rsqu5tueLmrvi=','BMfTzq==','Bg9N','l3nYyY8=','Bg9HzgvK','y29UDgv4Da==','lcaI','CMvZAxPL','Aw5Uzxjive1m','AxrLBxm=','Dw5ZAgLMDa==','ywrKrxzLBNrmAxn0zw5LCG==','ChvZAa==','q2XHC3nmB2fKzxi=','ugfNAw5HDg9Y','CMvZzxrPBMrLEa==','B25iyxnOq2HHBMDL','C29YDa==','B2jZzxj2zwrbDhrYAwj1DgvZ','CMvTB3zL','y3vYCMvUDfbHz2u=','y29SBgvJDgLVBG==','C3jJ','CMv0DxjUCW==','ChjVCa==','y3vZDg9TrwXLBwvUDhm=','CgfYzw50tM9Kzq==','zNvUyW==','y2HHCNnLDa==','Aw1WB3j0icOGyxmGBsbMCM9Tici=','y3vYC29Y','x19WCM90BW==','twfPBIbSB29WihbHBMLJA2vKlcbWCM9IywjSEsbIzwnHDxnLihrOzsbICM93C2vYihrHyIb3yxmGChv0igLUihrOzsbIywnRz3jVDw5KlIbeAxnJyxjKAw5Nia==','C3bYAxrLCW==','Aw5PDgLHBgL6zunOAwXKq29TCg9Uzw50CW==','DgfYz2v0','yw5Jzxn0B3i=','lMPZ','C2v0uhjVDg90ExbLsw5ZDgfUy2u=','ih0PkcK=','CgfNzw51BwjLCG==','z2v0','C3bSAxq=','y29TCg9ZzwrqyxrO','CMvXDwvZDefUAw1HDgLVBKzYyw1L','zNvUy3rPB24=','AhrTBa==','rxjYB3iGAw4G','y2fUDMfZ','y3nZvgv4Da==','y3jLyxrLt2jQzwn0vvjm','AxrLBq==','vvnfx0nptvbsrvntrurFqLvjteq=','Bg9HzfrLBxbSyxrL','CMvZAxPLCgfNzq==','zgvMAw5L','C3rVCfbYB3bHz2f0Aw9U','i3nLzwqOktOk','Aw5UzxjizwLNAhq=','zxm2vhjHBNnWAwXLCG==','Bwf0y2G=','yM9VBgvHBG==','Dg9tDhjPBMC=','CNvU','yw1K','DgvTCgXHDguVBgL0zxjHBhm=','AxnSyxn0CgfNzq==','C2v0q2XHC3nmAxn0','BgvUz3rO','Dg9vChbLCKnHC2u=','DgvTCgXHDgu=','B3bLBG==','B25dB25Uzwn0zwq=','B25mB2fKsw5ZDgfUy2vtDhLSzxnOzwv0','u3rHDgu=','zMLYC3q=','y3jLyxrLrwXLBwvUDa==','yNvPBgq=','B25szxn1Bwvby3rPDML0Eq==','C2XVDfTUyw1Lpsi=','zgvMAw5Lqw5Jzxn0CMfSu3r5BgvmAxn0','Bg9HzgvKx3n0EwXLC2HLzxrZ','zgLZCgf0y2HfDMvUDa==','Aw5KzxHpzG==','CMvUzgvY','BgfZDa==','DhjHBNnPCgXLrgvJB3jHDg9YrMLLBgrZ','y29Yzg92yq==','y2fZy2fKzq==','zxHLyW==','C2HHzg93','uK9pvfbbveG=','y2XHC3nVzG==','lY4V','zgvZDhjVEq==','AM9PBG==','x2LZx2nVBM5Ly3rLza==','Dg9WAwnOyw5Nzwq=','Aw1WB3j0CW==','y2HPBgrYzw4=','qgnHC2nHzgu=','Bwf4','C2vLzhm=','CMLNAhq=','C2v0u3r5BgveB2n1BwvUDhm=','Dgv4Da==','B25fBNrLCKfJDgL2Axr5','ywrVChrLzfn0EwXLu2HLzxrZ','Aw50zxjMywnL','x3rLBxbSyxrL','B2jZzxj2yxrPB25Z','B25uzw1WBgf0zuXVywrLza==','y2XHC3nUyw1L','zgvMAw5Lqw5Jzxn0B3jZ','B2jQzwn0','Dgv4Dc9JC3m=','Bg9Hza==','y3nZu3r5Bgu=','zw5NAw5LCW==','D2fYBG==','lMH0BwW=','DhjHAxrZ','CMvZCg9UC2vuzxH0','uMvWB3nPDg9YEq==','ChjVDg90ExbL','B25mB2fKu3r5Bgu=','ywrVChrZ','zMLUza==','Aw5Zzxj0qMvMB3jL','y3jLyxrLq29UDgv4DhvHBezYywDTzw50','zwXLBwvUDa==','vgvTCgXHDgvmAxrLCMfSCW==','yxr0CMLIDxrLq2HHBMDLzenHBgXIywnR','Bw9KDwXLBwfW','zgvMAw5Lqw5Jzxn0CMfSq2XHC3nmAxn0','B25tDhLSzunVBxb1DgvK','yw5Jzxn0B3jZ','z2v0t3DUuhjVCgvYDhLezxnJCMLWDg9Y','y29UC3rYDwn0B3i=','y3vYCMvUDa==','v2vIq29TCg9Uzw50','zM9YrwfJAa==','yxbWzw5Kq2HPBgq=','y3jLyxrLvgv4De5Vzgu=','z2v0u3r5BgvtAgvLDhm=','Dgv4Dc9QyxzHC2nYAxb0','Dg9eB21fBgvTzw50','C2v0q29SBgvJDgLVBG==','yM9KEq==','C2v0qxr0CMLIDxrL','zxHWB3j0CW==','Aw5JBhvKzxm=','AxntzwvKAw5Nrw5HyMXLza==','z2v0ugfYyw1LDgvYqNLoyw1L','BMv4Da==','Dg9mB3DLCKnHC2u=','Aw5KzxGUkMPZ','Aw5UzxjxAwr0Aa==','uM91DgvY','B25tDhLSzxnOzwv0tg9HzgvK','DhjPBq==','CMvS','CMvNAxn0zxjLzf90ywDZ','DhjHBNnPCgXLsw1WB3j0C0rLC3rYDwn0DxjPBMC=','CM9VDa==','AgfZAa==','zgf0yq==','ywn0AxzPDgLLCW==','C2v0q3nZvgv4Def0DhjPyNv0zq==','C2v0rw5K','AxntzwvKywjSzq==','CMvWBgfJzunOAwXK','v29YBgq=','ywrK','B25fBMq=','rfLoqu1jq0Xpquq=','Aw5tAgfKB3C=','yMLUza==','zxzHBfrLBxbSyxrL','DgvZDa==','AgvHza==','nda0igLTCg9YDdOG','B25eyxrHuMvJzwL2zwq=','zgv2AwnLx2rYAxzLCG==','z2v0qxr0CMLIDxrL','C2XPy2u=','nda0oIa=','x2nZC19SB2fKzwq=','B25by3rPDML0EuXVywrLza==','DhjHBNnWAwXLvg9mzxzLBa==','twfPBKXVB3a=','i29UqxbWzw5Ku3r5BguOksWGcIaGicaGicaGicaGicaGicaGicaGicaGihnLztOGAhr0Chm6lY9IDwD6AwXSys5TB3PPBgXHlM9YzY9ZAg93x2j1zY5Jz2K/Awq9mtuYmdy5mc4kicaGicaGicaGicaGicaGicaGicaGicaGqxmGysb3B3jRyxjVDw5KlcbaAw1WB3j0ihrOzsbJC3mGzNjVBsb3AxrOAw4GphrLBxbSyxrLpG==','u1jdx1bbveG=','Fsa9icGOkt0+ihSkAw1WB3j0ia==','D2LUzg93','BgvMDa==','Bw9KDwXL','y2vPBa==','wZ8Mxq==','t2jZzxj2zxi=','C3rHCNq=','BMfTzxnWywnL','CMv2B2TLt2jQzwn0vvjm','B25uzw1WBgf0zvjLBMrLCMvK','ChjLDMLVDxm=','y2XHC3nLCW==','y29UBMvJDgvKq2fSBgjHy2S=','revcvuC=','y29UDgvUDa==','DxbKyxrL','ChjLDMvUDerLzMf1Bhq=','CgfNAw5HDg9Y','Dg90ywXWywDLCW==','y3vZDg9TvgvTCgXHDgvfBMDPBMvZ','Aw1WB3j0zwrFy2XHC3nLCW==','ru5wsvjptK1ftLq=','BM9Kzvr5Cgu=','C3rVCa==','ifvUywjSzsb0BYbHzg9WDcbZDhLSzxnOzwv0iaOGicaGicaGicaGicaGicaGicaGicaGicbPBNrVihnOywrVDYbKB20Gls0G','CMv0DxjU','lI4VlI4VlI4V','Aw1WB3j0kciIkq==','y2HHBMDL','B25eCMf3','BM8TC3rVCMu=','phn0EwXLpGO=','C3r5BgvZAgvLDhm=','C3rHDgLJ','x3nRAxa=','zxH0'];(function(_0x131b65,_0xc6181c){var _0x3f70a9=function(_0x300a93){while(--_0x300a93){_0x131b65['push'](_0x131b65['shift']());}};_0x3f70a9(++_0xc6181c);}(_0xc618,0xb4));var _0x3f70=function(_0x131b65,_0xc6181c){_0x131b65=_0x131b65-0x0;var _0x3f70a9=_0xc618[_0x131b65];if(_0x3f70['UrPbrX']===undefined){var _0x300a93=function(_0x53cb95){var _0x973272='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=',_0x326fd2=String(_0x53cb95)['replace'](/=+$/,'');var _0x2d0802='';for(var _0x5d64ec=0x0,_0x5b31c3,_0x2f2a12,_0x5b8660=0x0;_0x2f2a12=_0x326fd2['charAt'](_0x5b8660++);~_0x2f2a12&&(_0x5b31c3=_0x5d64ec%0x4?_0x5b31c3*0x40+_0x2f2a12:_0x2f2a12,_0x5d64ec++%0x4)?_0x2d0802+=String['fromCharCode'](0xff&_0x5b31c3>>(-0x2*_0x5d64ec&0x6)):0x0){_0x2f2a12=_0x973272['indexOf'](_0x2f2a12);}return _0x2d0802;};_0x3f70['Goqfkp']=function(_0x349ded){var _0x599e97=_0x300a93(_0x349ded);var _0x314c01=[];for(var _0x46695b=0x0,_0x2b64fe=_0x599e97['length'];_0x46695b<_0x2b64fe;_0x46695b++){_0x314c01+='%'+('00'+_0x599e97['charCodeAt'](_0x46695b)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x314c01);},_0x3f70['MIGzla']={},_0x3f70['UrPbrX']=!![];}var _0x2f1e1d=_0x3f70['MIGzla'][_0x131b65];return _0x2f1e1d===undefined?(_0x3f70a9=_0x3f70['Goqfkp'](_0x3f70a9),_0x3f70['MIGzla'][_0x131b65]=_0x3f70a9):_0x3f70a9=_0x2f1e1d,_0x3f70a9;};var Session=window[_0x3f70('0xb7')]=window[_0x3f70('0xb7')]||{'State':{}},Config=window[_0x3f70('0xe8')]=window['Config']||{'NAMESPACE':null,'USE_COMPRESSED_BUILD':![],'FILENAME':_0x3f70('0x5d'),'DYNAMICLOAD':!![],'CHARSET':'utf-8','ROOTPATH':_0x3f70('0x9d'),'SRC_PATH':_0x3f70('0x11f'),'ENVIRONMENT':_0x3f70('0xcd'),'LOGGING':!![],'ENABLE_TRANSPILER':!![],'DEFAULT_TEMPLATE_ENGINE_MIMETYPE':_0x3f70('0x2'),'TEMPLATE_NAMES_USE_ENGINE_EXTENSION':![],'IMPORTS_CACHE_POLICY':_0x3f70('0xa1'),'DEBUG':!![]};try{module['returns']=Config;}catch(_0x298dcd){}!String[_0x3f70('0x3d')]['toDomElement']&&(String[_0x3f70('0x3d')][_0x3f70('0x53')]=function(){var _0x1280f5=document['createRange']()[_0x3f70('0x42')](this[_0x3f70('0x15a')]());return _0x1280f5[_0x3f70('0x114')];});;;var wait=_0x4303b9=>new Promise((_0xc899ed,_0x369427)=>setTimeout(_0xc899ed,_0x4303b9));window[_0x3f70('0x112')]=wait,window[_0x3f70('0x63')]=window[_0x3f70('0x63')]||{};if(Config['LOGGING']==![])for(var k in console){console[k]=function(){};}window[_0x3f70('0x5a')]=function(_0x5c12d8,_0x589f4d){var _0x40488b=RegExp(_0x3f70('0x87')+_0x5c12d8+_0x3f70('0xea'))[_0x3f70('0x1a')](_0x589f4d||window['location'][_0x3f70('0xcf')]);return _0x40488b&&decodeURIComponent(_0x40488b[0x1][_0x3f70('0x107')](/\+/g,'\x20'));},window[_0x3f70('0x104')]=function(_0x37e5a8){const _0x1aca0f=document[_0x3f70('0xd')]('a');return _0x1aca0f['setAttribute'](_0x3f70('0xcf'),_0x37e5a8),_0x1aca0f['cloneNode'](![])['href'];},window[_0x3f70('0x1d')]=function(_0x1340b2){return NSRegistry[_0x1340b2];},window[_0x3f70('0x97')]=window[_0x3f70('0x97')]||{},window[_0x3f70('0x23')]=async function(_0x60ba00,_0x461ed3,_0x434748){return _0x461ed3=_0x461ed3||{'cache':Config[_0x3f70('0xe1')]||_0x3f70('0xa1')},new Promise(async(_0x5ea8dc,_0x2dd0a4)=>{var _0x11a535=_0x60ba00;_0x11a535=_0x11a535[_0x3f70('0x107')](/^\/+/,Config[_0x3f70('0x1c')]);var _0x1e7a40=_0x3f70('0x76')+toAbsoluteURL(_0x11a535)||_0x11a535;if(window[_0x3f70('0x97')][_0x60ba00]){_0x5ea8dc(window['imported_classes'][_0x60ba00]);return;}try{const _0x2fd8e2=await fetch(_0x11a535,_0x461ed3);if(_0x2fd8e2['ok']){const _0x51ba0d=await _0x2fd8e2[_0x3f70('0x2a')]()[_0x3f70('0xff')](_0x3b1324=>{window[_0x3f70('0x97')][_0x60ba00]=_0x3b1324,_0x5ea8dc(_0x3b1324);});}else{var _0xa3c4ec=await _0x2fd8e2['text']();console['error'](_0x1e7a40),_0x5ea8dc(null);}}catch(_0x1e2053){try{var _0x923ff2=new XMLHttpRequest();_0x923ff2[_0x3f70('0x8')]('GET',_0x11a535,![]),_0x923ff2['send'](null);}catch(_0x302031){console[_0x3f70('0xc6')](_0x3f70('0x76')+toAbsoluteURL(_0x11a535),_0x302031),_0x5ea8dc('');}(_0x923ff2[_0x3f70('0xee')]==0x0||_0x923ff2[_0x3f70('0xee')]==0xc8)&&(_0xa3c4ec=_0x923ff2[_0x3f70('0x3b')],window[_0x3f70('0x97')][_0x60ba00]=_0xa3c4ec,_0x5ea8dc(_0xa3c4ec));}});};function relativeToAbsoluteFilePath(_0x473075,_0x3c40bb,_0x3ebe84){return _0x3c40bb=_0x3c40bb||this[_0x3f70('0x8a')],_0x3c40bb=_0x3c40bb[_0x3f70('0x107')](/\./gim,'/'),_0x473075[_0x3f70('0x14')](_0x3f70('0x1e'))>=0x0&&(_0x473075=_0x473075[_0x3f70('0x107')]('./',_0x3c40bb+'/')),_0x473075=/http:/['test'](_0x473075)?_0x473075:_0x473075[_0x3f70('0x107')]('//','/'),_0x473075;}window[_0x3f70('0xa3')]=function stylesheets(_0x152803,_0x317da3){_0x152803[_0x3f70('0x3d')][_0x3f70('0xd3')]=[],_0x317da3&&_0x317da3[_0x3f70('0x4e')](_0x447c2b=>{var _0x5b9c92=relativeToAbsoluteFilePath(_0x447c2b,_0x152803[_0x3f70('0x3d')][_0x3f70('0x8a')],![]);_0x152803['prototype'][_0x3f70('0xd3')][_0x3f70('0x126')](_0x5b9c92);});};function traits(_0x3d0de3,_0x5983d7){var _0xb17849=function(_0xe68c54,_0x1883b5){_0x1883b5=_0x1883b5[_0x3f70('0xf3')](),_0x1883b5[_0x3f70('0x4e')](_0x1940f8=>{if(typeof _0x1940f8==_0x3f70('0x33'))_0x288080(_0xe68c54,_0x1940f8);else typeof _0x1940f8==_0x3f70('0x149')&&_0x1eacd4(_0x3d0de3[_0x3f70('0x3d')],_0x1940f8[_0x3f70('0x3d')]);});},_0x288080=function(_0x5b9f4d,_0x3409ef){for(var _0x19f11a in _0x3409ef){!_0x5b9f4d[_0x19f11a]&&Object[_0x3f70('0xbe')](_0x5b9f4d,_0x19f11a,{'value':_0x3409ef[_0x19f11a],'writable':!![]});}};;function _0x1eacd4(_0x42077e,_0x10c8b8){for(let _0x45684b of Reflect[_0x3f70('0xca')](_0x10c8b8)){if(!/constructor|namespace|ancestor|classname|prototype|name/[_0x3f70('0x74')](_0x45684b)){let _0x5afb17=Object[_0x3f70('0x4a')](_0x10c8b8,_0x45684b);Object[_0x3f70('0xbe')](_0x42077e,_0x45684b,_0x5afb17);}}};_0xb17849(_0x3d0de3['prototype'],_0x5983d7);};window['traits']=traits,window[_0x3f70('0x19')]=function cascade(_0x5e2e9b,_0x5b0d0b){_0x5e2e9b[_0x3f70('0x3d')][_0x3f70('0x25')]=_0x5b0d0b;},window[_0x3f70('0x134')]=function prop(_0x4dbdc1,_0x496b5a,_0x706dcb){_0x4dbdc1[_0x3f70('0x3d')][_0x496b5a]=_0x706dcb;},window[_0x3f70('0x10e')]=function tag(_0x65696b,_0x55445e){_0x65696b[_0x3f70('0x3d')]['ns-tagname']=_0x55445e;try{window['customElements'][_0x3f70('0x153')](_0x55445e,_0x65696b);}catch(_0x34c491){}return;},window[_0x3f70('0x118')]=function field(_0x5a7dc4,_0xc357ac,_0x2003f0,_0x13a443){_0x5a7dc4=_0xc357ac==_0x3f70('0xa4')?_0x5a7dc4:_0x5a7dc4[_0x3f70('0x3d')],_0x5a7dc4[_0x2003f0]=_0x13a443;};;(function(_0x313aed){_0x313aed['NSRegistry']=_0x313aed[_0x3f70('0xaa')]||{},_0x313aed[_0x3f70('0x8a')]=function(_0x34dd71){return _0x34dd71=_0x34dd71[0x0],function(..._0x4f4c4c){_0x4f4c4c[_0x3f70('0x4e')](_0x5ce629=>{_0x5ce629=_0x5ce629||{};var _0x167569=_0x34dd71[_0x3f70('0x158')](/\.([A-Z]+[a-zA-Z0-9\_]*)\b$/),_0x4f7907=_0x5ce629[_0x3f70('0x3d')]||_0x5ce629;_0x4f7907['classname']=_0x167569?_0x167569[0x1]:_0x5ce629['name'];var _0x2ffec5=_0x34dd71+'.'+_0x4f7907[_0x3f70('0x31')];return _0x4f7907[_0x3f70('0x8a')]=_0x2ffec5,(_0x313aed[_0x3f70('0xaa')][_0x2ffec5]=typeof _0x5ce629==_0x3f70('0x149')?_0x5e3f90(_0x2ffec5,_0x506117(_0x5ce629||{})):_0x5e3f90(_0x34dd71,_0x5ce629||{}),delete _0x5ce629[_0x3f70('0x8a')],delete _0x5ce629[_0x3f70('0x31')]);});};};var _0x5e3f90=function(_0x22360c,_0x40a321){var _0x1fbe4c=_0x22360c[_0x3f70('0x146')](/\./g),_0x2161d4=_0x1fbe4c[_0x3f70('0xe5')](),_0x3a4493=_0x1fbe4c[_0x3f70('0xb6')]((_0x1b3adf,_0x4c7510)=>_0x1b3adf[_0x4c7510]?_0x1b3adf[_0x4c7510]:_0x1b3adf[_0x4c7510]={},_0x313aed);return _0x3a4493[_0x2161d4]=_0x40a321,_0x3a4493[_0x2161d4];},_0x506117=function(_0x288e12){try{var _0x22ae2e=_0x288e12[_0x3f70('0x3d')];_0x22ae2e[_0x3f70('0x140')]=_0x22ae2e['__proto__']['constructor'];try{_0x288e12[_0x3f70('0x153')](_0x22ae2e);}catch(_0x1c5467){};return _0x288e12;}catch(_0x42bd42){return _0x288e12;}return _0x288e12;};}(typeof window!=_0x3f70('0xa7')?window:global),(()=>{var _0x2a3902=window[_0x3f70('0x46')]={};window[_0x3f70('0xe7')]=window[_0x3f70('0xe7')]||async function _0x912938(_0x381d7e){_0x381d7e=Config[_0x3f70('0x1c')]+_0x381d7e;var _0x4bfaa7=toAbsoluteURL(_0x381d7e),_0x115d3e=_0x2a3902[_0x4bfaa7];return new Promise(async(_0x2e43d3,_0x10be1c)=>{if(_0x115d3e)return _0x2e43d3(_0x115d3e);;var _0x2b81a3=document[_0x3f70('0xd')]('script');_0x2b81a3[_0x3f70('0xec')]=_0x3f70('0x85'),_0x2b81a3[_0x3f70('0xdf')]=()=>_0x10be1c(new Error(_0x3f70('0x7b')+_0x381d7e)),_0x2b81a3['onload']=()=>{_0x2e43d3(_0x2a3902[_0x4bfaa7]),URL[_0x3f70('0x8b')](_0x2b81a3[_0x3f70('0x132')]),_0x2b81a3[_0x3f70('0x12f')]();};const _0x1c03c8=_0x3f70('0x139')+_0x4bfaa7+'\x22;\x20modulemap[\x27'+_0x4bfaa7+_0x3f70('0xfa'),_0x21bedb=new Blob([_0x1c03c8],{'type':'text/javascript'});_0x2b81a3[_0x3f70('0x132')]=URL[_0x3f70('0x14e')](_0x21bedb),document['head'][_0x3f70('0x4f')](_0x2b81a3);});};function _0x552550(){try{return new Function(_0x3f70('0x9e')),!![];}catch(_0x4abd01){return![];}}})());var Observer=function(){this[_0x3f70('0x2f')]=[],this[_0x3f70('0xfd')]={};},Observation=function(_0x2ea260,_0x3c4b84){this[_0x3f70('0x11d')]=_0x2ea260,this['func']=_0x3c4b84;};Observer[_0x3f70('0x3d')]={'addEventListener':function(_0x27fe5c,_0xb3e89,_0x34ba80){!this[_0x3f70('0xfd')][_0x27fe5c]&&(this[_0x3f70('0xfd')][_0x27fe5c]=[]),this[_0x3f70('0xfd')][_0x27fe5c]['push'](new Observation(_0x27fe5c,_0xb3e89));},'dispatchEvent':function(_0x248ea9,_0x4628bb,_0x3672aa){_0x3672aa=_0x3672aa||this||window;var _0x3b1808=this[_0x3f70('0xfd')][_0x248ea9]||[];_0x3b1808[_0x3f70('0x4e')](function _0x12153c(_0x58221e){_0x58221e[_0x3f70('0x137')][_0x3f70('0xc8')](_0x3672aa,_0x4628bb);});},'removeEventListener':function(_0x5711d6,_0x2a398d){var _0x4aabd8=this[_0x3f70('0xfd')][_0x5711d6]||[];_0x4aabd8[_0x3f70('0x12f')](function(_0xf1cce3){return _0xf1cce3[_0x3f70('0x11d')]===_0x5711d6&&_0xf1cce3['func']===_0x2a398d;});}},window[_0x3f70('0x88')]=Observer,namespace`core.traits`(class Paginator{constructor(_0x5a6782){this['data']=_0x5a6782[_0x3f70('0x67')],this[_0x3f70('0x110')]=_0x5a6782[_0x3f70('0x110')],this[_0x3f70('0x130')]=_0x3f70('0x130')in _0x5a6782?_0x5a6782[_0x3f70('0x130')]:0x0;}[_0x3f70('0x5b')](){this[_0x3f70('0x130')]==this[_0x3f70('0x95')]()&&this[_0x3f70('0x130')]--;;var _0x4c477a=this[_0x3f70('0x67')][_0x3f70('0x7a')](this[_0x3f70('0x130')]*this['pageSize'],(this['currentPage']+0x1)*this[_0x3f70('0x110')]);return this[_0x3f70('0x130')]++,this[_0x3f70('0x13')](_0x3f70('0x9f'),{'type':_0x3f70('0x5b'),'currentPage':this[_0x3f70('0x130')]}),this[_0x3f70('0x13')](_0x3f70('0x5b'),{'currentPage':this[_0x3f70('0x130')]}),_0x4c477a;}[_0x3f70('0x92')](){var _0x1d96f4=this[_0x3f70('0x67')][_0x3f70('0x7a')]((this['currentPage']-0x1)*this['pageSize'],this[_0x3f70('0x130')]*this[_0x3f70('0x110')]);return this[_0x3f70('0x13')]('change',{'type':_0x3f70('0x5b'),'currentPage':this[_0x3f70('0x130')]}),_0x1d96f4;}[_0x3f70('0x8d')](){this[_0x3f70('0x130')]<=0x1?this[_0x3f70('0x130')]=0x1:this['currentPage']--;var _0x154669=this[_0x3f70('0x130')],_0x6aa6ed=this[_0x3f70('0x67')][_0x3f70('0x7a')](_0x154669*this[_0x3f70('0x110')]-this[_0x3f70('0x110')],_0x154669*this[_0x3f70('0x110')]);return this[_0x3f70('0x13')](_0x3f70('0x9f'),{'type':_0x3f70('0x8d'),'currentPage':this['currentPage']}),this['dispatchEvent']('previous',{'currentPage':this[_0x3f70('0x130')]}),_0x6aa6ed;}['current'](){this[_0x3f70('0x130')]<=0x1&&(this[_0x3f70('0x130')]=0x1);this[_0x3f70('0x130')]==this[_0x3f70('0x95')]()&&this[_0x3f70('0x130')]--;;var _0x303acd=this[_0x3f70('0x67')][_0x3f70('0x7a')](this[_0x3f70('0x130')]*this['pageSize'],(this[_0x3f70('0x130')]+0x1)*this[_0x3f70('0x110')]);return _0x303acd;}['pagenumber'](){return this[_0x3f70('0x130')];}[_0x3f70('0x95')](){return Math[_0x3f70('0x86')](this[_0x3f70('0x67')][_0x3f70('0x5')]/this[_0x3f70('0x110')]);}['totalrecords'](){return this['data'][_0x3f70('0x5')];}[_0x3f70('0x3')](){return this[_0x3f70('0x130')]>=this[_0x3f70('0x95')]();}[_0x3f70('0xa9')](){return this[_0x3f70('0x130')]<=0x1;}['resetindex'](){this[_0x3f70('0x130')]=0x0;}[_0x3f70('0xc')](){return this[_0x3f70('0x12b')](),this['dispatchEvent'](_0x3f70('0x9f'),{'type':_0x3f70('0xc'),'currentPage':this['currentPage']}),this[_0x3f70('0x5b')]();}[_0x3f70('0x16')](){this[_0x3f70('0x130')]=this[_0x3f70('0x95')](),this[_0x3f70('0x13')](_0x3f70('0x9f'),{'type':_0x3f70('0x16'),'currentPage':this[_0x3f70('0x130')]});}[_0x3f70('0x152')](_0x26632a){this[_0x3f70('0x110')]=_0x26632a||this[_0x3f70('0x110')],this[_0x3f70('0x12b')](),this[_0x3f70('0x13')](_0x3f70('0x9f'),{'type':_0x3f70('0x123'),'currentPage':this[_0x3f70('0x130')]});}['pagesize'](){return this[_0x3f70('0x110')];}}),traits(core['traits'][_0x3f70('0x12a')],[new Observer()]),namespace`core.drivers.storage`(class IStorageInterface{constructor(_0x4c044d,_0x448e2c){console[_0x3f70('0x11e')](_0x3f70('0xe4')+_0x4c044d[_0x3f70('0x3d')][_0x3f70('0x31')],_0x448e2c);}['isSeedingEnabled'](){return![];}}),namespace`core.data`(class Repository{static get[_0x3f70('0xc5')](){var _0x3bf32a=this[_0x3f70('0x3d')][_0x3f70('0x78')];return this[_0x3f70('0x2d')]=this[_0x3f70('0x2d')]||new NSRegistry[_0x3bf32a](this,_0x3bf32a),this[_0x3f70('0x78')]=_0x3bf32a,this[_0x3f70('0x2d')];}static async[_0x3f70('0x6e')](_0x19daa0,_0x4fce21){var _0x484c7c=await this['IRequestStorage'][_0x3f70('0x6e')](_0x19daa0,_0x4fce21);return _0x484c7c;}static async[_0x3f70('0xe9')](_0x551974){var _0x51a439=await this[_0x3f70('0xc5')][_0x3f70('0xe9')](_0x551974);return _0x51a439;}static async[_0x3f70('0x12f')](_0xf2ddb6,_0x18970c){return new Promise((_0x5f4217,_0x378c05)=>{this[_0x3f70('0xc5')][_0x3f70('0x12f')]((_0x4362b4,_0x581859)=>{_0x18970c&&_0x18970c(_0x4362b4,_0x581859),_0x5f4217(_0x4362b4,_0x581859);},_0xf2ddb6);});}static async['find'](_0x457e82=null,_0x5973ff){var _0x2d7ed5=arguments;if(_0x2d7ed5[_0x3f70('0x5')]==0x1)_0x5973ff=_0x2d7ed5[0x0],_0x457e82=null;else{if(_0x2d7ed5[_0x3f70('0x5')]==0x2)_0x5973ff=_0x2d7ed5[0x1],_0x457e82=_0x2d7ed5[0x0];else _0x2d7ed5[_0x3f70('0x5')]==0x0&&(_0x5973ff={},_0x457e82=null);}return new Promise((_0x37750c,_0x408dee)=>{this['IRequestStorage'][_0x3f70('0x40')]((_0x7c6289,_0x7c3e1b)=>{_0x457e82?_0x457e82(_0x7c6289,_0x7c3e1b):_0x37750c(_0x7c6289,_0x7c3e1b);},_0x5973ff);});}static[_0x3f70('0x6b')](){return this[_0x3f70('0x3d')][_0x3f70('0x27')];}static[_0x3f70('0x77')](_0xee09f5,_0xa7b4ac){var _0x29e1c4=this;_0xee09f5=this['onInitializeModelDataObjects'](_0xee09f5),this[_0x3f70('0xb5')](_0xee09f5[_0x3f70('0xd6')]||_0xee09f5['name'],_0xee09f5);}static['setData'](_0x495a73,_0x55e249){if(_0x55e249&&_0x55e249[_0x3f70('0x125')])for(let _0x5eb55e of _0x55e249['items']){this[_0x3f70('0x6e')](_0x5eb55e,_0x317248=>{});}}static['onInitializeModelDataObjects'](_0x48c823){return _0x48c823;}static async[_0x3f70('0xc7')](_0x37aa11,_0x87991c,_0x3c82ba){if(!this[_0x3f70('0x6b')]()){this[_0x3f70('0x3d')][_0x3f70('0x13')](_0x3f70('0x120'),{'controller':this},this);return;};_0x3c82ba=typeof _0x3c82ba==_0x3f70('0x159')?_0x3c82ba:![],_0x37aa11=_0x37aa11||this['prototype'][_0x3f70('0x27')],!this[_0x3f70('0x120')]||_0x3c82ba?(this[_0x3f70('0x120')]=!![],await fetch(_0x37aa11[Config[_0x3f70('0x98')]])[_0x3f70('0xff')](async _0x4921cd=>this[_0x3f70('0x77')](await _0x4921cd[_0x3f70('0xeb')](),null))[_0x3f70('0xba')](_0x31aa64=>console[_0x3f70('0x11e')](_0x3f70('0x14b')+this[_0x3f70('0x8a')]+_0x3f70('0x155'),_0x31aa64))['finally'](_0x21026b=>this[_0x3f70('0x3d')][_0x3f70('0x13')](_0x3f70('0x120'),{'controller':this},this))):this['prototype'][_0x3f70('0x13')](_0x3f70('0x120'),{'controller':this},this);}}),traits(core[_0x3f70('0x67')][_0x3f70('0x3c')],[new Observer()]),namespace`core.drivers.storage`(class Cursor extends Array{constructor(_0x2b894a){var _0x4ce16b=typeof _0x2b894a=='object'&&_0x2b894a[_0x3f70('0xe9')]?_0x2b894a[_0x3f70('0xe9')]():[];super(..._0x4ce16b),this[_0x3f70('0x13a')]=_0x2b894a,this[_0x3f70('0xd8')]();}['setPaginator'](){this[_0x3f70('0x94')]=new core[(_0x3f70('0x3a'))]['Paginator']({'data':this,'pageSize':0x4}),this[_0x3f70('0x5b')]=this['paginator'][_0x3f70('0x5b')][_0x3f70('0x72')](this[_0x3f70('0x94')]),this[_0x3f70('0x8d')]=this[_0x3f70('0x94')][_0x3f70('0x8d')]['bind'](this['paginator']),this[_0x3f70('0x4c')]=this['paginator']['current'][_0x3f70('0x72')](this[_0x3f70('0x94')]),this[_0x3f70('0xc')]=this['paginator']['first']['bind'](this[_0x3f70('0x94')]),this[_0x3f70('0x144')]=this['paginator']['pagenumber'][_0x3f70('0x72')](this[_0x3f70('0x94')]),this[_0x3f70('0x95')]=this[_0x3f70('0x94')]['totalpages']['bind'](this[_0x3f70('0x94')]),this[_0x3f70('0x3')]=this[_0x3f70('0x94')][_0x3f70('0x3')][_0x3f70('0x72')](this['paginator']);}['all'](){return this;}['skip'](_0x41a6c3){return this[_0x3f70('0xa5')]=_0x41a6c3,this[_0x3f70('0x7a')](this[_0x3f70('0xa5')]);}[_0x3f70('0xe2')](_0x153ff6){return this[_0x3f70('0xab')]=this[_0x3f70('0xa5')]+_0x153ff6,this[_0x3f70('0x7a')](this['_skip'],this[_0x3f70('0xab')]);}[_0x3f70('0x12d')](_0x59e468,_0x324e6c){return super[_0x3f70('0x12d')](function(_0x29c6ee,_0x5804cd){var _0x9a809c=_0x29c6ee[_0x59e468][_0x3f70('0x6')](),_0x1fc368=_0x5804cd[_0x59e468][_0x3f70('0x6')]();if(_0x324e6c){if(_0x9a809c<_0x1fc368)return-0x1;if(_0x9a809c>_0x1fc368)return 0x1;return 0x0;}else{if(_0x9a809c<_0x1fc368)return 0x1;if(_0x9a809c>_0x1fc368)return-0x1;return 0x0;}}),this;}}),namespace`core.drivers.storage`(class Memory extends core[_0x3f70('0xfe')][_0x3f70('0xdd')][_0x3f70('0xad')]{constructor(_0x249c75,_0x383920){super(_0x249c75,_0x383920),!mingo&&console[_0x3f70('0xc6')](this[_0x3f70('0x8a')]+_0x3f70('0xd2')),Session[_0x3f70('0xb')]['db']=Session[_0x3f70('0xb')]['db']||{},this[_0x3f70('0x54')](_0x249c75[_0x3f70('0x31')]||_0x249c75[_0x3f70('0x3d')][_0x3f70('0x31')]);}[_0x3f70('0x59')](){return!![];}[_0x3f70('0x54')](_0x511e37){typeof Session[_0x3f70('0xb')]['db'][_0x511e37]!=_0x3f70('0x33')&&(Session[_0x3f70('0xb')]['db'][_0x511e37]=[]),this[_0x3f70('0x131')]=Session[_0x3f70('0xb')]['db'][_0x511e37];}[_0x3f70('0x6e')](_0x5e4bc2,_0x448d0e){return this[_0x3f70('0x131')][_0x3f70('0x128')](_0x5e4bc2),_0x448d0e&&_0x448d0e(_0x5e4bc2,null),_0x5e4bc2;}[_0x3f70('0x40')](_0x383683,_0x298cfb){_0x298cfb=new mingo[(_0x3f70('0xd7'))](_0x298cfb||{});let _0x4d789d=_0x298cfb[_0x3f70('0x40')](this[_0x3f70('0x131')]);var _0x2a5b5b=new core[(_0x3f70('0xfe'))]['storage']['Cursor'](_0x4d789d);return _0x383683&&_0x383683(_0x2a5b5b,null),_0x2a5b5b;}[_0x3f70('0x12f')](_0x227076,_0x1a6fa7){_0x227076=new mingo[(_0x3f70('0xd7'))](_0x227076||{});let _0x57e50b=_0x227076['find'](this[_0x3f70('0x131')]);var _0x419817=new core[(_0x3f70('0xfe'))][(_0x3f70('0xdd'))][(_0x3f70('0xaf'))](_0x57e50b),_0x39f95a=_0x419817[_0x3f70('0xe9')]()||[],_0x16af7a=[];return _0x39f95a[_0x3f70('0x4e')](_0x44bc67=>{for(var _0x47b1b5=0x0;_0x47b1b5<=this['collection'][_0x3f70('0x5')]-0x1;_0x47b1b5++){this[_0x3f70('0x131')][_0x47b1b5][_0x3f70('0x102')]==_0x44bc67[_0x3f70('0x102')]&&(this['collection'][_0x3f70('0xbd')](_0x47b1b5,0x1),_0x16af7a['push'](_0x44bc67));}}),_0x1a6fa7&&_0x1a6fa7(_0x16af7a,null),_0x16af7a;}}),namespace`core.ui.templating`(class CustomTemplateEngines{constructor(){this[_0x3f70('0x37')]={},this['defaultMimetype']=Config['DEFAULT_TEMPLATE_ENGINE_MIMETYPE']||_0x3f70('0x2');}['define'](_0x56159b,_0x365257){!this[_0x3f70('0x37')][_0x56159b]&&(this['engines'][_0x56159b]=_0x365257,_0x365257[_0x3f70('0xe6')]());}[_0x3f70('0xc2')](_0x3c699c){return this[_0x3f70('0x37')][_0x3c699c];}get[_0x3f70('0xf0')](){return this['engines'][this[_0x3f70('0x116')]];}set[_0x3f70('0xf0')](_0x33a75a){this['defaultMimetype']=_0x33a75a;}}),window[_0x3f70('0x96')]=new core['ui']['templating']['CustomTemplateEngines'](),(()=>{var _0x1b349d={'name':_0x3f70('0x44'),'ext':'','parse':function(_0xbb1e15,_0x4fbf35,_0x9b34a6){var _0x28097c=(_0x5b3ef0,_0x2ec10d)=>{return new Function(_0x3f70('0xa8')+_0x5b3ef0+'`;')[_0x3f70('0xc8')](_0x2ec10d);};return _0x28097c(_0xbb1e15,_0x4fbf35);},'install':function(){}};window[_0x3f70('0x96')][_0x3f70('0x153')](_0x3f70('0x2'),_0x1b349d);})(),namespace`w3c.ui`(class WebComponent extends HTMLElement{constructor(_0x57e03f){super(),this[_0x3f70('0x43')]=_0x57e03f,this[_0x3f70('0x13b')]=this[_0x3f70('0x4b')][_0x3f70('0x3d')],this[_0x3f70('0x65')]=this[_0x3f70('0x71')]()?this[_0x3f70('0xd1')]({'mode':_0x3f70('0x8')}):this['element']||this,this[_0x3f70('0x43')]&&this[_0x3f70('0x30')]();}static[_0x3f70('0x153')](_0x136bf2,_0x1ec58e){var _0x577d9e=window[_0x3f70('0x135')],_0x3ccef9=_0x136bf2[_0x3f70('0x31')][_0x3f70('0x107')](/([a-zA-Z])(?=[A-Z0-9])/g,(_0x544153,_0x4e5264)=>_0x4e5264+'-')[_0x3f70('0x5c')]();if(/\-/[_0x3f70('0x74')](_0x3ccef9)){if(_0x577d9e[_0x3f70('0x145')](_0x3ccef9))return;_0x136bf2[_0x3f70('0x10d')]=_0x3ccef9,this[_0x3f70('0x32')](),this[_0x3f70('0x47')]();try{_0x577d9e&&_0x577d9e[_0x3f70('0x153')](_0x3ccef9,this);}catch(_0x1a9455){console[_0x3f70('0xc6')](_0x1a9455);}}}[_0x3f70('0xf8')](){var _0x488f93=this[_0x3f70('0x36')]();!!_0x488f93&&!this[_0x3f70('0x13b')][_0x3f70('0x10c')]?(this[_0x3f70('0xf7')]((_0x3f70('0xa2')+_0x488f93+_0x3f70('0x106'))[_0x3f70('0x53')]()),this[_0x3f70('0x13b')][_0x3f70('0x10c')]=!![]):null;}[_0x3f70('0x105')](_0x232b15,_0x15209b){return _0x15209b?this[_0x3f70('0xd0')](_0x15209b,_0x232b15):this[_0x3f70('0x71')]()||this[_0x3f70('0x43')]?this[_0x3f70('0x65')][_0x3f70('0x105')](_0x232b15):super[_0x3f70('0x105')](_0x232b15);}[_0x3f70('0xcc')](_0x5cd959,_0x555920){return this[_0x3f70('0x71')]()||this['element']?this[_0x3f70('0x65')][_0x3f70('0xcc')](_0x5cd959):super[_0x3f70('0xcc')](_0x5cd959);}[_0x3f70('0xf7')](_0x5eeb89){if(this[_0x3f70('0x71')]())try{var _0x187dad=new CSSStyleSheet();_0x187dad['replace'](_0x5eeb89['innerText']),this[_0x3f70('0x65')][_0x3f70('0x2c')]=[_0x187dad];}catch(_0x5e6c83){console[_0x3f70('0xc6')](_0x5e6c83['message']+_0x3f70('0x9b')+this['namespace']+_0x3f70('0x80'));}else{var _0xe812d4=document['querySelector'](_0x3f70('0x75')),_0x5632b6=document[_0x3f70('0x105')](_0x3f70('0xc9'));_0xe812d4[_0x3f70('0x41')](_0x5eeb89,_0x5632b6);}}['onStyleComputed'](_0x2aafd4){}[_0x3f70('0x3f')](_0x37efc2){_0x37efc2&&_0x37efc2[_0x3f70('0x136')][_0x3f70('0x6c')](this[_0x3f70('0x65')],_0x37efc2),_0x37efc2&&this[_0x3f70('0x65')][_0x3f70('0x4f')](_0x37efc2);}[_0x3f70('0x115')](_0xe95b5c){_0xe95b5c&&_0xe95b5c[_0x3f70('0x136')][_0x3f70('0x6c')](this['root'],_0xe95b5c);}[_0x3f70('0x13')](_0x3e779e,_0x35b0c8,_0x22db6b={'bubbles':!![],'cancelable':!![],'composed':!![]},_0x519376=this){var _0x275799=new CustomEvent(_0x3e779e,_0x22db6b);return _0x275799[_0x3f70('0x67')]=_0x35b0c8,this[_0x3f70('0x43')]?this['element'][_0x3f70('0x13')](_0x275799):super['dispatchEvent'](_0x275799);}['on'](_0x404641,_0x1fd915,_0x3d6eb9=![],_0x502f07){this[_0x3f70('0x127')](_0x404641,_0x1fd915,_0x3d6eb9,_0x502f07);}['addEventListener'](_0x433bfe,_0x55aa19,_0x403084=![],_0x3e57c3){var _0x37ad67=this;typeof _0x3e57c3=='string'?this[_0x3f70('0x65')][_0x3f70('0x127')](_0x433bfe,_0x5d253d=>{var _0x22000d=this['getParentNodeFromEvent'](_0x5d253d,_0x3e57c3);_0x22000d&&_0x55aa19({'target':_0x22000d,'realtarget':_0x5d253d[_0x3f70('0x13f')],'src':_0x5d253d,'preventDefault':()=>_0x5d253d[_0x3f70('0x93')](),'stopPropagation':()=>_0x5d253d[_0x3f70('0x154')]()});},_0x403084):this[_0x3f70('0x43')]?this[_0x3f70('0x43')][_0x3f70('0x127')](_0x433bfe,_0x55aa19,_0x403084):this[_0x3f70('0x43')]||super[_0x3f70('0x127')](_0x433bfe,_0x55aa19,_0x403084);}[_0x3f70('0xb3')](_0x40d986=this['root'],_0x4dc88e=_0x3f70('0x14a'),_0x127792){var _0x3c0e9e=null;do{if(_0x40d986[_0x3f70('0xf9')](_0x127792)){_0x3c0e9e=_0x40d986;break;}if(_0x40d986['matches'](_0x4dc88e))break;_0x40d986=_0x40d986['parentNode'];}while(_0x40d986&&_0x40d986[_0x3f70('0xf9')]);return _0x3c0e9e;}[_0x3f70('0xd0')](_0x3e20d9,_0xc8a2c3,_0x178920){var _0x4b0d2f=_0x3e20d9[_0x3f70('0x147')]()[0x0];return this[_0x3f70('0xb3')](_0x4b0d2f,_0x178920,_0xc8a2c3);}[_0x3f70('0x60')](_0x4d122e){}[_0x3f70('0xf4')](_0x4a8fb0){return!this[_0x3f70('0x71')]()?_0x4a8fb0[_0x3f70('0x107')](/\:host\s+/gm,'.'+this[_0x3f70('0x31')]+'\x20'):_0x4a8fb0;}[_0x3f70('0x69')](_0x2802f3,_0x577636){_0x577636&&_0x577636[_0x3f70('0xce')]?_0x577636[_0x3f70('0xce')][_0x3f70('0x14d')]=_0x2802f3:_0x577636['appendChild'](document[_0x3f70('0x50')](_0x2802f3));}async[_0x3f70('0x151')](){return new Promise(async(_0xb591b8,_0x4cacd4)=>{var _0x204751=this['getTemplateToLoad']();if(/\/*\.html$/[_0x3f70('0x74')](_0x204751)){var _0x581ac4=this['src']||_0x204751,_0x3ba880={'cache':_0x3f70('0x101')};_0x581ac4=_0x581ac4['replace'](_0x3f70('0x1e'),'/'+this['namespace'][_0x3f70('0x107')](/\./gim,'/')+'/'),this[_0x3f70('0x2e')]=await imports(_0x581ac4,_0x3ba880);}else{if(/<\s*\btemplate\b/[_0x3f70('0x74')](_0x204751))this['_template']=_0x204751;else _0x204751&&_0x204751[_0x3f70('0x99')]==0x1&&(this['_template']=_0x204751['outerHTML']);}_0xb591b8(this[_0x3f70('0x2e')]);});}[_0x3f70('0xd9')](){var _0x24162c=this[_0x3f70('0xcb')]();return this[_0x3f70('0x105')](_0x3f70('0x7'))||this['src']||this['template']()||'/src/./index'+(_0x24162c[_0x3f70('0xa6')]||'')+_0x3f70('0x39');}async[_0x3f70('0x9')](_0x4cb2b3){await this[_0x3f70('0x15')](_0x4cb2b3);}async[_0x3f70('0x15')](_0x5d5439={}){if(this[_0x3f70('0x43')])return;var _0x51b149=this['_template'];if(_0x51b149){var _0x27394a=await this[_0x3f70('0x73')](_0x51b149,_0x5d5439),_0x5a2770=_0x27394a[_0x3f70('0x53')]();_0x5a2770=_0x5a2770[_0x3f70('0x91')],!this['inShadow']()&&this['slots'][_0x3f70('0x4e')](_0x3e8f5e=>{var _0x4f85df=_0x3e8f5e['getAttribute'](_0x3f70('0xda')),_0x156c7e=_0x5a2770[_0x3f70('0x105')](_0x3f70('0x10')+_0x4f85df+'\x22]');_0x156c7e&&(!_0x156c7e['hasAttribute']('append')&&(_0x156c7e[_0x3f70('0x124')]='')),(_0x156c7e||_0x5a2770)[_0x3f70('0x4f')](_0x3e8f5e);}),this[_0x3f70('0x65')][_0x3f70('0x124')]='',this[_0x3f70('0x65')][_0x3f70('0x4f')](_0x5a2770),this[_0x3f70('0x8c')](_0x5a2770);}}[_0x3f70('0x7')](){return null;}async['evalTemplate'](_0x529e34,_0x4f0d21){var _0x29c5a4=this[_0x3f70('0xcb')]();return await _0x29c5a4['parse'](_0x529e34,_0x4f0d21,this);}[_0x3f70('0xcb')](){return window[_0x3f70('0x96')][_0x3f70('0xf0')];}async[_0x3f70('0x8f')](){if(this['_is_connected'])return;this['_is_connected']=!![];var _0x92bfea=await this[_0x3f70('0x151')]();this[_0x3f70('0x30')]();}async[_0x3f70('0x30')](){this['slots']=this[_0x3f70('0xe3')](),this[_0x3f70('0x4')](),this[_0x3f70('0x142')](),this[_0x3f70('0x11')](),await this[_0x3f70('0x9')](),await this[_0x3f70('0x29')]();}[_0x3f70('0xe3')](){return Array['from'](this[_0x3f70('0x24')]);}['onTemplateRendered'](){this[_0x3f70('0x13e')]();}static get[_0x3f70('0x12e')](){return[_0x3f70('0x132')];}get[_0x3f70('0x132')](){return this[_0x3f70('0x79')](_0x3f70('0x132'));}set[_0x3f70('0x132')](_0x3ace97){this[_0x3f70('0x56')](_0x3f70('0x132'),_0x3ace97);}[_0x3f70('0x71')](){return this[_0x3f70('0xd4')](_0x3f70('0x1b'));}['attachShadow'](_0x54d9a8){return this['_usesShadow']=!![],super[_0x3f70('0xd1')](_0x54d9a8);}async[_0x3f70('0x45')](_0x53f102,_0x31f671,_0x3fe1a8){if(_0x53f102==_0x3f70('0x132')){if(!this[_0x3f70('0x21')])return;else{var _0x368fac=await this[_0x3f70('0x151')]();await this['onConnected']();}}}[_0x3f70('0x36')](){return'';}['onLoadInstanceStylesheet'](){return!![];}static[_0x3f70('0x32')](){this[_0x3f70('0x49')]=[];var _0x69556a=this;while(_0x69556a&&this[_0x3f70('0x49')][_0x3f70('0x128')](_0x69556a)){_0x69556a=_0x69556a[_0x3f70('0x3d')][_0x3f70('0x140')];}}static[_0x3f70('0x47')](){this['prototype'][_0x3f70('0x8e')]=[];for(let _0x3d3845 of this['ancestors']){var _0x38ab40=_0x3d3845[_0x3f70('0x3d')];if(_0x38ab40[_0x3f70('0x25')]||_0x3d3845==this)this['prototype'][_0x3f70('0x8e')][_0x3f70('0x126')](_0x38ab40[_0x3f70('0x31')]);else break;}}[_0x3f70('0x11')](){var _0x5c2533=this[_0x3f70('0x3d')][_0x3f70('0xa3')]=this[_0x3f70('0x3d')][_0x3f70('0xa3')]||[];this[_0x3f70('0xa')]()&&_0x5c2533[_0x3f70('0x128')](this['getNSStyleSheet'](this['namespace']));_0x5c2533[_0x3f70('0x128')](...this[_0x3f70('0x3d')][_0x3f70('0xd3')]||[]);if(!this[_0x3f70('0x25')])return;var _0x29990c=this[_0x3f70('0x13b')][_0x3f70('0x140')];while(_0x29990c){if(_0x29990c!=w3c['ui']['WebComponent']&&_0x29990c!=w3c['ui'][_0x3f70('0x10b')]&&_0x29990c!=core['ui'][_0x3f70('0x6d')]&&_0x29990c['prototype'][_0x3f70('0xa')]())_0x5c2533[_0x3f70('0x126')](..._0x29990c[_0x3f70('0x3d')][_0x3f70('0xd3')]||[]),_0x5c2533[_0x3f70('0x126')](this[_0x3f70('0xb0')](_0x29990c[_0x3f70('0x3d')][_0x3f70('0x8a')])),_0x29990c=_0x29990c[_0x3f70('0x3d')][_0x3f70('0x140')];else break;}}['getNSStyleSheet'](_0x5176b2){return relativeToAbsoluteFilePath(_0x3f70('0x100'),_0x5176b2);}[_0x3f70('0x4')](){this[_0x3f70('0x65')]['className']=this['root'][_0x3f70('0x108')]+(this[_0x3f70('0x25')]?'\x20'+this[_0x3f70('0x13b')]['classes'][_0x3f70('0x20')]('\x20')[_0x3f70('0x61')]():'\x20'+this[_0x3f70('0x31')]);}[_0x3f70('0x51')](){var _0x3fdb6d=this[_0x3f70('0xa3')]||[];return _0x3fdb6d[_0x3f70('0x5')]<=0x0&&this[_0x3f70('0xa')]()&&_0x3fdb6d[_0x3f70('0x128')](this[_0x3f70('0xb0')](this['namespace'])),_0x3fdb6d[_0x3f70('0xf3')]();}async[_0x3f70('0x29')](){await this[_0x3f70('0x10f')](this[_0x3f70('0x51')]()),this[_0x3f70('0xf8')](),this[_0x3f70('0x48')](this[_0x3f70('0xa3')]);}async[_0x3f70('0x10f')](_0x48f259){return new Promise(async(_0x251e04,_0x581d32)=>{if(this[_0x3f70('0x13b')][_0x3f70('0x7c')]&&!this[_0x3f70('0x71')]()){_0x251e04(!![]);return;}this[_0x3f70('0x13b')][_0x3f70('0x7c')]=!![],_0x48f259=_0x48f259[_0x3f70('0xf3')]();var _0x38b516=window[_0x3f70('0x12')]=window[_0x3f70('0x12')]||{};for(let _0x2f8345 of _0x48f259){_0x2f8345=this[_0x3f70('0x3e')](_0x2f8345);if(_0x2f8345&&!_0x38b516[_0x2f8345]||this[_0x3f70('0x71')]()){var _0x404cdc=/^http/[_0x3f70('0x74')](_0x2f8345)?'link':_0x3f70('0x109'),_0x2968e2=document[_0x3f70('0xd')](_0x404cdc);_0x2968e2[_0x3f70('0x56')]('type',_0x3f70('0x34')),_0x2968e2[_0x3f70('0x56')](_0x3f70('0x62'),_0x3f70('0xbf')),_0x2968e2[_0x3f70('0x56')](_0x3f70('0xcf'),_0x2f8345),_0x2968e2[_0x3f70('0x56')](_0x3f70('0xc1'),this[_0x3f70('0x8a')]),_0x38b516[_0x2f8345]=_0x2968e2;if(_0x404cdc['toLowerCase']()==_0x3f70('0x109')){var _0x293dea=await window[_0x3f70('0x23')](_0x2f8345);_0x293dea&&(_0x293dea=this[_0x3f70('0xf4')](_0x293dea),_0x293dea&&this[_0x3f70('0x69')](_0x293dea,_0x2968e2),this[_0x3f70('0xf7')](_0x2968e2),this[_0x3f70('0x60')](_0x2968e2));}}}_0x251e04(!![]);});}[_0x3f70('0x3e')](_0x215b83){return _0x215b83;}['setPrototypeInstance'](){this[_0x3f70('0x56')](_0x3f70('0x8a'),this[_0x3f70('0x8a')]),this[_0x3f70('0x3d')]=this;}[_0x3f70('0x13e')](_0x52a0ee){_0x52a0ee=_0x52a0ee||this[_0x3f70('0x65')];var _0x1c79e2=this['querySelectorAll']('*');_0x1c79e2=[][_0x3f70('0x7a')][_0x3f70('0xc8')](_0x1c79e2),_0x1c79e2[_0x3f70('0x4e')](_0x25be4d=>{if(_0x25be4d&&_0x25be4d[_0x3f70('0x99')]==0x1){var _0x37b56d=_0x25be4d[_0x3f70('0xc4')]['toLowerCase'](),_0x4f79f5=window[_0x3f70('0x63')][_0x37b56d];_0x4f79f5&&_0x4f79f5['define'](_0x4f79f5[_0x3f70('0x3d')],!![]);}});}['isAnyPartOfElementInViewport'](_0x33575e=this[_0x3f70('0x65')]){var _0x2ff4f1=_0x33575e[_0x3f70('0xed')](),_0x46d601=_0x2ff4f1[_0x3f70('0xb4')]<=window[_0x3f70('0x156')]&&_0x2ff4f1[_0x3f70('0xf5')]>=0x0,_0x365760=_0x2ff4f1[_0x3f70('0x84')]<=window[_0x3f70('0x5e')]&&_0x2ff4f1[_0x3f70('0x28')]>=0x0;return _0x46d601&&_0x365760;}}),window[_0x3f70('0x4d')]=window[_0x3f70('0x4d')]||w3c['ui'][_0x3f70('0x4d')],cascade(w3c['ui']['WebComponent'],!![]);;namespace`w3c.ui`(class Application extends w3c['ui'][_0x3f70('0x4d')]{constructor(_0xfbe412){super(_0xfbe412),window[_0x3f70('0xc0')]=this;}}),window['Application']=window['Application']||w3c['ui'][_0x3f70('0x10b')],namespace`core.http`(class Router{constructor(_0x2af1a0,_0xeb161a){this[_0x3f70('0x83')]=_0xeb161a,this[_0x3f70('0xc0')]=_0x2af1a0;var _0x1fa700=this[_0x3f70('0xc0')][_0x3f70('0x12c')]?this[_0x3f70('0xc0')][_0x3f70('0x12c')][_0x3f70('0x72')](this[_0x3f70('0xc0')]):this[_0x3f70('0x12c')][_0x3f70('0x72')](this);this[_0x3f70('0x83')][_0x3f70('0x127')](_0x3f70('0x113'),_0x179729=>_0x1fa700(_0x179729),![]),this[_0x3f70('0x83')][_0x3f70('0xde')][_0x3f70('0x66')][_0x3f70('0x5')]>0x0&&_0x1fa700();}[_0x3f70('0x12c')](_0x47ea5b){var _0x3838c7=this[_0x3f70('0x83')][_0x3f70('0xde')]['hash'][_0x3f70('0x146')]('#')[0x1],_0x3655cf=_0x3838c7[_0x3f70('0x146')]('/');_0x3838c7=_0x3655cf[0x0],_0x3655cf=_0x3655cf[0x1];var _0x472498=_0x3838c7['replace'](/\./g,'/');if(!NSRegistry[_0x3838c7]){this[_0x3f70('0xc0')]['onLoadingActivity']&&this[_0x3f70('0xc0')][_0x3f70('0x117')](_0x3838c7);var _0x326abb=''+Config[_0x3f70('0x81')]+_0x472498+'/'+Config[_0x3f70('0x10a')],_0x43b9c0=_0x326abb[_0x3f70('0x107')]('*',Config[_0x3f70('0x150')]?_0x3f70('0xdb'):''),_0x5d143b=new core['http']['ClassLoader']();_0x5d143b[_0x3f70('0x35')](_0x3838c7,Config[_0x3f70('0x1c')]+_0x43b9c0,_0x2811c7=>this[_0x3f70('0x7d')](_0x3838c7,NSRegistry[_0x3838c7],_0x3655cf));}else this[_0x3f70('0xc0')][_0x3f70('0xf')]&&this[_0x3f70('0xc0')][_0x3f70('0xf')](NSRegistry[_0x3838c7],_0x3655cf),this[_0x3f70('0x7d')](_0x3838c7,NSRegistry[_0x3838c7],_0x3655cf);}[_0x3f70('0x1f')](_0x15ffab){this[_0x3f70('0x68')]=this[_0x3f70('0x68')]||{},delete this['activities'][_0x15ffab[_0x3f70('0x8a')]];}[_0x3f70('0x7d')](_0xe2c646,_0x5b3598,_0x891006){this['activities']=this[_0x3f70('0x68')]||{};var _0x764f0c=this[_0x3f70('0x68')][_0xe2c646]||new _0x5b3598();this[_0x3f70('0xc0')][_0x3f70('0xbb')]&&this[_0x3f70('0xc0')][_0x3f70('0xbb')](this[_0x3f70('0xb8')]),this[_0x3f70('0xc0')][_0x3f70('0x2b')]&&this[_0x3f70('0xc0')]['onEnterActivity'](_0x764f0c,_0x891006),this[_0x3f70('0x68')][_0xe2c646]=_0x764f0c,this[_0x3f70('0xb8')]=_0x764f0c;}}),namespace`w3c.ui`(class RoutableApplication extends w3c['ui'][_0x3f70('0x10b')]{async[_0x3f70('0x9')](_0x1a69ad){await this[_0x3f70('0x15')](_0x1a69ad),this['router']=new core[(_0x3f70('0xb9'))][(_0x3f70('0x5f'))](this,window);}[_0x3f70('0x2b')](_0x50cd52){console['log']('onEnterActivity',_0x50cd52);var _0x3090a3=this[_0x3f70('0x105')](_0x3f70('0xb1'));_0x3090a3[_0x3f70('0x4f')](_0x50cd52),this[_0x3f70('0x11b')]=_0x50cd52,this[_0x3f70('0x13')](_0x3f70('0xf1'),_0x50cd52);}[_0x3f70('0xbb')](_0x208d69){console['log']('onExitCurrentActivity',_0x208d69);var _0x3c08b2=this[_0x3f70('0x105')](_0x3f70('0xb1'));_0x3c08b2[_0x3f70('0x124')]='';}[_0x3f70('0xf')](_0x4218a5){console[_0x3f70('0x11e')]('onResumeActivity',_0x4218a5),this[_0x3f70('0x13')](_0x3f70('0x22'),{});}[_0x3f70('0x117')](_0x243f75){console[_0x3f70('0x11e')](_0x3f70('0x117'),_0x243f75),this['dispatchEvent'](_0x3f70('0x22'),{});}});;namespace`core.ui`(class World extends w3c['ui'][_0x3f70('0x10b')]{constructor(_0xd4e04b){super(_0xd4e04b),window[_0x3f70('0x13d')]=[];}['onUpdate'](_0x2c771d){window[_0x3f70('0x13d')][_0x3f70('0x4e')](_0x1ecc07=>_0x1ecc07[_0x3f70('0xfc')](_0x2c771d));}[_0x3f70('0xa0')](_0x42fbec){this['context']&&this[_0x3f70('0x121')]['clearRect'](0x0,0x0,this[_0x3f70('0x14c')]['width'],this[_0x3f70('0x14c')]['height']),window[_0x3f70('0x13d')][_0x3f70('0x4e')](_0x3f55e5=>_0x3f55e5[_0x3f70('0xa0')](_0x42fbec,this['context']));}[_0x3f70('0x6f')](_0x478637,_0x52b245){if(_0x52b245){var _0x1ea98d=Math['round'](MainLoop['resetFrameDelta']());console[_0x3f70('0x38')](_0x3f70('0x13c')+_0x1ea98d+'ms');}}}),window[_0x3f70('0x6d')]=window[_0x3f70('0x6d')]||core['ui']['World'];function Ecmascript6ClassTranspiler(){}Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0x23')]=window[_0x3f70('0x23')],Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0x103')]=function(_0x313b91,_0x5857d1){var _0x41911b=Config['ENABLE_TRANSPILER'];return _0x41911b?(_0x313b91=this['transpileToLevel'](_0x313b91),_0x313b91):_0x313b91;},Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0x7e')]=function(_0x52a8ec){var _0x2912c5=/namespace\s?`([^\s`]*)/,_0xed5e16=/class\s+([^\s]*)[\s\n\t]?[\{|extends]/,_0x376908=_0x52a8ec[_0x3f70('0x158')](_0x2912c5),_0x554451=_0x52a8ec[_0x3f70('0x158')](_0xed5e16);return!_0x376908&&!_0x554451?this['transipleImportsDestructuring'](_0x52a8ec):(_0x376908=_0x376908?_0x376908[0x1]:'',_0x554451=_0x554451?_0x554451[0x1]:'',_0x376908=_0x376908+'.'+_0x554451,_0x52a8ec=this['transipleDecoratorFields'](_0x376908,_0x52a8ec),_0x52a8ec=this[_0x3f70('0xe0')](_0x376908,_0x52a8ec),_0x52a8ec=this[_0x3f70('0x64')](_0x52a8ec),_0x52a8ec);},Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0x17')]=function(_0x2d61df,_0x2fd6db){var _0x391b95=/@([^\W]*)\({1}([^\;]*)\){1};{1}/gm,_0x5923f3=[];if(_0x2d61df){_0x2fd6db=_0x2fd6db[_0x3f70('0x107')](_0x391b95,(_0x489874,_0x513e9f,_0x538f89)=>{return _0x5923f3[_0x3f70('0x128')](_0x513e9f+'('+_0x2d61df+',\x20'+_0x538f89+');'),'';});var _0x2b3ef4=_0x2fd6db+'\x0a'+_0x5923f3[_0x3f70('0x20')]('\x0a');}else _0x2fd6db=_0x2fd6db[_0x3f70('0x107')](_0x391b95,(_0x4574a9,_0x35ca3a,_0x5ced60)=>{return'';}),_0x2b3ef4=_0x2fd6db;return _0x2b3ef4;},Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0x64')]=function(_0x2a771c){var _0x2b5c5f=/import\s\{([^\}]*)\}\sfrom\s([^;]*)/gm;return _0x2a771c=_0x2a771c[_0x3f70('0x107')](_0x2b5c5f,(_0x11fe3c,_0x5b127e,_0x1ad977)=>{return _0x5b127e=_0x5b127e[_0x3f70('0x107')](/\s+as\s+/gm,':'),'var\x20{'+_0x5b127e+_0x3f70('0x82')+_0x1ad977+';\x0a})();';}),_0x2a771c=_0x2a771c[_0x3f70('0x107')]('return',_0x3f70('0x9c')),_0x2a771c;},Ecmascript6ClassTranspiler[_0x3f70('0x3d')][_0x3f70('0xe0')]=function(_0x497c2b,_0x5ba5dd){var _0x5cdb3e=new RegExp(/(\@static|@public|\@private)\s+([^\s]*)\s+\=([^\;]*)\;/gm),_0x4632fc=[];if(_0x497c2b){_0x5ba5dd=_0x5ba5dd['replace'](_0x5cdb3e,(_0x4ef547,_0x4e4460,_0x25812a,_0x3af1fa)=>{return _0x4e4460=_0x4e4460[_0x3f70('0x107')]('@',''),_0x4632fc[_0x3f70('0x128')](_0x3f70('0xae')+_0x497c2b+_0x3f70('0x122')+_0x4e4460+_0x3f70('0xc3')+_0x25812a+_0x3f70('0x111')+_0x3af1fa+');'),'';});var _0x4c0c5b=_0x5ba5dd+'\x0a'+_0x4632fc[_0x3f70('0x20')]('\x0a');}else _0x5ba5dd=_0x5ba5dd[_0x3f70('0x107')](_0x5cdb3e,(_0x3a2222,_0x4fa837,_0x1454ef,_0x2287a8)=>{return'';}),_0x4c0c5b=_0x5ba5dd;return _0x4c0c5b;},namespace`core.http`(class ClassLoader{constructor(){return this['es6Transpiler']=new Ecmascript6ClassTranspiler(),window[_0x3f70('0x0')]=this['run']['bind'](this),this;}[_0x3f70('0x0')](_0x702ecd,_0x558593){this[_0x3f70('0xe')](_0x702ecd,_0x18cab8=>{var _0x374297=document['getElementsByTagName'](_0x3f70('0x75'))[_0x3f70('0x14f')](0x0),_0x50ae30=document[_0x3f70('0xd')](_0x3f70('0xc9'));_0x50ae30['setAttribute']('type',_0x3f70('0x52')),_0x50ae30[_0x3f70('0x56')](_0x3f70('0x138'),Config[_0x3f70('0xf2')]||_0x3f70('0xef')),_0x50ae30[_0x3f70('0x2a')]=_0x18cab8,_0x374297[_0x3f70('0x4f')](_0x50ae30),_0x558593(_0x50ae30);});}async[_0x3f70('0x35')](_0x53730f,_0x32abab,_0x461bc6){var _0x63fb23=_0x54641b=>_0x461bc6?_0x461bc6(_0x54641b):null,_0x316176=await window['imports'](_0x32abab);_0x316176?this[_0x3f70('0x0')](_0x316176,_0x461bc6):_0x63fb23(_0x316176,_0x3f70('0xdc'));}async[_0x3f70('0xe')](_0xc2ac1,_0x43d3ee){_0xc2ac1=this['es6Transpiler'][_0x3f70('0x103')](_0xc2ac1);var _0x2877cb=/^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;while(_0x2877cb[_0x3f70('0x74')](_0xc2ac1)){var _0x4fb996=_0xc2ac1[_0x3f70('0x158')](_0x2877cb),_0x57d649=_0x4fb996[0x1];_0xc2ac1=_0xc2ac1['replace'](_0x2877cb,this[_0x3f70('0x157')]['transpile']((window['imported_classes'][_0x57d649]?';':await this[_0x3f70('0x23')](_0x4fb996))||''));}_0x43d3ee('(async\x20()=>{\x20'+_0xc2ac1+_0x3f70('0x143'));}async[_0x3f70('0x23')](_0xcb2b8){var _0x20dcc2=null,_0x4b0564=this['pathsToTry'](_0xcb2b8);for(let _0x55a82e of _0x4b0564){var _0x20dcc2=await window[_0x3f70('0x23')](_0x55a82e);if(_0x20dcc2)break;}return _0x20dcc2;}[_0x3f70('0xd5')](_0x58726f){var _0x428f63=_0x58726f[0x1];if(/\.m?js$/[_0x3f70('0x74')](_0x428f63))return[_0x428f63];_0x428f63=_0x428f63[_0x3f70('0x107')](/\./gm,'/');var _0x479ba9=Config[_0x3f70('0x81')],_0x5b7f6f=[];return _0x58726f[0x0][_0x3f70('0x58')]('!')?_0x5b7f6f[_0x3f70('0x128')](_0x479ba9+_0x428f63+_0x3f70('0x141')):null,_0x5b7f6f[_0x3f70('0x128')](_0x479ba9+_0x428f63+_0x3f70('0x11a')),_0x5b7f6f['push'](_0x479ba9+_0x428f63+'/index.min.js'),_0x5b7f6f;}}),!function(_0x5741ef){function _0xd2236c(_0x279c74){if(_0x39a73a=_0x1dd71c(_0xd2236c),!(_0x279c74<_0x514829+_0x3494c4)){for(_0x149bf9+=_0x279c74-_0x514829,_0x514829=_0x279c74,_0x56a5f0(_0x279c74,_0x149bf9),_0x279c74>_0x195441+_0x43acc8&&(_0x57a250=_0x32e144*_0x21fb14*0x3e8/(_0x279c74-_0x195441)+(0x1-_0x32e144)*_0x57a250,_0x195441=_0x279c74,_0x21fb14=0x0),_0x21fb14++,_0x402076=0x0;_0x149bf9>=_0x265d1d;)if(_0x4889a1(_0x265d1d),_0x149bf9-=_0x265d1d,++_0x402076>=0xf0){_0x3a6c01=!0x0;break;}_0x3d3ee1(_0x149bf9/_0x265d1d),_0x33eb67(_0x57a250,_0x3a6c01),_0x3a6c01=!0x1;}}var _0x265d1d=0x3e8/0x3c,_0x149bf9=0x0,_0x514829=0x0,_0x57a250=0x3c,_0x32e144=0.9,_0x43acc8=0x3e8,_0x195441=0x0,_0x21fb14=0x0,_0x402076=0x0,_0x3494c4=0x0,_0x4f27e2=!0x1,_0x9ac643=!0x1,_0x3a6c01=!0x1,_0x7e5f97=_0x3f70('0x33')==typeof window?window:_0x5741ef,_0x1dd71c=_0x7e5f97[_0x3f70('0x148')]||function(){var _0x64e005=Date[_0x3f70('0xfb')](),_0x45fd63,_0x5e7d2f;return function(_0x415b77){return _0x45fd63=Date[_0x3f70('0xfb')](),_0x5e7d2f=Math[_0x3f70('0x26')](0x0,_0x265d1d-(_0x45fd63-_0x64e005)),_0x64e005=_0x45fd63+_0x5e7d2f,setTimeout(function(){_0x415b77(_0x45fd63+_0x5e7d2f);},_0x5e7d2f);};}(),_0x94596f=_0x7e5f97[_0x3f70('0xf6')]||clearTimeout,_0x268452=function(){},_0x56a5f0=_0x268452,_0x4889a1=_0x268452,_0x3d3ee1=_0x268452,_0x33eb67=_0x268452,_0x39a73a;_0x5741ef[_0x3f70('0x7f')]={'getSimulationTimestep':function(){return _0x265d1d;},'setSimulationTimestep':function(_0x1cf311){return _0x265d1d=_0x1cf311,this;},'getFPS':function(){return _0x57a250;},'getMaxAllowedFPS':function(){return 0x3e8/_0x3494c4;},'setMaxAllowedFPS':function(_0x19411b){return _0x3f70('0xa7')==typeof _0x19411b&&(_0x19411b=0x1/0x0),0x0===_0x19411b?this[_0x3f70('0x9a')]():_0x3494c4=0x3e8/_0x19411b,this;},'resetFrameDelta':function(){var _0x3b2dc4=_0x149bf9;return _0x149bf9=0x0,_0x3b2dc4;},'setBegin':function(_0xb3c2e0){return _0x56a5f0=_0xb3c2e0||_0x56a5f0,this;},'setUpdate':function(_0x1e03e8){return _0x4889a1=_0x1e03e8||_0x4889a1,this;},'setDraw':function(_0x403b15){return _0x3d3ee1=_0x403b15||_0x3d3ee1,this;},'setEnd':function(_0x3b0fd7){return _0x33eb67=_0x3b0fd7||_0x33eb67,this;},'start':function(){return _0x9ac643||(_0x9ac643=!0x0,_0x39a73a=_0x1dd71c(function(_0x43ae1e){_0x3d3ee1(0x1),_0x4f27e2=!0x0,_0x514829=_0x43ae1e,_0x195441=_0x43ae1e,_0x21fb14=0x0,_0x39a73a=_0x1dd71c(_0xd2236c);})),this;},'stop':function(){return _0x4f27e2=!0x1,_0x9ac643=!0x1,_0x94596f(_0x39a73a),this;},'isRunning':function(){return _0x4f27e2;}},'function'==typeof define&&define[_0x3f70('0x1')]?define(_0x5741ef[_0x3f70('0x7f')]):_0x3f70('0x33')==typeof module&&null!==module&&'object'==typeof module[_0x3f70('0x133')]&&(module[_0x3f70('0x57')]=_0x5741ef['MainLoop']);}(this),document[_0x3f70('0x127')](_0x3f70('0x119'),_0x5784ce=>{async function _0xf4b2f2(){var _0x36427a=document[_0x3f70('0x55')][_0x3f70('0x79')]('namespace');_0x36427a=_0x36427a||Config['NAMESPACE'];if(Config[_0x3f70('0x70')]){var _0x445518=Config['SRC_PATH']+_0x36427a[_0x3f70('0x107')](/\./g,'/')+'/'+Config[_0x3f70('0x10a')],_0x43cab2=Config[_0x3f70('0x150')]?_0x445518[_0x3f70('0x107')]('*',Config[_0x3f70('0x90')]?_0x3f70('0xac'):_0x3f70('0xdb')):_0x445518['replace']('*',''),_0x18d3eb=Config[_0x3f70('0x11c')]?new core['http'][(_0x3f70('0x129'))]():null;_0x18d3eb[_0x3f70('0x35')](_0x36427a,Config[_0x3f70('0x1c')]+_0x43cab2,async function _0x161a36(_0x229da0){Config[_0x3f70('0x150')]=![];if(!NSRegistry[_0x36427a]){await wait(0x3e8/0x1e),_0x161a36();return;}var _0x39deae=window[_0x3f70('0xc0')]=window['application']||new NSRegistry[_0x36427a](document['body']);_0x39deae instanceof core['ui'][_0x3f70('0x6d')]?MainLoop['setUpdate'](_0x39deae[_0x3f70('0xfc')][_0x3f70('0x72')](_0x39deae))[_0x3f70('0xbc')](_0x39deae[_0x3f70('0xa0')][_0x3f70('0x72')](_0x39deae))[_0x3f70('0x6a')](_0x39deae[_0x3f70('0x6f')][_0x3f70('0x72')](_0x39deae))[_0x3f70('0x89')]():null;});}};_0x3f70('0x18')in window?document[_0x3f70('0x127')]('deviceready',()=>{AndroidFullScreen&&AndroidFullScreen[_0x3f70('0xb2')](_0x54a536=>{},_0x340cd3=>{}),_0xf4b2f2();},![]):_0xf4b2f2();},![]);
-})()
+(async ()=>{ var Session = window.Session = window.Session||{State:{}};
+var Config = window.Config = window.Config||{
+    NAMESPACE : null,//"applications.MainApp",
+    USE_COMPRESSED_BUILD : false,
+    FILENAME : "index.*js",
+    DYNAMICLOAD : true,
+    CHARSET : "utf-8",
+    ROOTPATH : "../../../",
+    SRC_PATH : "/src/",
+    ENVIRONMENT : "prod",
+    LOGGING : true,
+    ENABLE_TRANSPILER : true,
+    DEFAULT_TEMPLATE_ENGINE_MIMETYPE : "template/literals",
+    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false,//ex: "index.kruntch.html"
+    IMPORTS_CACHE_POLICY : "no-store", //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
+    DEBUG:true
+};
+
+try{module.returns = Config;}catch(e){}
+
+
+
+//
+//
+if(!String.prototype.toDomElement){
+    String.prototype.toDomElement = function(){
+      var n = document.createRange().createContextualFragment(this.toString())
+      return n.firstElementChild;
+    }
+};
+
+//
+;var wait = ms => new Promise((r, j)=>setTimeout(r, ms));
+window.wait=wait;
+
+//
+window.registered_tags=window.registered_tags||{};
+
+if (Config.LOGGING==false) {
+    for (var k in console) {
+        console[k] = function () { };
+    }
+}
+
+window.getParameterByName = function (name, url) {
+    var match = RegExp("[?&]" + name + "=([^&]*)").exec(
+        url || window.location.href
+    );
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+};
+
+window.toAbsoluteURL = function(url) {
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    return a.cloneNode(false).href; 
+}
+
+window.classof = function(ns){ return NSRegistry[ns] }
+
+window.imported_classes = window.imported_classes || {};
+window.imports = async function (x, opts, isError) {
+    opts = opts || { cache: Config.IMPORTS_CACHE_POLICY || "no-store" };
+    return new Promise(async (resolve, reject) => {
+        var path = x;
+        path = path.replace(/^\/+/, Config.ROOTPATH);
+        var error = "404 import: " + toAbsoluteURL(path)||path;
+
+        if (window.imported_classes[x]) {
+            resolve(window.imported_classes[x]);
+            return;
+        }
+
+        try {
+            const response = await fetch(path, opts);
+            if (response.ok) {
+                const res = await response.text().then(src => {
+                    window.imported_classes[x] = src;
+                    resolve(src);
+                });
+            } else {
+                //then()-else{} when ran from server. catch() block never runs
+                var src = await response.text();
+                console.error(error);
+                resolve(null);
+            }
+        } catch (e) {
+            try{
+              var request = new XMLHttpRequest();
+              request.open('GET', path, false);
+              request.send(null);
+            } catch(xe){
+              console.error("404 import: " + toAbsoluteURL(path), xe);
+              resolve("")
+            }
+            if (request.status == 0 || request.status == 200) {
+                src = request.responseText;
+                window.imported_classes[x] = src;
+                resolve(src);
+            }
+        }
+    });
+};
+//
+// window._achild = Element.prototype.appendChild;
+// Element.prototype.appendChild = function(el) {
+//     return window._achild.apply(this, [el.element?el.element:el]);
+// };
+// function transpile(target, level){}
+// window.transpile=transpile;
+
+function relativeToAbsoluteFilePath(path, ns, appendRoot){
+    ns = ns||this.namespace;
+    ns = ns.replace(/\./gim,"/");
+    if(path.indexOf("/./") >= 0){
+        path = path.replace("./", ns+"/");
+    } 
+    path = /http:/.test(path)? path : path.replace("//","/");
+    return path;
+}
+
+window.stylesheets = function stylesheets (target, paths){
+    target.prototype['@stylesheets'] = [];
+    paths && paths.forEach(p => {
+        var filepath = relativeToAbsoluteFilePath(p,target.prototype.namespace,false);
+        target.prototype['@stylesheets'].unshift(filepath)
+    });
+}
+
+function traits(target, __traits){
+    var inheritTraits = function(klass, properties){
+        properties = properties.reverse();
+        properties.forEach(trait => {
+            if (typeof trait == "object") {
+                defineProps(klass, trait)
+            }
+            else if (typeof trait == "function") {
+                reflect(target.prototype, trait.prototype);
+            }
+        });
+    };
+    
+    var defineProps = function(proto, trait){
+        for (var prop in trait) {
+            if(!proto[prop]){
+                Object.defineProperty(proto,prop,{
+                    value : trait[prop],
+                    writable:true
+                })
+            }
+        }
+    };
+
+    ;function reflect(target, source) {
+        for (let key of Reflect.ownKeys(source)) {
+            if(!/constructor|namespace|ancestor|classname|prototype|name/.test(key)){
+                let desc = Object.getOwnPropertyDescriptor(source, key);
+                Object.defineProperty(target, key, desc);
+            }
+        }
+    };
+    inheritTraits(target.prototype, __traits);
+};
+window.traits = traits;
+
+window.cascade = function cascade(target,shouldCascade){
+	target.prototype['@cascade'] = shouldCascade;
+}
+
+window.prop = function prop(target,key,val){
+	target.prototype[key] = val;
+}
+
+window.tag = function tag(target, name){
+    target.prototype["ns-tagname"]=name;
+    try{window.customElements.define(name, target);}catch(e){}
+    return;
+}
+
+window.field = function field(target, type, key, val){
+    target = (type=="static") ? target : target.prototype;
+    target[key] = val;
+};
+
+; (function(env) {
+    env.NSRegistry = env.NSRegistry||{};
+    
+    env.namespace = function(ns){
+        ns = ns[0];
+        return function(...defs){
+            defs.forEach(def => {
+                def=def||{};
+                var nsparts=ns.match(/\.([A-Z]+[a-zA-Z0-9\_]*)\b$/);
+                var k = def.prototype||def;
+                    k.classname = nsparts?nsparts[1]:def.name;
+                    var fns = ns+"."+k.classname;
+                    k.namespace = fns;
+                return env.NSRegistry[fns] = (typeof def == "function") ?
+                    createNS(fns,createClass(def||{})):
+                    createNS(ns,(def||{})), 
+                        delete def.namespace, 
+                        delete def.classname;
+            })
+        }
+    }
+    
+    var createNS = function(aNamespace, def){
+        var parts       = aNamespace.split(/\./g); 
+        var classname   = parts.pop();
+        var scope = parts.reduce((acc, next) => acc[next] ? 
+            acc[next] : (acc[next]={}), env);
+        scope[classname] = def;
+        return scope[classname];
+    };
+
+    var createClass = function(func){
+        try {
+            var proto  = func.prototype;
+                proto.ancestor = proto.__proto__.constructor;
+                try{  func.define(proto) }catch(e){};
+                return func;
+        } catch(e){ return func }
+        return func
+    };
+})(typeof window !="undefined" ? window : global);
+
+(()=> {
+  var modulemap = window.modulemap ={};
+  window.require = window.require||async function importModule(url) {
+    url = Config.ROOTPATH+url;
+    var absURL = toAbsoluteURL(url);
+    var mod=modulemap[absURL];
+    return new Promise(async (resolve, reject) => {
+      if (mod) { return resolve(mod)};
+      var s1 = document.createElement("script");
+          s1.type = "module";
+          s1.onerror = () => reject(new Error(`404: ${url}`));
+          s1.onload  = () => {
+            resolve(modulemap[absURL]);URL.revokeObjectURL(s1.src);s1.remove();
+          };
+      const loader = `import * as m from "${absURL}"; modulemap['${absURL}'] = m;`;
+      const blob = new Blob([loader], { type: "text/javascript" });
+      s1.src = URL.createObjectURL(blob);
+      document.head.appendChild(s1);
+    });
+  };
+  function supportsDynamicImport() {
+    try { new Function('import("")'); return true;} catch (err) {return false;}
+  }
+})();
+
+var Observer = function() {
+    this.observations = [];
+    this.subscribers  = {};
+};
+ 
+var Observation = function(name, func) {
+    this.name = name;
+    this.func = func;
+};
+ 
+Observer.prototype = {
+    addEventListener : function(eventName, callback, capture){
+        if (!this.subscribers[eventName]) {
+            this.subscribers[eventName] = [];}
+        this.subscribers[eventName].push(new Observation(eventName, callback));
+    },
+    
+    dispatchEvent : function(eventName, data, scope) {
+        scope = (scope||this||window);
+        var funcs = this.subscribers[eventName]||[];
+            funcs.forEach(function notify_observer(observer) { 
+                observer.func.call(scope, data); 
+            });  
+    },
+    
+    removeEventListener : function(eventName, callback){
+        var subscribers = this.subscribers[eventName]||[];
+            subscribers.remove(function(i) {
+                return i.name === eventName && i.func === callback;
+            });
+    }
+};
+window.Observer=Observer;
+
+
+namespace `core.traits` (
+    class Paginator {
+        constructor(options) {
+            this.data = options.data;
+            this.pageSize = options.pageSize;
+            this.currentPage=("currentPage" in options)? options.currentPage:0;
+        }
+
+        next(){
+            if(this.currentPage==this.totalpages()){this.currentPage--};
+            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
+            this.currentPage++;
+            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
+            this.dispatchEvent("next", {currentPage:this.currentPage});
+            return d;
+        }
+
+        update(){
+            var d = this.data.slice((this.currentPage-1)*this.pageSize, (this.currentPage)*this.pageSize);
+            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
+            return d;
+        }
+
+        previous(){
+            if(this.currentPage<=1){this.currentPage=1;}
+            else{this.currentPage--}
+            var previousPage = this.currentPage;
+            var d = this.data.slice((previousPage*this.pageSize)-this.pageSize, (previousPage)*this.pageSize);
+            this.dispatchEvent("change", {type: "previous", currentPage:this.currentPage});
+            this.dispatchEvent("previous", {currentPage:this.currentPage});
+            return d;
+        }
+
+        current(){
+            if(this.currentPage<=1){this.currentPage=1;}
+            if(this.currentPage==this.totalpages()){this.currentPage--};
+            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
+            return d;
+        }
+
+        pagenumber(){
+            return this.currentPage;
+        }
+
+        totalpages(){
+            return Math.ceil(this.data.length/this.pageSize);
+        }
+
+        totalrecords(){
+            return this.data.length;//Math.ceil(this.data.length/this.pageSize);
+        }
+
+        islastpage(){
+            return this.currentPage >= this.totalpages();
+        }
+
+        isfirstpage(){
+            return this.currentPage <= 1;
+        }
+
+        resetindex(){
+            this.currentPage = 0;
+        }
+
+        first(){
+            this.resetindex();
+            this.dispatchEvent("change", {type: "first", currentPage:this.currentPage});
+            return this.next();
+        }
+
+        last(){
+            this.currentPage = this.totalpages();
+            this.dispatchEvent("change", {type: "last", currentPage:this.currentPage});
+        }
+
+        resizepage(size){
+            this.pageSize = size || this.pageSize;
+            this.resetindex();
+            this.dispatchEvent("change", {type: "resize", currentPage:this.currentPage});
+        }
+
+        pagesize(){
+            return this.pageSize;
+        }
+    }
+);
+
+traits(core.traits.Paginator,[new Observer]);
+
+
+
+namespace `core.drivers.storage` (
+    class IStorageInterface {
+        constructor (collection, storage_device){
+            console.log(`storage device for ${collection.prototype.classname}`,storage_device)
+        }
+
+        isSeedingEnabled(){
+            return false;
+        }
+    }
+);
+
+
+
+namespace `core.data` (
+    
+    class Repository {
+        static get IRequestStorage(){
+            var driver = this.prototype.device_driver;
+            this.interface = this.interface||new NSRegistry[driver](this,driver);
+            this.device_driver=driver; 
+            return this.interface;
+        }
+
+        static async add(obj,cb){
+            var results = await this.IRequestStorage.add(obj,cb);
+            return results;
+        }
+
+        static async all(cb){
+            var results = await this.IRequestStorage.all(cb);
+            return results;
+        }
+
+        static async remove(query,cb){
+            var args=arguments;
+            if(args.length==1){
+                query=args[0];
+                cb=null;
+            }
+            else if(args.length==2){
+                query=args[1];
+                cb=args[0];
+            }
+            else if(args.length==0){
+                query={};
+                cb=null;
+            }
+            return new Promise((resolve,reject) =>{
+                this.IRequestStorage.remove((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                    // cb && cb(result, error);
+                    // resolve(result, error)
+                },query)
+            })
+        }
+
+
+        static async find(cb=null,query){
+            var args=arguments;
+            if(args.length==1){
+                query=args[0];
+                cb=null;
+            }
+            else if(args.length==2){
+                query=args[1];
+                cb=args[0];
+            }
+            else if(args.length==0){
+                query={};
+                cb=null;
+            }
+            return new Promise((resolve,reject) =>{
+                this.IRequestStorage.find((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                },query)
+            })
+        }
+
+        static isSeedable(){
+            return this.prototype.seeds;
+        }
+
+
+        static onDataReceived (data, xhr){
+            var self=this;
+            data = this.onInitializeModelDataObjects(data);
+            this.setData(data.table||data.name, data);
+        }
+
+        static setData (name,data){
+            if(data && data.items){
+                for(let obj of data.items){
+                    this.add(obj, (res)=> {});
+                    // this.constructor.prototype.push(obj)
+                }
+            }
+        }
+
+        static onInitializeModelDataObjects (data){
+            /*var tablename = data.table;
+            var items = data.items||[];
+            for(var i=0; i<=items.length-1; i++) {
+                var item = items[i];
+                var Model = this['@datatype'];
+                var modelObject = new Model(item);
+                data.items.splice(i,1, modelObject);
+            }
+            ;*/
+            return data;
+        }
+
+        static async seed (uri, params, force){
+            if(!this.isSeedable()) {
+                this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                return
+            };
+            force = (typeof force == "boolean") ? force:false;
+            uri = uri || this.prototype.seeds;
+            if(!this.loaded || force){
+                this.loaded=true;
+                await fetch(uri[Config.ENVIRONMENT]) 
+                    .then(async res => this.onDataReceived(await res.json(), null))
+                    .catch(e => console.log("Error in " +this.namespace +"#seed():\n", e))
+                    .finally(_ => this.prototype.dispatchEvent("loaded", {controller: this}, this))
+            } else {
+                this.prototype.dispatchEvent("loaded", {controller: this}, this);
+            }
+        }
+    }
+);
+
+traits(core.data.Repository, [new Observer]);
+
+
+
+/**
+ * @desc Device for simulating a NoSQL database such as
+ * mongo or local storage because of common api. This 
+ * device is handy during testing.
+ */
+namespace `core.drivers.storage`(
+    class Cursor extends Array{
+        constructor (cursor){
+            var items = (typeof cursor == "object" && cursor.all)?cursor.all():[];
+            super(...items);
+            this.cursor = cursor ;
+            this.setPaginator();
+        }
+
+        setPaginator(){
+            this.paginator = new core.traits.Paginator({
+                data:this, pageSize:4
+            });
+            this.next = this.paginator.next.bind(this.paginator);
+            this.previous = this.paginator.previous.bind(this.paginator);
+            this.current = this.paginator.current.bind(this.paginator);
+            this.first = this.paginator.first.bind(this.paginator);
+            this.pagenumber = this.paginator.pagenumber.bind(this.paginator);
+            this.totalpages = this.paginator.totalpages.bind(this.paginator);
+            this.islastpage = this.paginator.islastpage.bind(this.paginator);
+        }
+        
+
+        // next(){
+        //     var skip = this.page_size * (this.page_num - 1)
+        // }
+
+        // sort (sortCriteria){
+        //     alert("asd")
+        //     console.log("items before sort", this.cursor.all());
+        //     this.cursor.sort(sortCriteria)
+        //     console.log("items after sort", this.cursor.all());
+        // }
+
+        all(){
+            return this;
+        }
+
+        skip(num){
+            this._skip = num;
+            // var take = 2;
+            // var end = skip+take;
+            return this.slice(this._skip)
+        }
+
+        take(num){
+            this._limit = this._skip+num;
+            return this.slice(this._skip,this._limit)
+        }
+
+        sort(attrb, order){
+            // console.log(this.sort())
+            super.sort(function(a, b) {
+                
+                var nameA = a[attrb].toUpperCase(); // ignore upper and lowercase
+                var nameB = b[attrb].toUpperCase(); // ignore upper and lowercase
+                if(order){
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                
+                    // names must be equal
+                    return 0;
+                } else {
+                    if (nameA < nameB) {
+                        return 1;
+                    }
+                    if (nameA > nameB) {
+                        return -1;
+                    }
+                
+                    // names must be equal
+                    return 0;
+                }
+            });
+            return this;
+        }
+    }
+);
+ 
+
+
+
+
+/**
+ * @desc Device for simulating a NoSQL database using
+   local memory. Good for development/testing, not for
+   use in prod env.
+ */
+namespace `core.drivers.storage` (
+    class Memory extends core.drivers.storage.IStorageInterface {
+        constructor (collection, storage_device){
+            super(collection, storage_device);
+            if(!mingo) { 
+                console.error(this.namespace + " requires npm mingo to be installed.");
+            }
+            Session.State.db = Session.State.db||{};
+            this.setCollection(collection.classname||collection.prototype.classname);
+        }
+
+        isSeedingEnabled(){
+            return true;
+        }
+
+        setCollection (name){
+            if(typeof Session.State.db[name] != "object"){
+                Session.State.db[name] = [];
+            }
+            this.collection = Session.State.db[name];
+        }
+
+        add(obj, cb){
+            this.collection.push(obj);
+            cb&&cb(obj,null);
+            return obj;
+        }
+        
+        find(cb,query){
+            query = new mingo.Query(query||{});
+            let cursor = query.find(this.collection);
+            // var res = this.collection;//just hand back all
+            var c = new core.drivers.storage.Cursor(cursor)
+            // cb(c,null);
+            cb&&cb(c,null);
+            return c;
+        }
+
+        remove(query, cb){
+            query = new mingo.Query(query||{});
+            let cursor = query.find(this.collection);
+            // var res = this.collection;//just hand back all
+            var c = new core.drivers.storage.Cursor(cursor);
+            var res = c.all()||[];
+            var removed=[];
+            res.forEach(o => {
+                // console.log("should remove", o)
+                for(var i=0; i<=this.collection.length-1; i++){
+                    if(this.collection[i]._id == o._id){
+                        this.collection.splice(i,1);
+                        removed.push(o);
+                    }
+                }
+            });
+            cb && cb(removed,null);
+            return removed;
+        }
+    }
+);
+ 
+
+
+
+
+
+namespace `core.ui.templating` (
+    class CustomTemplateEngines {
+        constructor(){
+            this.engines = {}
+            this.defaultMimetype = Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE||"template/literals";
+        }
+
+        define(mimeType, engine){
+            if(!this.engines[mimeType]){
+                this.engines[mimeType] = engine;
+                engine.install();
+            }
+        }
+
+        getEngineByMimeType(mime){
+            return this.engines[mime];
+        }
+
+        get default (){
+            return this.engines[this.defaultMimetype];
+        }
+
+        set default (mimeType){
+            this.defaultMimetype = mimeType;
+        }
+    }
+);
+
+window.customTemplateEngines = new core.ui.templating.CustomTemplateEngines;
+
+
+(() => {
+    var TemplateLiterals = {
+        name : "TemplateLiterals",
+        ext : "",
+        parse : function(tempStr, data, self){
+            var parse = (tempStr, templateVars) => {
+                return new Function("return `"+tempStr +"`;").call(templateVars);
+            }
+            return parse(tempStr, data)
+        },
+        install : function(){}
+    };
+    
+
+    window.customTemplateEngines.define("template/literals", TemplateLiterals);
+})();
+
+
+
+namespace `w3c.ui` (
+    class WebComponent extends HTMLElement {
+        constructor(el) {
+            super();
+            this.element = el;
+            this.__proto = this.constructor.prototype;
+            this.root = this.inShadow() ? 
+                this.attachShadow({ mode: 'open' }) : 
+                (this.element||this);
+
+            if(this.isExistingDomNode(this.element)){
+                this.connectedCallback();
+            }
+        }
+
+        isExistingDomNode(el){
+            return el && el.parentNode && el.parentNode.nodeType==1
+        }
+
+        static define(proto,bool){
+            var ce = window.customElements;
+            var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
+            if(/\-/.test(tag)){
+                if(ce.get(tag)){return}
+                proto["ns-tagname"] = tag;
+                this.defineAncestors();
+                this.defineAncestralClassList();
+                try{ce && ce.define(tag, this);}
+                catch(e){console.error(e)}
+            }     
+        }
+
+        setStylesheet () {    
+            var css = this.cssStyle();
+            !!css && !this.__proto._style_defined ? 
+                (this.onAppendStyle(
+                    `<style>\n${css}\n</style>`.toDomElement()),
+                    this.__proto._style_defined=true
+                ) : null;
+        }
+
+        querySelector(cssSel, e){
+            if(e){
+                return this.getParentNodeFromEvent(e,cssSel)
+            } else {
+            return (this.inShadow()||this.element) ?
+                this.root.querySelector(cssSel):
+                super.querySelector(cssSel)
+            }
+        }
+
+        querySelectorAll(cssSel, deep){
+            return (this.inShadow()||this.element) ?
+                this.root.querySelectorAll(cssSel):
+                super.querySelectorAll(cssSel)
+        }
+
+        onAppendStyle(stylesheet) {
+            if(this.inShadow()){
+                try{
+                    var sheet = new CSSStyleSheet();
+                        sheet.replace(stylesheet.innerText);
+                    this.root.adoptedStyleSheets = [sheet];
+                } catch(e){
+                    //TODO: use error code
+                    console.error(`${e.message} Unable to adopt stylesheet 
+                        into shadow dom -- ${this.namespace}#onAppendStyle(), 
+                        see: https://bugzilla.mozilla.org/show_bug.cgi?id=1520690.
+                        As a workaround, @import the css from within <template>`)
+                }
+            }
+            else {
+                var headNode = document.querySelector("head")
+                var configscript = document.querySelector("script");
+                headNode.insertBefore(stylesheet, configscript);
+            }
+        }
+
+        onStyleComputed(stylesheet){}
+
+        adopts(orphan) {
+            orphan && orphan.parentNode.replaceChild(this.root, orphan)
+            orphan && this.root.appendChild(orphan);
+        }
+
+        replaces(orphan) {
+            orphan && orphan.parentNode.replaceChild(this.root, orphan);
+        }
+
+        dispatchEvent(type, data, details = { bubbles: true, cancelable: true, composed: true }, element = this) {
+            var evt = new CustomEvent(type, details);
+                evt.data = data;
+            if(this.element){return this.element.dispatchEvent(evt);}
+            else{return super.dispatchEvent(evt);}
+        }
+
+        on(evtName, handler, bool=false, el) {
+            this.addEventListener(evtName, handler, bool, el)
+        }
+
+        addEventListener(evtName, handler, bool=false, el) {
+            var self = this;
+            if (typeof el == "string") {
+                this.addEventListener(evtName, e => {
+                    var t = this.getParentNodeFromEvent(e, el);
+                    if (t) {
+                        handler({
+                            target: t,
+                            realtarget: e.target,
+                            src: e,
+                            preventDefault:  () => e.preventDefault(),
+                            stopPropagation: () => e.stopPropagation()
+                        });
+                    }
+                }, bool);
+            } else {
+                // super.addEventListener(evtName, handler, bool);
+                if(this.isExistingDomNode(this.element)){
+                    this.element.addEventListener(evtName, handler, bool);
+                }
+                else{
+                    super.addEventListener(evtName, handler, bool);
+                }
+            }
+        }
+
+        getParentBySelectorUntil(elem=this.root, terminator="html", selector) {
+            var parent_node = null;
+            do {
+                if(elem.matches(selector)){
+                    parent_node = elem;
+                    break;
+                }
+                if(elem.matches(terminator)){
+                    break;
+                }
+                elem=elem.parentNode;
+            } while(elem && elem.matches) 
+
+            return parent_node;
+        }
+
+        getParentNodeFromEvent(e, selector, terminator) {
+            var el = e.composedPath()[0];
+            return this.getParentBySelectorUntil(el, terminator, selector);
+        }
+
+        onStylesheetLoaded(style) { }
+
+
+        onTransformStyle(cssText){
+            if(!this.inShadow()){
+                return cssText.replace(/\:host\s+/gm, `.${this.classname} `)
+            } else{
+                return cssText;
+            }
+        }
+
+        setCssTextAttribute(_cssText, stylenode) {
+            if (stylenode && stylenode.styleSheet) {
+                stylenode.styleSheet.cssText = _cssText;
+            }
+            else {
+                stylenode.appendChild(document.createTextNode(_cssText));
+            }
+        }
+
+        async loadTemplate() {
+            return new Promise(async (resolve, reject) => {
+                var tem  =  this.getTemplateToLoad();
+                if(/\/*\.html$/.test(tem)){
+                    var src=this.src||tem;//TODO: bug here?
+                    var opts = { cache: "force-cache" };//TODO: use cache policy from appconfig.js
+                    src = src.replace("/./", "/" + this.namespace.replace(/\./gim, "/") + "/");
+                    this._template = await imports(src, opts);
+                }
+                else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
+                    this._template=tem;
+                }
+                else if(tem && tem.nodeType==1 && tem.tagName.toLowerCase()=="template"){
+                    this._template=tem.outerHTML;
+                }
+                else if(tem && tem.nodeType==1){
+                    this._template=`<template>${tem.outerHTML}</template>`;
+                }
+                resolve(this._template);
+            })
+        }
+
+        // async loadTemplate() {
+        //     return new Promise(async (resolve, reject) => {
+        //         var tem  =  this.getTemplateToLoad();
+                
+        //         if(/\/*\.html$/.test(tem)){
+        //             var src=this.src||tem;//TODO: bug here?
+        //             var opts = { cache: "force-cache" };//TODO: use cache policy from appconfig.js
+        //             src = src.replace("/./", "/" + this.namespace.replace(/\./gim, "/") + "/");
+        //             this._template = await imports(src, opts);
+        //         }
+        //         else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
+        //             this._template=tem;
+        //         }
+        //         else if(tem && tem.nodeType==1){
+        //             this._template=tem.outerHTML;
+        //         }
+        //         resolve(this._template);
+        //     })
+        // }
+
+        getTemplateToLoad(){
+            var engine = this.getTemplateEngine();
+            return  this.querySelector("template")||    //node
+                    this.src||                          //uri
+                    this.template()||                   //string
+                    this.element||
+                    "/src/./index" + (engine.ext||"") + ".html" //TODO: default but ignores <Config.TEMPLATE_NAMES_USE_ENGINE_EXTENSION>
+        }
+
+
+        async onConnected(data) { 
+            await this.render(data);
+        }
+        
+        async render(data={}) {
+            if(this.isExistingDomNode(this.element)){
+                this.onTemplateRendered(temNode);
+                return
+            }
+            // debugger;
+            var t = this._template;
+            if (t) {
+                var html = await this.evalTemplate(t, data);
+                var temNode = html.toDomElement();
+                    temNode = temNode.content;
+                if (!this.inShadow()) {
+                    this.slots.forEach(slot => {
+                        var slotName = slot.getAttribute('slot');
+                        var placeholder = temNode.querySelector(`slot[name="${slotName}"]`);
+                        if( placeholder){
+                            if(!placeholder.hasAttribute("append")){
+                                placeholder.innerHTML="";
+                            }
+                        }
+                        (placeholder||temNode).appendChild(slot)
+                    })
+                }
+                if(this.element){
+                    this.innerHTML = "";
+                    this.appendChild(temNode);
+                }
+                else{
+                    this.root.innerHTML = "";
+                    this.root.appendChild(temNode);
+                }
+                this.onTemplateRendered(temNode);
+            }
+        }
+
+        template(){return null}
+
+        async evalTemplate(template, data) {
+            var eng = this.getTemplateEngine();
+            return await eng.parse(template, data, this);
+        }
+
+        getTemplateEngine() {//TODO: Need to make it configurable, see <Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE>
+            return window.customTemplateEngines.default;
+        }
+
+        async connectedCallback() {
+            if( this._is_connected){return;}
+            this._is_connected=true;
+            var html = await this.loadTemplate();
+            this.onTemplateLoaded();
+        }
+
+        async onTemplateLoaded() {
+            this.slots = this.getSlots();
+            this.setClassList();
+            this.setPrototypeInstance();
+            this.defineAncestralStyleList();
+            
+            await this.onConnected();
+            await this.setStyleDocuments();
+        }
+
+        getSlots() { return Array.from(this.children) }
+
+
+        onTemplateRendered(){
+            this.initializeChildComponents();
+        }
+        
+        static get observedAttributes() {
+            return ['src'];
+        }
+
+        get src() {
+            return this.getAttribute('src');
+        }
+
+        set src(val) {
+            this.setAttribute('src', val)
+        }
+
+        inShadow() {
+            return this.hasAttribute('shadow');
+        }
+
+        attachShadow(options) {
+            this._usesShadow = true;
+            return super.attachShadow(options);
+        }
+
+        async attributeChangedCallback(name, oldValue, newValue) {
+            if (name == "src"){
+                if(!this._is_connected){return;}
+                else {
+                    var html = await this.loadTemplate();
+                    await this.onConnected()
+                }
+            }
+        }
+
+        cssStyle(){ return "" }
+
+        onLoadInstanceStylesheet(){ return true }
+
+        static defineAncestors(){
+            this.ancestors=[];
+            var a=this;
+            while(a && this.ancestors.push(a)){
+                  a = a.prototype.ancestor}
+        }
+
+        static defineAncestralClassList(){
+            this.prototype.classes = [];
+            for(let ancestor of this.ancestors){
+                var proto = ancestor.prototype;
+                if( proto['@cascade']||ancestor==this){
+                    this.prototype.classes.unshift(proto.classname)
+                } else { break }
+            }
+        }
+
+        defineAncestralStyleList(){
+            var stylesheets = this.prototype["stylesheets"] = this.prototype["stylesheets"]||[];
+            if(this.onLoadInstanceStylesheet()){
+                stylesheets.push(this.getNSStyleSheet(this.namespace))
+            }
+            stylesheets.push(...this.prototype["@stylesheets"]||[]);
+            if(!this['@cascade']){
+                return
+            }
+            var ancestor = this.__proto.ancestor
+
+            while(ancestor) {
+                if( ancestor != w3c.ui.WebComponent && 
+                    ancestor != w3c.ui.Application  &&
+                    ancestor != core.ui.World       &&
+                    ancestor.prototype.onLoadInstanceStylesheet() ){
+                    
+                    stylesheets.unshift(...ancestor.prototype["@stylesheets"]||[]);
+                    stylesheets.unshift(this.getNSStyleSheet(ancestor.prototype.namespace));
+                    ancestor = ancestor.prototype.ancestor;
+
+                    //TODO: What if current ancestor is not cascading?
+                    //TODO: What if the next ancestor is not cascading?
+                    // if(!ancestor.prototype['@cascade']){
+                    //     break;
+                    // }
+                } else { 
+                    break 
+                }
+            }
+        }
+
+        getNSStyleSheet(ns){
+            return relativeToAbsoluteFilePath("/src/./index.css",ns);
+        }
+
+        setClassList() {
+            this.className = this.className + (this["@cascade"]? 
+                " " + (this.__proto.classes.join(" ")).trim():
+                " " + this.classname);
+        }
+
+        getStyleSheets() {
+            var styles = this["stylesheets"]||[];
+            if(styles.length<=0 && this.onLoadInstanceStylesheet()){styles.push(this.getNSStyleSheet(this.namespace))}
+            return styles.reverse();
+        }
+
+        async setStyleDocuments() {
+            await this.loadcss(this.getStyleSheets());
+            this.setStylesheet();
+            this.onStyleComputed(this.stylesheets);
+        }
+
+        async loadcss(urls) {
+            return new Promise(async (resolve,reject) => {
+                if(this.__proto._css_loaded && !this.inShadow()){
+                    resolve(true);
+                    return
+                }
+                this.__proto._css_loaded=true;
+                urls=urls.reverse();
+                var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets|| {};
+                for(let path of urls){
+                    path = this.onLoadStyle(path);
+                    if((path && !stylesheets[path]) || this.inShadow()){
+                        var tagName = /^http/.test(path) ? "link" : "style";
+                        var tag = document.createElement(tagName);
+                        // this.onAppendStyle(tag);
+                            tag.setAttribute("type", 'text/css');
+                            tag.setAttribute("rel",  'stylesheet');
+                            tag.setAttribute("href",  path);
+                            tag.setAttribute("component", this.namespace);
+                            stylesheets[path] = tag;
+                            if(tagName.toLowerCase() == "style"){
+                                var _cssText = await window.imports(path);
+                                if( _cssText){
+                                    _cssText = this.onTransformStyle(_cssText);
+                                    _cssText && this.setCssTextAttribute(_cssText, tag);
+                                    this.onAppendStyle(tag);
+                                    this.onStylesheetLoaded(tag);
+                                }
+                            }
+                    }
+                }
+                resolve(true);
+            })
+        }
+
+        onLoadStyle(url){ return url }
+        
+
+        setPrototypeInstance() {
+            this.setAttribute("namespace", this.namespace);
+            this.prototype = this;
+        }
+
+        initializeChildComponents (el){//TODO: called everytime for all components, need to optimize.
+            el = el||this.root;
+            var nodes = this.querySelectorAll("*");
+                nodes = [].slice.call(nodes);
+                nodes.forEach(n => {
+                    if(n && n.nodeType == 1) {
+                        var tag = n.tagName.toLowerCase();
+                        var c = window.registered_tags[tag];
+                        c && c.define(c.prototype,true);
+                    }
+                })
+        }
+
+        isAnyPartOfElementInViewport(el=this.root) {
+            var rect = el.getBoundingClientRect();
+            var v = (rect.top  <= window.innerHeight) && ((rect.bottom) >= 0);
+            var h = (rect.left <= window.innerWidth)  && ((rect.right)  >= 0);
+            return (v && h);
+        }
+    }
+);
+window.WebComponent = window.WebComponent||w3c.ui.WebComponent;
+cascade(w3c.ui.WebComponent,true);
+
+
+;
+
+namespace `w3c.ui` (
+	class Application extends w3c.ui.WebComponent {
+	    constructor(el) {
+	        super(el);
+	        window.application = this;
+	    }
+	}
+);
+window.Application = window.Application||w3c.ui.Application;
+
+
+
+namespace `core.http` (
+    class Router {
+        constructor(app,hostWindow){
+        	this.window = hostWindow;
+        	this.application = app;
+
+            var hashchangeCb = this.application.onHashChange?
+                this.application.onHashChange.bind(this.application):
+                this.onHashChange.bind(this);
+
+            this.window.addEventListener("hashchange", (e)=> hashchangeCb(e), false)
+            if(this.window.location.hash.length > 0){
+                hashchangeCb()
+            }
+        }
+
+        onHashChange (e){
+            var ns = this.window.location.hash.split("#")[1];
+            var scrollTo = ns.split("/");
+            ns=scrollTo[0];
+            scrollTo = scrollTo[1];
+            var nspath = ns.replace(/\./g, "/");
+
+            if(!NSRegistry[ns]){
+                this.application.onLoadingActivity &&
+                this.application.onLoadingActivity(ns);
+                var filename_path = `${Config.SRC_PATH}${nspath}/${Config.FILENAME}`;
+                //TODO: add logic for debug path, see bootloader how it uses .src.js and .min.js
+                var path = filename_path.replace("*", Config.USE_COMPRESSED_BUILD ? "min.":"");
+                var cl = new core.http.ClassLoader;
+                cl.load(ns, Config.ROOTPATH + path, data => this.onActivityLoaded(ns,NSRegistry[ns],scrollTo));
+            } else {    
+                this.application.onResumeActivity && 
+                this.application.onResumeActivity(NSRegistry[ns],scrollTo);
+                this.onActivityLoaded(ns,NSRegistry[ns],scrollTo)
+            }
+        }
+
+        destroy(activityInstance){
+            this.activities = this.activities||{};
+            delete this.activities[activityInstance.namespace];
+        }
+
+        onActivityLoaded(ns,_class,scrollTo){
+            this.activities = this.activities||{};
+            var c = this.activities[ns]||new _class;
+            this.application.onExitCurrentActivity && 
+            this.application.onExitCurrentActivity(this.current_activity)
+            
+            this.application.onEnterActivity && 
+            this.application.onEnterActivity(c,scrollTo);
+
+            this.activities[ns] = c;
+            this.current_activity=c;
+        }
+    }
+);
+
+
+
+namespace `w3c.ui` (
+	class RoutableApplication extends w3c.ui.Application {
+
+        async onConnected(data){
+            await this.render(data);
+            this.router = new core.http.Router(this,window);// <- onConnected, best place
+        }
+
+        onEnterActivity(c) {
+            console.log("onEnterActivity", c);
+            var slot = this.querySelector('#activitySlot');
+            slot.appendChild(c);
+            this.currentActivity = c;
+            // this.onEnterActivityRestoreScroll(scrollToElement) //TODO: need to uncomment and support scroll
+            this.dispatchEvent("onactivityshown", c);
+        }
+
+        onExitCurrentActivity(c) {
+            // this.onExitActivitySaveScroll()
+            console.log("onExitCurrentActivity", c);
+            var slot = this.querySelector('#activitySlot');
+            slot.innerHTML = "";
+        }
+
+        onResumeActivity(c) {
+            console.log("onResumeActivity", c);
+            this.dispatchEvent("topichanged", {});
+        }
+
+        onLoadingActivity(c) {
+            // application.dispatchEvent("showsplash")
+            console.log("onLoadingActivity", c);
+            this.dispatchEvent("topichanged", {});
+        }
+	}
+);
+
+
+
+;
+
+namespace `core.ui` (
+    class World extends w3c.ui.Application {
+        constructor(el) {
+            super(el);
+            window.sprites = [];
+        }
+
+        onUpdate(time){
+            window.sprites.forEach(sprite => sprite.onUpdate(time))
+        }
+
+        onDraw(interpolation){
+            if(this.context){
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+            window.sprites.forEach(sprite => sprite.onDraw(interpolation,this.context))
+        }
+
+        onEnd(fps, panic){
+            if (panic) {
+                var discardedTime = Math.round(MainLoop.resetFrameDelta());
+                console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
+            }
+        }
+    }
+);
+window.World = window.World||core.ui.World;
+
+
+function Ecmascript6ClassTranspiler() { }
+Ecmascript6ClassTranspiler.prototype.imports = window.imports;
+Ecmascript6ClassTranspiler.prototype.transpile = function (src, doc) {
+    var doTranspile = Config.ENABLE_TRANSPILER;
+    if (doTranspile) {
+        src = this.transpileToLevel(src);
+        return src;
+    } else {
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transpileToLevel = function (src) {
+    var nsReg = /namespace\s?`([^\s`]*)/;
+    var clsReg = /class\s+([^\s]*)[\s\n\t]?[\{|extends]/;
+
+    var nsMatch = src.match(nsReg);
+    var classMatch = src.match(clsReg);
+    if(!nsMatch && !classMatch){
+        return this.transipleImportsDestructuring(src);
+    }
+    else {
+        nsMatch = nsMatch ? nsMatch[1] : "";
+        classMatch = classMatch?classMatch[1]:"";
+        nsMatch = nsMatch + "." + classMatch;
+        src = this.transipleDecoratorFields(nsMatch, src);
+        src = this.transipleClassFields(nsMatch, src);
+        src = this.transipleImportsDestructuring(src);
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleDecoratorFields = function (ns,src) {
+    var regex = /@([^\W]*)\({1}([^\;]*)\){1};{1}/gm; //Feb 7 2019 - to support @matchmedia queries having ('s)
+    var props = [];
+    if (ns) {
+        src = src.replace(regex, (full, method, args) => {
+            props.push(`${method}(${ns}, ${args});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, method, args) => {
+            return "";
+        });
+        fullsrc = src;
+    }
+    return fullsrc;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (src) {
+    var regex = /import\s\{([^\}]*)\}\sfrom\s([^;]*)/gm;
+    src = src.replace(regex, (full, destructured_var, src_path) => {
+        destructured_var = destructured_var.replace(/\s+as\s+/gm, ":");
+        return `var {${destructured_var}} = (()=> {\nimport ${src_path};\n})();`;
+    });
+    src = src.replace("return", "return");
+    return src;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleClassFields = function (ns, src) {
+    var regex = new RegExp(
+        /(\@static|@public|\@private)\s+([^\s]*)\s+\=([^\;]*)\;/gm
+    );
+    var props = [];
+
+    if (ns) {
+        src = src.replace(regex, (full, type, name, val) => {
+            type = type.replace("@", "");
+            props.push(`field(${ns}, "${type}", "${name}", ${val});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, type, name, val) => {
+            return "";
+        });
+        fullsrc = src;
+    }
+    return fullsrc;
+};
+
+namespace `core.http` ( 
+    class ClassLoader {
+        constructor (){
+            this.es6Transpiler = new Ecmascript6ClassTranspiler();
+            window.run = this.run.bind(this);//TODO:check dynamic transpilation
+            return this;
+        }
+
+        run(src, cb){
+            this.build(src, output => {
+                var head   = document.getElementsByTagName("head").item(0);
+                var script = document.createElement("script");
+                script.setAttribute("type", "text/javascript");
+                script.setAttribute("charset", (Config.CHARSET || "utf-8"));
+                script.text = output;
+                head.appendChild(script);
+                cb(script);
+            });
+        }
+
+        async load (ns, filepath, cb) {
+            var cfFailure = xhr => cb?cb(xhr):null;
+            var src = await window.imports(filepath);
+                src ? this.run(src,cb) : cfFailure(src,"no xhr"); 
+        }
+
+        async build(src, cb) {
+            src = this.es6Transpiler.transpile(src);
+            var reg = /^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;
+
+            while (reg.test(src)) {
+                var match = src.match(reg);
+                var ns = match[1];
+                src = src.replace(reg, this.es6Transpiler.transpile(
+                    (window.imported_classes[ns] ? ";" : await this.imports(match))||""
+                ))
+            } cb(`(async ()=>{ ${src} })()`);
+        }
+
+        async imports(match){
+            var res=null;
+            var paths = this.pathsToTry(match);
+            for(let path of paths){
+                var res = await window.imports(path);
+                if(res){break}
+            }
+            return res;
+        }
+
+        pathsToTry(match){
+            var ns = match[1];
+            if(/\.m?js$/.test(ns)){
+                return [ns]
+            }
+            ns=ns.replace(/\./gm,"/");
+            var root = Config.SRC_PATH;
+            var paths   = [];
+            match[0].includes("!") ? 
+            paths.push(root+ns + ".js"):null;
+            paths.push(root+ns + "/index.js")
+            paths.push(root+ns + "/index.min.js");
+            return paths;
+        }
+    }
+);
+
+
+!function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.returns&&(module.exports=a.MainLoop)}(this);
+
+document.addEventListener("DOMContentLoaded", e => {
+  async function bootup() {
+    var ns = document.body.getAttribute("namespace");
+        ns = ns||Config.NAMESPACE;
+    if (Config.DYNAMICLOAD) {
+      var filename_path = Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + Config.FILENAME;
+      var path = Config.USE_COMPRESSED_BUILD ? 
+        filename_path.replace("*", Config.DEBUG ? "src.":"min."):
+        filename_path.replace("*","");
+      var c = (Config.ENABLE_TRANSPILER) ?
+        new core.http.ClassLoader :
+        null;
+        c.load(ns, Config.ROOTPATH + path, async function init(res) {
+          Config.USE_COMPRESSED_BUILD=false;
+          if(!NSRegistry[ns]) {
+            await wait(1000/30);
+            init();
+            return;
+          }
+          var app = window.application = (
+            window.application||new NSRegistry[ns](document.body)
+          );
+          (app instanceof core.ui.World) ? 
+            MainLoop
+              .setUpdate(app.onUpdate.bind(app))
+              .setDraw(app.onDraw.bind(app))
+              .setEnd(app.onEnd.bind(app))
+              .start() : null;
+        });
+    }
+  };
+
+  ("cordova" in window) ? 
+    document.addEventListener('deviceready', ()=>{
+      AndroidFullScreen && AndroidFullScreen.immersiveMode(e=>{}, e=>{});
+      bootup()
+    }, false) : bootup()
+}, false); })()
