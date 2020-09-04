@@ -1,154 +1,140 @@
-$framework = {
-	stable : "2.0.1",
-	nightly : "2.1.0",
-	current: "2.1.0",
-	
-	description: "2.1.0 framework update - bundled with latest ADP Tracker improvements and more."
-}
-;
+(async ()=>{ var Session = window.Session = window.Session||{State:{}};
+var Config = window.Config = window.Config||{
+    NAMESPACE : null,//"applications.MainApp",
+    USE_COMPRESSED_BUILD : false,
+    FILENAME : "index.*js",
+    DYNAMICLOAD : true,
+    CHARSET : "utf-8",
+    ROOTPATH : "../../../",
+    SRC_PATH : "/src/",
+    ENVIRONMENT : "prod",
+    LOGGING : true,
+    ENABLE_TRANSPILER : true,
+    DEFAULT_TEMPLATE_ENGINE_MIMETYPE : "template/literals",
+    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false,//ex: "index.kruntch.html"
+    IMPORTS_CACHE_POLICY : "no-store", //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
+    DEBUG:true
+};
 
-//----------EXTENSIONS----------------
+try{module.returns = Config;}catch(e){}
 
-;
-//USED BY TRACKER
 
-// toQueryString = function(obj, prefix) {
-//   var str = [];
-//   for(var p in obj) {
-//     if (obj.hasOwnProperty(p)) {
-//       var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-//       str.push(typeof v == "object" ?
-//         toQueryString(v, k) :
-//         encodeURIComponent(k) + "=" + encodeURIComponent(v));
-//     }
-//   }
-//   return str.join("&");
-// }
-;
 
+//
+//
 if(!String.prototype.toDomElement){
-  String.prototype.toHtmlElement = String.prototype.toDomElement = function () {
-        var wrapper = document.createElement('div');
-        wrapper.innerHTML = this.toString();
-        var df= document.createDocumentFragment();
-            df.appendChild(wrapper);
-        return df.firstElementChild.firstElementChild;
+    String.prototype.toDomElement = function(){
+      var n = document.createRange().createContextualFragment(this.toString())
+      return n.firstElementChild;
     }
 };
 
+//
+;var wait = ms => new Promise((r, j)=>setTimeout(r, ms));
+window.wait=wait;
 
-String.prototype.toLocaleString = function(langCode){
-  langCode = langCode||Session.State.currentLanguage.CODE;
-  var key = this.toString();
-  if(Localization){
-    if(Localization[langCode]){
-      return Localization[langCode][key]||
-             Localization[langCode][key.toLowerCase()]||key;
-    } else {
-      return key;
+//
+window.registered_tags=window.registered_tags||{};
+
+if (Config.LOGGING==false) {
+    for (var k in console) {
+        console[k] = function () { };
     }
-  }
-  else {
-    return key;
-  }
+}
+
+window.getParameterByName = function (name, url) {
+    var match = RegExp("[?&]" + name + "=([^&]*)").exec(
+        url || window.location.href
+    );
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 };
 
-;
+window.toAbsoluteURL = function(url) {
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    return a.cloneNode(false).href; 
+}
 
-;
+window.classof = function(ns){ return NSRegistry[ns] }
 
-;
+window.imported_classes = window.imported_classes || {};
+window.imports = async function (x, opts, isError) {
+    opts = opts || { cache: Config.IMPORTS_CACHE_POLICY || "no-store" };
+    return new Promise(async (resolve, reject) => {
+        var path = x;
+        path = path.replace(/^\/+/, Config.ROOTPATH);
+        var error = "404 import: " + toAbsoluteURL(path)||path;
 
-if(!Array.prototype.where){
-    Array.prototype.where = function(exp){
-        var exp = new Function("$", "return " + exp);
-        var arr=[];
-        for(var i=0; i<=this.length-1; i++){
-            if(exp(this[i])){
-                arr.push(this[i])
+        if (window.imported_classes[x]) {
+            resolve(window.imported_classes[x]);
+            return;
+        }
+
+        try {
+            const response = await fetch(path, opts);
+            if (response.ok) {
+                const res = await response.text().then(src => {
+                    window.imported_classes[x] = src;
+                    resolve(src);
+                });
+            } else {
+                //then()-else{} when ran from server. catch() block never runs
+                var src = await response.text();
+                console.error(error);
+                resolve(null);
+            }
+        } catch (e) {
+            try{
+              var request = new XMLHttpRequest();
+              request.open('GET', path, false);
+              request.send(null);
+            } catch(xe){
+              console.error("404 import: " + toAbsoluteURL(path), xe);
+              resolve("")
+            }
+            if (request.status == 0 || request.status == 200) {
+                src = request.responseText;
+                window.imported_classes[x] = src;
+                resolve(src);
             }
         }
-        return arr;
-    };
-}
-;
-if("logging" in Config && Config.LOGGING != true) {
-  for(var k in console){
-      console[k]=function(){};
-  }
+    });
 };
+//
+// window._achild = Element.prototype.appendChild;
+// Element.prototype.appendChild = function(el) {
+//     return window._achild.apply(this, [el.element?el.element:el]);
+// };
+// function transpile(target, level){}
+// window.transpile=transpile;
 
-
-window.getParameterByName = function(name, url) {
-    var match = RegExp('[?&]' + name + '=([^&]*)').exec(url||window.location.href);
-    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-};
-
-
-
-window.imported_classes = window.imported_classes||{};
-window.imports = async function (x,opts, isError) { 
-  debugger;
-  opts = opts||{cache: Config.IMPORTS_CACHE_POLICY||"no-store"};
-  return new Promise((resolve,reject) => {
-    // var path = /^https?:/.test(x)? x : Config.ROOTPATH + x;
-    var path = x;
-    path = path.replace(/^\/+/,Config.ROOTPATH);
-    var error = "Unable to load: " + path;
-    
-    if(window.imported_classes[x]){
-      console.error("redundant imports to : " + x + " detected");
-      resolve(window.imported_classes[x]);
-      return;
-    }
-
-    fetch(path,opts)
-      .then(async (response) => {
-          if(response.ok) {
-              var src = await response.text();
-              window.imported_classes[x]=src;
-              resolve(src)
-          }
-          else {//then()-else{} when ran from server. catch() block never runs 
-            var src = await response.text();
-            console.error(error,src);
-            resolve(null)
-          }
-       })
-      .catch((e) => {//catch() block fired when ran from file:// disk
-        console.error(error, e);
-        resolve(null)
-      })
-  })
-};
-
-;
-
-
-//--------ES7-STYLE DECORATORS--------
-function transpile(target, level){
-	// target.prototype.__isTranspiled = true;
-	// target.prototype.__transpileLevel = level;
+function relativeToAbsoluteFilePath(path, ns, appendRoot){
+    ns = ns||this.namespace;
+    ns = ns.replace(/\./gim,"/");
+    if(path.indexOf("/./") >= 0){
+        path = path.replace("./", ns+"/");
+    } 
+    path = /http:/.test(path)? path : path.replace("//","/");
+    return path;
 }
 
-function stylesheets (target, paths){
-	target.prototype['@stylesheets'] = paths
-}
-
-function css (target, paths){
-	target.prototype['@stylesheets'] = paths
-}
-
-function html (target, path){
-	target.prototype['@template-uri'] = path
+window.stylesheets = function stylesheets (target, paths){
+    target.prototype['@stylesheets'] = [];
+    paths && paths.forEach(p => {
+        var filepath = relativeToAbsoluteFilePath(p,target.prototype.namespace,false);
+        target.prototype['@stylesheets'].unshift(filepath)
+    });
 }
 
 function traits(target, __traits){
-	var inheritTraits = function(klass, properties){
+    var inheritTraits = function(klass, properties){
         properties = properties.reverse();
         properties.forEach(trait => {
             if (typeof trait == "object") {
                 defineProps(klass, trait)
+            }
+            else if (typeof trait == "function") {
+                reflect(target.prototype, trait.prototype);
             }
         });
     };
@@ -162,47 +148,105 @@ function traits(target, __traits){
                 })
             }
         }
-    }
-    
-	inheritTraits(target.prototype, __traits);
-}
+    };
 
-function cascade(target,shouldCascade){
+    ;function reflect(target, source) {
+        for (let key of Reflect.ownKeys(source)) {
+            if(!/constructor|namespace|ancestor|classname|prototype|name/.test(key)){
+                let desc = Object.getOwnPropertyDescriptor(source, key);
+                Object.defineProperty(target, key, desc);
+            }
+        }
+    };
+    inheritTraits(target.prototype, __traits);
+};
+window.traits = traits;
+
+window.cascade = function cascade(target,shouldCascade){
 	target.prototype['@cascade'] = shouldCascade;
 }
 
-function prop(target,key,val){
+window.prop = function prop(target,key,val){
 	target.prototype[key] = val;
 }
 
-function loggable(target, params){
-	
+window.tag = function tag(target, name){
+    target.prototype["ns-tagname"]=name;
+    try{window.customElements.define(name, target);}catch(e){}
+    return;
 }
 
-function tag(target, name){
-    window.customElements.define(name, target);
-    // if(name.indexOf("app") >= 0){
-    //     window.customElements.define(name, target);
-    // }
-    // else {
-    //     var app_tag = Config.DEFAULT_APP_NAME;
-    //     customElements.whenDefined(app_tag).then(()=>{
-    //         window.customElements.define(name, target)
-    //     });
-    // }
-}
-
-function field(target, type, key, val){
-    target = (type=="static") ? 
-        target:
-        target.prototype;
+window.field = function field(target, type, key, val){
+    target = (type=="static") ? target : target.prototype;
     target[key] = val;
-}
-;
+};
 
+; (function(env) {
+    env.NSRegistry = env.NSRegistry||{};
+    
+    env.namespace = function(ns){
+        ns = ns[0];
+        return function(...defs){
+            defs.forEach(def => {
+                def=def||{};
+                var nsparts=ns.match(/\.([A-Z]+[a-zA-Z0-9\_]*)\b$/);
+                var k = def.prototype||def;
+                    k.classname = nsparts?nsparts[1]:def.name;
+                    var fns = ns+"."+k.classname;
+                    k.namespace = fns;
+                return env.NSRegistry[fns] = (typeof def == "function") ?
+                    createNS(fns,createClass(def||{})):
+                    createNS(ns,(def||{})), 
+                        delete def.namespace, 
+                        delete def.classname;
+            })
+        }
+    }
+    
+    var createNS = function(aNamespace, def){
+        var parts       = aNamespace.split(/\./g); 
+        var classname   = parts.pop();
+        var scope = parts.reduce((acc, next) => acc[next] ? 
+            acc[next] : (acc[next]={}), env);
+        scope[classname] = def;
+        return scope[classname];
+    };
 
-//TODO: Remove WebAction,WebIterator, XmlHttpRequest from build.
-//--------------LIBS------------------
+    var createClass = function(func){
+        try {
+            var proto  = func.prototype;
+                proto.ancestor = proto.__proto__.constructor;
+                try{  func.define(proto) }catch(e){};
+                return func;
+        } catch(e){ return func }
+        return func
+    };
+})(typeof window !="undefined" ? window : global);
+
+(()=> {
+  var modulemap = window.modulemap ={};
+  window.require = window.require||async function importModule(url) {
+    url = Config.ROOTPATH+url;
+    var absURL = toAbsoluteURL(url);
+    var mod=modulemap[absURL];
+    return new Promise(async (resolve, reject) => {
+      if (mod) { return resolve(mod)};
+      var s1 = document.createElement("script");
+          s1.type = "module";
+          s1.onerror = () => reject(new Error(`404: ${url}`));
+          s1.onload  = () => {
+            resolve(modulemap[absURL]);URL.revokeObjectURL(s1.src);s1.remove();
+          };
+      const loader = `import * as m from "${absURL}"; modulemap['${absURL}'] = m;`;
+      const blob = new Blob([loader], { type: "text/javascript" });
+      s1.src = URL.createObjectURL(blob);
+      document.head.appendChild(s1);
+    });
+  };
+  function supportsDynamicImport() {
+    try { new Function('import("")'); return true;} catch (err) {return false;}
+  }
+})();
 
 var Observer = function() {
     this.observations = [];
@@ -224,7 +268,7 @@ Observer.prototype = {
     dispatchEvent : function(eventName, data, scope) {
         scope = (scope||this||window);
         var funcs = this.subscribers[eventName]||[];
-   	        funcs.forEach(function notify_observer(observer) { 
+            funcs.forEach(function notify_observer(observer) { 
                 observer.func.call(scope, data); 
             });  
     },
@@ -236,1237 +280,1245 @@ Observer.prototype = {
             });
     }
 };
-;
-
-/** @desc ECMASCRIPT 6 CLASS TRANSPILER.
-  Able to transpile ES6-style class syntax into
-  native ES5 function-contructor syntax.
-  Run the code below in Firebug for an example.
-*/
+window.Observer=Observer;
 
 
-function Ecmascript6ClassTranspiler(){};
-Ecmascript6ClassTranspiler.prototype.imports = window.imports;
-
-
-Ecmascript6ClassTranspiler.prototype.transpile = function(src, doc){
-  var doTranspile = Config.ENABLE_TRANSPILER;
-  // var transpileLevel = src.match(transpileSettings);
-  if(doTranspile) {
-    src = this.transpileToLevel(src);
-    return src;
-  }
-  else {return src;}
-};
-
-
-Ecmascript6ClassTranspiler.prototype.transpileToLevel = function(src){
-    // if(level == "es7") {
-      var nsReg = /(?:@{1}[^\s]*\({1}[^\;]*\){1};{1})?\n?namespace\([\'\"]{1}([^\'\"]*)/
-      var nsMatch = src.match(nsReg);
-      nsMatch = nsMatch?nsMatch[1]:"";
-      src = this.transipleDecoratorFields(nsMatch,src);
-      src = this.transipleClassFields(nsMatch,src);
-      src = this.transipleImportsDestructuring(nsMatch,src);
-      return src
-    // }
-    // else {
-    //   return src
-    // }
-};
-
-Ecmascript6ClassTranspiler.prototype.transipleDecoratorFields = function(ns,src){
-  var regex = /@([^\s]*)\({1}([^\;]*)\){1};{1}/gm;
-  var props = [];
-  if(ns){
-    src = src.replace(regex, (full, method, args)=> {
-      props.push(`${method}(${ns}, ${args});`);
-      return "";
-    });
-    var fullsrc = src + "\n" + props.join("\n");
-  } else {
-    src = src.replace(regex, (full, method, args)=> {
-      return "";
-    });
-    fullsrc = src;
-  }
-  return fullsrc;
-}
-
-Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function(ns,src){
-    var regex = /import\s\{([^\}]*)\}\sfrom\s([^;]*)/gm;
-    src = src.replace(regex, (full, destructured_var, src_path)=> {
-      destructured_var = destructured_var.replace(/\s+as\s+/gm,":");
-      return `const {${destructured_var}} = (()=> {\nimport ${src_path};\n})();`
-    });
-    src = src.replace("export ", "return ");
-  return src;
-}
-
-Ecmascript6ClassTranspiler.prototype.transipleClassFields = function(ns,src){
-  var regex = /(@static|@public|@private)(?:[^\s]*)\s([^\s]*)[\s\=]*([^\;]*)\;{1}\n{1}/gm;
-  var props = [];
-
-  if(ns){
-    src = src.replace(regex, (full, type, name, val)=> {
-      type = type.replace("@","");
-      props.push(`field(${ns}, "${type}", "${name}", ${val});`);
-      return "";
-    });
-    var fullsrc = src + "\n" + props.join("\n");
-  } else {
-    src = src.replace(regex, (full, type, name, val)=> {
-      return "";
-    });
-    fullsrc=src;
-  }
-  return fullsrc;
-}
-
-// Ecmascript6ClassTranspiler.prototype.transpile = function(src, doc){
-//     var transpileSettings = /@transpile\([\'\"]*([a-zA-Z0-9]*)[\'\"]*\)/;
-//     var transpileLevel = src.match(transpileSettings);
-//     if(transpileLevel && transpileLevel[1]) {
-//       src = this.transpileToLevel(transpileLevel[1],src);
-//       return src;
-//     }
-//     else {return src;}
-// };
-
-
-
-Ecmascript6ClassTranspiler.prototype.Build = async function(_code, cb){
-  _code = this.transpile(_code);
-   var self=this;
-    var finished = false;
-    var reg = /^(?:\/\/\=\s*require|import\W|\#+include\W)\s*[\'\"]{1}([^\'\"]*)[\'\"]{1}\;/im;
-    
-    //This one works but matches import statements in middle of src
-    // var reg = /(?:\/\/\=\s*require|import\W|\#+include\W)\s*[\'\"]?([0-9A-Za-z\-\_\.\/\\]*)[\'\"]?/im;
-    
-    while(reg.test(_code)){
-        var s="";
-        var ns_or_path = _code.match(reg)[1];
-        
-
-        if(/\.js|\.mjs$/.test(ns_or_path)){
-          if(window.imported_classes[ns_or_path]){
-            s = /\.mjs$/.test(ns_or_path)?
-              window.imported_classes[ns_or_path] : ";"
-          }
-          else {s = await this.imports(ns_or_path);}
+namespace `core.traits` (
+    class Paginator {
+        constructor(options) {
+            this.data = options.data;
+            this.pageSize = options.pageSize;
+            this.currentPage=("currentPage" in options)? options.currentPage:0;
         }
-        else {
-          var paths_to_try = this.pathsToTry(ns_or_path);
-          if(window.imported_classes[paths_to_try[0]] || window.imported_classes[paths_to_try[1]]){s=";"}
-          else {
-            s = await this.imports(paths_to_try[0],false)||
-                await this.imports(paths_to_try[1],false);
-          }
-          if(!s){
-            console.error("Attempted to import a namespace or file by trying 2 locations and failed. Verify your imports. Locations tried: ", paths_to_try)
-          }
+
+        next(){
+            if(this.currentPage==this.totalpages()){this.currentPage--};
+            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
+            this.currentPage++;
+            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
+            this.dispatchEvent("next", {currentPage:this.currentPage});
+            return d;
         }
-        s = s? this.transpile(s):"";
-        _code = _code.replace(reg, s)
+
+        update(){
+            var d = this.data.slice((this.currentPage-1)*this.pageSize, (this.currentPage)*this.pageSize);
+            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
+            return d;
+        }
+
+        previous(){
+            if(this.currentPage<=1){this.currentPage=1;}
+            else{this.currentPage--}
+            var previousPage = this.currentPage;
+            var d = this.data.slice((previousPage*this.pageSize)-this.pageSize, (previousPage)*this.pageSize);
+            this.dispatchEvent("change", {type: "previous", currentPage:this.currentPage});
+            this.dispatchEvent("previous", {currentPage:this.currentPage});
+            return d;
+        }
+
+        current(){
+            if(this.currentPage<=1){this.currentPage=1;}
+            if(this.currentPage==this.totalpages()){this.currentPage--};
+            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
+            return d;
+        }
+
+        pagenumber(){
+            return this.currentPage;
+        }
+
+        totalpages(){
+            return Math.ceil(this.data.length/this.pageSize);
+        }
+
+        totalrecords(){
+            return this.data.length;//Math.ceil(this.data.length/this.pageSize);
+        }
+
+        islastpage(){
+            return this.currentPage >= this.totalpages();
+        }
+
+        isfirstpage(){
+            return this.currentPage <= 1;
+        }
+
+        resetindex(){
+            this.currentPage = 0;
+        }
+
+        first(){
+            this.resetindex();
+            this.dispatchEvent("change", {type: "first", currentPage:this.currentPage});
+            return this.next();
+        }
+
+        last(){
+            this.currentPage = this.totalpages();
+            this.dispatchEvent("change", {type: "last", currentPage:this.currentPage});
+        }
+
+        resizepage(size){
+            this.pageSize = size || this.pageSize;
+            this.resetindex();
+            this.dispatchEvent("change", {type: "resize", currentPage:this.currentPage});
+        }
+
+        pagesize(){
+            return this.pageSize;
+        }
     }
-    cb(_code);
-};
+);
+
+traits(core.traits.Paginator,[new Observer]);
 
 
-Ecmascript6ClassTranspiler.prototype.pathsToTry = function (_namespace) {
-  var paths = [];
-  if(/\.js$/.test(_namespace)){
-    paths.push(_namespace);
-  } else{
-    var classname_path = ("src/" + _namespace.replace(/\./g,"/") + ".js");
-    var filename_path  = ("src/" + _namespace.replace(/\./g,"/") + "/index.js");
-    paths.push(filename_path);
-    paths.push(classname_path);
-  }
-  return paths;
-};
-;
 
-; (function(env) {
-    var importedFiles={};
-    var Class;
-    env.NSRegistry = env.NSRegistry||{};
-    // env.Class = Class = function(){};
-    //     Class.prototype = {
-    //         preInitialize: function(){
-    //             var res = this.initialize.apply(this, arguments);
-    //             this.initializeTraits(arguments);
-    //             return res;
-    //         },
-            
-    //         initialize       : function() {return this;},
-            
-            
-    //         hasOwnMember : function(key){
-    //             try{return this.constructor.prototype.hasOwnProperty(key)}
-    //             catch(e){return this.hasOwnProperty(key);}
-    //         },
-            
-    //         initializeTraits : function(){
-    //             var traits = this["@traits"]||[];
-    //             for(var i=0; i<=traits.length-1; i++){
-    //                 var trait = traits[i];
-    //                 if(typeof trait == "function"){
-    //                     new trait(this,arguments);
-    //                 }
-    //                 else if(trait && trait.initialize) {}
-    //             }
-    //         }
-    //     };
-    
-    
-    env.namespace = function(ns, def){
-        def=def||{};
-        var k = (def && typeof def == "object") ?
-            def : def.prototype;
-            k.namespace = ns;
-            k.classname = /([a-zA-Z]*)$/.test(ns) ? 
-                RegExp.$1 :
-                "Anonymous";
-
-        // if(def && typeof def == "object"){
-        //     def.namespace = ns;
-        //     def.classname = /([a-zA-Z]*)$/.test(ns) ? RegExp.$1:"Anonymous";
-        // } else {
-        //     if(def && typeof def == "function") {
-        //         def.prototype.namespace = ns;
-        //         def.prototype.classname = /([a-zA-Z]*)$/.test(ns) ? RegExp.$1:"Anonymous";
-        //     }   
-        // }
-        var n = createNS(ns);
-        env.NSRegistry[ns] = n[0][n[1]] = def ?
-            createClass(def,ns) : {};
-    };
-    
-    
-    var createNS = function(aNamespace){
-        var scope       = env;
-        var parts       = aNamespace.split(/\./g); 
-        var classname   = parts.pop();
-            
-        for (var i = 0; i <= parts.length - 1; i++) {
-            scope = scope[parts[i]]||(scope[parts[i]] = {});
-        };
-        return [scope,classname];
-    };
-    
-    
-    var createClass = function(properties, ns){
-        if(typeof properties == "function"){
-            properties.prototype.ancestor = properties.prototype.__proto__.constructor;
-            return properties
+namespace `core.drivers.storage` (
+    class IStorageInterface {
+        constructor (collection, storage_device){
+            console.log(`storage device for ${collection.prototype.classname}`,storage_device)
         }
-        /*if(properties["@imports"] && properties["@imports"].length > 0){
-            console.warn("Depracated : " + ns + " > The @imports decorator-rule in Simul8 classes will be phased out eventually.\nUse the ES6-style:\n import 'src/file/path.js' instead.")
-            loadImports(properties, ns);
+
+        isSeedingEnabled(){
+            return false;
         }
-        delete properties["@imports"];
-        delete properties["@import"];
-        var obj = properties["@inherits"];
-        
-       if(!("@inherits" in properties)) {
-           obj = properties["@inherits"] = Class;
-       }
-       else if(typeof obj == "string") {
-           var inheritedNS = obj;
-           obj = properties["@inherits"] = (NSRegistry[obj]);
-           if(!obj){
-               throw new TypeError(ns + " inherits from a class, " +inheritedNS + " - that is not defined")
-           }
-       }
-       else {
-           obj = properties["@inherits"] = (properties["@inherits"]);
-           if(!obj){
-               throw new TypeError(ns + " inherits from a class that is not defined.")
-           }
-       }
-        
-        var traits = (properties["@traits"]||{});
-        if (typeof(obj) === "function") {
-            var F = function(){}; //optimization
-                F.prototype = obj.prototype;
-                
-            var klass = function() {
-                return this.preInitialize? this.preInitialize.apply(this, arguments):
-                        this.initialize.apply(this, arguments);
+    }
+);
+
+
+
+namespace `core.data` (
+    
+    class Repository {
+        static get IRequestStorage(){
+            var driver = this.prototype.device_driver;
+            this.interface = this.interface||new NSRegistry[driver](this,driver);
+            this.device_driver=driver; 
+            return this.interface;
+        }
+
+        static async add(obj,cb){
+            var results = await this.IRequestStorage.add(obj,cb);
+            return results;
+        }
+
+        static async all(cb){
+            var results = await this.IRequestStorage.all(cb);
+            return results;
+        }
+
+        static async remove(query,cb){
+            var args=arguments;
+            if(args.length==1){
+                query=args[0];
+                cb=null;
+            }
+            else if(args.length==2){
+                query=args[1];
+                cb=args[0];
+            }
+            else if(args.length==0){
+                query={};
+                cb=null;
+            }
+            return new Promise((resolve,reject) =>{
+                this.IRequestStorage.remove((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                    // cb && cb(result, error);
+                    // resolve(result, error)
+                },query)
+            })
+        }
+
+
+        static async find(cb=null,query){
+            var args=arguments;
+            if(args.length==1){
+                query=args[0];
+                cb=null;
+            }
+            else if(args.length==2){
+                query=args[1];
+                cb=args[0];
+            }
+            else if(args.length==0){
+                query={};
+                cb=null;
+            }
+            return new Promise((resolve,reject) =>{
+                this.IRequestStorage.find((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                },query)
+            })
+        }
+
+        static isSeedable(){
+            return this.prototype.seeds;
+        }
+
+
+        static onDataReceived (data, xhr){
+            var self=this;
+            data = this.onInitializeModelDataObjects(data);
+            this.setData(data.table||data.name, data);
+        }
+
+        static setData (name,data){
+            if(data && data.items){
+                for(let obj of data.items){
+                    this.add(obj, (res)=> {});
+                    // this.constructor.prototype.push(obj)
+                }
+            }
+        }
+
+        static onInitializeModelDataObjects (data){
+            /*var tablename = data.table;
+            var items = data.items||[];
+            for(var i=0; i<=items.length-1; i++) {
+                var item = items[i];
+                var Model = this['@datatype'];
+                var modelObject = new Model(item);
+                data.items.splice(i,1, modelObject);
+            }
+            ;*/
+            return data;
+        }
+
+        static async seed (uri, params, force){
+            if(!this.isSeedable()) {
+                this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                return
             };
-            klass.prototype = new F();
-            inheritTraits(klass.prototype, traits);
-            inheritProperties(klass.prototype, properties);
-            klass.prototype.constructor = klass;
-            klass.prototype.ancestor = obj;
-            inheritStaticMembers(klass, obj, properties);
-            //TODO: Get getter/setter decorators to work
-            // defineGettersSetters(klass, obj, properties);
+            force = (typeof force == "boolean") ? force:false;
+            uri = uri || this.prototype.seeds;
+            if(!this.loaded || force){
+                this.loaded=true;
+                await fetch(uri[Config.ENVIRONMENT]) 
+                    .then(async res => this.onDataReceived(await res.json(), null))
+                    .catch(e => console.log("Error in " +this.namespace +"#seed():\n", e))
+                    .finally(_ => this.prototype.dispatchEvent("loaded", {controller: this}, this))
+            } else {
+                this.prototype.dispatchEvent("loaded", {controller: this}, this);
+            }
         }
-        return klass;*/
-    };
-
-    // var defineGettersSetters = function(klass, ancestor, properties){
-    //     for(var key in properties) {
-    //         var match = key.match(/\@([^\s]+)/);
-    //         if(match && properties.hasOwnProperty(key)) {
-    //             var obj = properties[key];
-    //             var propName = match[1];
-    //             Object.defineProperty(klass.prototype, propName, {
-    //                 get: obj.get,
-    //                 set : obj.set
-    //             });
-    //         }
-    //     }
-    // };
-
-    // var inheritStaticMembers = function(klass, ancestor, properties){
-    //     for(var key in ancestor) {
-    //         if(ancestor.hasOwnProperty(key)) {
-    //             klass[key] = ancestor[key];
-    //         }
-    //     }
-    //     for(var key in properties) {
-    //         if(key.indexOf('@static ')>=0 && properties.hasOwnProperty(key)) {
-    //             var propName = key.split(/\s+/)[1];
-    //             klass[propName] = properties[key];
-    //         }
-    //     }
-    // };
-    
-    // var loadImports = function(properties, ns){
-    //     var amdSupported = true;
-    //     var forceImports = false;
-    //     var self=this;
-    //     if(Config && ("AMD" in Config) && Config.AMD==false){
-    //         amdSupported=false;
-    //     }
-    //     if(!("@forceimports" in properties) || properties["@forceimports"]==false){
-    //         forceImports=false;
-    //     } else {
-    //         forceImports=true;
-    //     }
-    //     if(!amdSupported && !forceImports) {return}
-
-    //     var imports = properties["@imports"]||properties["@import"]||[];
-    //     for(var i=0; i<=imports.length-1; i++){
-    //        imports[i] = relativeToAbsoluteFilePath(imports[i], ns);
-    //     }
-    //     for(var i=0; i<=imports.length-1; i++) {
-    //         var p = imports[i];
-    //         var error = `404: Unable to load @imports(decorator) filepath: ${p} declared in: ${ns}, `;
-    //         if(importedFiles[imports[i]]) {
-    //            continue;
-    //         } else {
-    //              var  oXMLHttpRequest = new XMLHttpRequest;
-    //              try {
-    //                 oXMLHttpRequest.open("GET", imports[i], false);
-    //                 oXMLHttpRequest.setRequestHeader("Content-type", "text/javascript");
-    //                 if(oXMLHttpRequest.overrideMimeType){
-    //                     oXMLHttpRequest.overrideMimeType("text/javascript")
-    //                 }
-    //              } catch(e){}
-    //              oXMLHttpRequest.onreadystatechange  = function() {
-    //                 if (this.readyState == XMLHttpRequest.DONE) {
-    //                   if(this.status == 0 || this.status == 200){
-    //                     var head   = document.getElementsByTagName("head").item(0);
-    //                     var scripts = head.getElementsByTagName("script");
-    //                     var script = document.createElement("script");
-    //                         script.setAttribute("type", "text/javascript");
-    //                         script.setAttribute("charset", (Config.CHARSET || "utf-8"));
-    //                         var _src=this.responseText;
-    //                         var ecmaTranspiler = new Ecmascript6ClassTranspiler;
-    //                         _src = ecmaTranspiler.transpile(_src);
-    //                         ecmaTranspiler.Build(_src, (output) => {
-    //                             script.text = output;
-    //                             head.appendChild(script);
-    //                             importedFiles[imports[i]]=true;
-    //                         });
-    //                   }
-    //                   else {
-    //                     console.error(error)
-    //                   }
-    //                 }
-    //              }
-    //              try{
-    //                 oXMLHttpRequest.send(null);
-    //              } catch(e) {
-    //                  console.error(error, e.message)
-    //              }
-    //         }
-    //     }
-    // };
-    
-    // var relativeToAbsoluteFilePath = function(path, ns){
-    //     var apppath = Config.ROOTPATH? (Config.ROOTPATH + "/") : "";
-    //     ns = ns||this.namespace;
-
-    //     if(path.indexOf("~/") >= 0){
-    //         path = path.replace("~/", apppath);
-    //     } else if(path.indexOf("./") >= 0){
-    //         path = path.replace("./", apppath + ns.replace(/\./gim,"/") + "/");
-    //     } 
-    //     else if(path.indexOf("http") == 0){
-    //         return path;
-    //     }
-    //     else{
-    //         if(path.indexOf(Config.ROOTPATH)<0){
-    //             path = apppath + path
-    //         }
-    //     }
-    //     path = /http:/.test(path)? path : path.replace("//","/");
-    //     if(path.indexOf(".html")>=0 && engine != TemplateEnginePlugins.Kruntch){
-    //         path = path.replace(/\.html/, engine.ext+".html");
-    //     }
-    //     return path;
-    // };
-    
-    // var inheritTraits = function(klass, properties){
-    //     var _traits = properties; 
-    //     if (_traits) {
-    //         var traits = [];
-    //         if (_traits.reverse) {
-    //             traits = traits.concat(_traits.reverse());}
-    //         else {traits.push(_traits);}
-    //         var trait;
-    //         for (var i = 0; (trait = traits[i]); i++) {
-    //             if (typeof trait == "object") {
-    //                 inheritProperties(klass, trait)
-    //             }
-    //         }
-    //     }
-    //     return klass;
-    // };
-        
-    // var inheritProperties = function(dest, src, fname){
-    //     if (!src || !dest) {return;}
-    //     if (arguments.length === 3) {
-    //         var ancestor    = dest[fname], 
-    //             descendent  = src[fname], 
-    //             method      = descendent;
-                
-    //         descendent = function() {
-    //             var ref     = this.parent;
-    //             this.parent = ancestor;
-    //             var result  = method.apply(this, arguments);
-    //             if(ref) {
-    //                 this.parent = ref;
-    //             }
-    //             else { delete this.parent }
-    //             return result;
-    //         };
-    //         descendent.valueOf  = function() { return method;};
-    //         descendent.toString = function() { return method.toString();};
-    //         dest[fname] = descendent;
-    //     }
-    //     else {
-    //         for (var prop in src) {
-    //             if (dest[prop] && typeof(src[prop]) === 'function') { 
-    //                 inheritProperties(dest, src, prop);
-    //             }
-    //             else { dest[prop] = src[prop]; }
-    //         }
-    //     }
-    //     return dest;
-    // };
-})(this);
-;
-// require core/http/XmlHttpRequest
-// require core/http/WebAction
-// require core/http/WebIterator
-
-namespace("core.http.ClassLoader", class {
-
-    constructor (){
-        this.observations = [];
-        this.subscribers  = {};
-        return this;
     }
+);
 
-    // loadMJS(filepath){
-    //     var head  = document.getElementsByTagName("head").item(0);
-    //     var script = document.createElement("script");
-    //     script.setAttribute("type", "module");
-    //     script.setAttribute("charset", (Config.CHARSET || "utf-8"));
-    //     script.src = filepath;
-    //     head.appendChild(script);
-    //     var data = {};
-    //     this.dispatchEvent("load", data, self)
-    // }
+traits(core.data.Repository, [new Observer]);
+
+
+
+/**
+ * @desc Device for simulating a NoSQL database such as
+ * mongo or local storage because of common api. This 
+ * device is handy during testing.
+ */
+namespace `core.drivers.storage`(
+    class Cursor extends Array{
+        constructor (cursor){
+            var items = (typeof cursor == "object" && cursor.all)?cursor.all():[];
+            super(...items);
+            this.cursor = cursor ;
+            this.setPaginator();
+        }
+
+        setPaginator(){
+            this.paginator = new core.traits.Paginator({
+                data:this, pageSize:4
+            });
+            this.next = this.paginator.next.bind(this.paginator);
+            this.previous = this.paginator.previous.bind(this.paginator);
+            this.current = this.paginator.current.bind(this.paginator);
+            this.first = this.paginator.first.bind(this.paginator);
+            this.pagenumber = this.paginator.pagenumber.bind(this.paginator);
+            this.totalpages = this.paginator.totalpages.bind(this.paginator);
+            this.islastpage = this.paginator.islastpage.bind(this.paginator);
+        }
+        
+
+        // next(){
+        //     var skip = this.page_size * (this.page_num - 1)
+        // }
+
+        // sort (sortCriteria){
+        //     alert("asd")
+        //     console.log("items before sort", this.cursor.all());
+        //     this.cursor.sort(sortCriteria)
+        //     console.log("items after sort", this.cursor.all());
+        // }
+
+        all(){
+            return this;
+        }
+
+        skip(num){
+            this._skip = num;
+            // var take = 2;
+            // var end = skip+take;
+            return this.slice(this._skip)
+        }
+
+        take(num){
+            this._limit = this._skip+num;
+            return this.slice(this._skip,this._limit)
+        }
+
+        sort(attrb, order){
+            // console.log(this.sort())
+            super.sort(function(a, b) {
+                
+                var nameA = a[attrb].toUpperCase(); // ignore upper and lowercase
+                var nameB = b[attrb].toUpperCase(); // ignore upper and lowercase
+                if(order){
+                    if (nameA < nameB) {
+                        return -1;
+                    }
+                    if (nameA > nameB) {
+                        return 1;
+                    }
+                
+                    // names must be equal
+                    return 0;
+                } else {
+                    if (nameA < nameB) {
+                        return 1;
+                    }
+                    if (nameA > nameB) {
+                        return -1;
+                    }
+                
+                    // names must be equal
+                    return 0;
+                }
+            });
+            return this;
+        }
+    }
+);
+ 
+
+
+
+
+/**
+ * @desc Device for simulating a NoSQL database using
+   local memory. Good for development/testing, not for
+   use in prod env.
+ */
+namespace `core.drivers.storage` (
+    class Memory extends core.drivers.storage.IStorageInterface {
+        constructor (collection, storage_device){
+            super(collection, storage_device);
+            if(!mingo) { 
+                console.error(this.namespace + " requires npm mingo to be installed.");
+            }
+            Session.State.db = Session.State.db||{};
+            this.setCollection(collection.classname||collection.prototype.classname);
+        }
+
+        isSeedingEnabled(){
+            return true;
+        }
+
+        setCollection (name){
+            if(typeof Session.State.db[name] != "object"){
+                Session.State.db[name] = [];
+            }
+            this.collection = Session.State.db[name];
+        }
+
+        add(obj, cb){
+            this.collection.push(obj);
+            cb&&cb(obj,null);
+            return obj;
+        }
+        
+        find(cb,query){
+            query = new mingo.Query(query||{});
+            let cursor = query.find(this.collection);
+            // var res = this.collection;//just hand back all
+            var c = new core.drivers.storage.Cursor(cursor)
+            // cb(c,null);
+            cb&&cb(c,null);
+            return c;
+        }
+
+        remove(query, cb){
+            query = new mingo.Query(query||{});
+            let cursor = query.find(this.collection);
+            // var res = this.collection;//just hand back all
+            var c = new core.drivers.storage.Cursor(cursor);
+            var res = c.all()||[];
+            var removed=[];
+            res.forEach(o => {
+                // console.log("should remove", o)
+                for(var i=0; i<=this.collection.length-1; i++){
+                    if(this.collection[i]._id == o._id){
+                        this.collection.splice(i,1);
+                        removed.push(o);
+                    }
+                }
+            });
+            cb && cb(removed,null);
+            return removed;
+        }
+    }
+);
+ 
+
+
+
+
+
+namespace `core.ui.templating` (
+    class CustomTemplateEngines {
+        constructor(){
+            this.engines = {}
+            this.defaultMimetype = Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE||"template/literals";
+        }
+
+        define(mimeType, engine){
+            if(!this.engines[mimeType]){
+                this.engines[mimeType] = engine;
+                engine.install();
+            }
+        }
+
+        getEngineByMimeType(mime){
+            return this.engines[mime];
+        }
+
+        get default (){
+            return this.engines[this.defaultMimetype];
+        }
+
+        set default (mimeType){
+            this.defaultMimetype = mimeType;
+        }
+    }
+);
+
+window.customTemplateEngines = new core.ui.templating.CustomTemplateEngines;
+
+
+(() => {
+    var TemplateLiterals = {
+        name : "TemplateLiterals",
+        ext : "",
+        parse : function(tempStr, data, self){
+            var parse = (tempStr, templateVars) => {
+                return new Function("return `"+tempStr +"`;").call(templateVars);
+            }
+            return parse(tempStr, data)
+        },
+        install : function(){}
+    };
     
-    async load (_namespace,filepath) {
-        var es6Transpiler = new Ecmascript6ClassTranspiler();
-        var self = this;
-        var src;
-        //var nsPath = filepath?filepath:("src/" + _namespace.replace(/\./g,"/") + ".js");
-        var cbSuccess = function(src){
-            es6Transpiler.Build(src,(output) => {
 
+    window.customTemplateEngines.define("template/literals", TemplateLiterals);
+})();
+
+
+
+namespace `w3c.ui` (
+    class WebComponent extends HTMLElement {
+        constructor(el) {
+            super();
+            this.element = el;
+            this.__proto = this.constructor.prototype;
+            this.root = this.inShadow() ? 
+                this.attachShadow({ mode: 'open' }) : 
+                (this.element||this);
+
+            if(this.isExistingDomNode(this.element)){
+                this.connectedCallback();
+            }
+        }
+
+        isExistingDomNode(el){
+            return el && el.parentNode && el.parentNode.nodeType==1
+        }
+
+        static define(proto,bool){
+            var ce = window.customElements;
+            var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
+            if(/\-/.test(tag)){
+                if(ce.get(tag)){return}
+                proto["ns-tagname"] = tag;
+                this.defineAncestors();
+                this.defineAncestralClassList();
+                try{ce && ce.define(tag, this);}
+                catch(e){console.error(e)}
+            }     
+        }
+
+        setStylesheet () {    
+            var css = this.cssStyle();
+            !!css && !this.__proto._style_defined ? 
+                (this.onAppendStyle(
+                    `<style>\n${css}\n</style>`.toDomElement()),
+                    this.__proto._style_defined=true
+                ) : null;
+        }
+
+        querySelector(cssSel, e){
+            if(e){
+                return this.getParentNodeFromEvent(e,cssSel)
+            } else {
+            return (this.inShadow()||this.element) ?
+                this.root.querySelector(cssSel):
+                super.querySelector(cssSel)
+            }
+        }
+
+        querySelectorAll(cssSel, deep){
+            return (this.inShadow()||this.element) ?
+                this.root.querySelectorAll(cssSel):
+                super.querySelectorAll(cssSel)
+        }
+
+        onAppendStyle(stylesheet) {
+            if(this.inShadow()){
+                try{
+                    var sheet = new CSSStyleSheet();
+                        sheet.replace(stylesheet.innerText);
+                    this.root.adoptedStyleSheets = [sheet];
+                } catch(e){
+                    //TODO: use error code
+                    console.error(`${e.message} Unable to adopt stylesheet 
+                        into shadow dom -- ${this.namespace}#onAppendStyle(), 
+                        see: https://bugzilla.mozilla.org/show_bug.cgi?id=1520690.
+                        As a workaround, @import the css from within <template>`)
+                }
+            }
+            else {
+                var headNode = document.querySelector("head")
+                var configscript = document.querySelector("script");
+                headNode.insertBefore(stylesheet, configscript);
+            }
+        }
+
+        onStyleComputed(stylesheet){}
+
+        adopts(orphan) {
+            orphan && orphan.parentNode.replaceChild(this.root, orphan)
+            orphan && this.root.appendChild(orphan);
+        }
+
+        replaces(orphan) {
+            orphan && orphan.parentNode.replaceChild(this.root, orphan);
+        }
+
+        dispatchEvent(type, data, details = { bubbles: true, cancelable: true, composed: true }, element = this) {
+            var evt = new CustomEvent(type, details);
+                evt.data = data;
+            if(this.element){return this.element.dispatchEvent(evt);}
+            else{return super.dispatchEvent(evt);}
+        }
+
+        on(evtName, handler, bool=false, el) {
+            this.addEventListener(evtName, handler, bool, el)
+        }
+
+        addEventListener(evtName, handler, bool=false, el) {
+            var self = this;
+            if (typeof el == "string") {
+                this.addEventListener(evtName, e => {
+                    var t = this.getParentNodeFromEvent(e, el);
+                    if (t) {
+                        handler({
+                            target: t,
+                            realtarget: e.target,
+                            src: e,
+                            preventDefault:  () => e.preventDefault(),
+                            stopPropagation: () => e.stopPropagation()
+                        });
+                    }
+                }, bool);
+            } else {
+                // super.addEventListener(evtName, handler, bool);
+                if(this.isExistingDomNode(this.element)){
+                    this.element.addEventListener(evtName, handler, bool);
+                }
+                else{
+                    super.addEventListener(evtName, handler, bool);
+                }
+            }
+        }
+
+        getParentBySelectorUntil(elem=this.root, terminator="html", selector) {
+            var parent_node = null;
+            do {
+                if(elem.matches(selector)){
+                    parent_node = elem;
+                    break;
+                }
+                if(elem.matches(terminator)){
+                    break;
+                }
+                elem=elem.parentNode;
+            } while(elem && elem.matches) 
+
+            return parent_node;
+        }
+
+        getParentNodeFromEvent(e, selector, terminator) {
+            var el = e.composedPath()[0];
+            return this.getParentBySelectorUntil(el, terminator, selector);
+        }
+
+        onStylesheetLoaded(style) { }
+
+
+        onTransformStyle(cssText){
+            if(!this.inShadow()){
+                return cssText.replace(/\:host\s+/gm, `.${this.classname} `)
+            } else{
+                return cssText;
+            }
+        }
+
+        setCssTextAttribute(_cssText, stylenode) {
+            if (stylenode && stylenode.styleSheet) {
+                stylenode.styleSheet.cssText = _cssText;
+            }
+            else {
+                stylenode.appendChild(document.createTextNode(_cssText));
+            }
+        }
+
+        async loadTemplate() {
+            return new Promise(async (resolve, reject) => {
+                var tem  =  this.getTemplateToLoad();
+                if(/\/*\.html$/.test(tem)){
+                    var src=this.src||tem;//TODO: bug here?
+                    var opts = { cache: "force-cache" };//TODO: use cache policy from appconfig.js
+                    src = src.replace("/./", "/" + this.namespace.replace(/\./gim, "/") + "/");
+                    this._template = await imports(src, opts);
+                }
+                else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
+                    this._template=tem;
+                }
+                else if(tem && tem.nodeType==1 && tem.tagName.toLowerCase()=="template"){
+                    this._template=tem.outerHTML;
+                }
+                else if(tem && tem.nodeType==1){
+                    this._template=`<template>${tem.outerHTML}</template>`;
+                }
+                resolve(this._template);
+            })
+        }
+
+        // async loadTemplate() {
+        //     return new Promise(async (resolve, reject) => {
+        //         var tem  =  this.getTemplateToLoad();
+                
+        //         if(/\/*\.html$/.test(tem)){
+        //             var src=this.src||tem;//TODO: bug here?
+        //             var opts = { cache: "force-cache" };//TODO: use cache policy from appconfig.js
+        //             src = src.replace("/./", "/" + this.namespace.replace(/\./gim, "/") + "/");
+        //             this._template = await imports(src, opts);
+        //         }
+        //         else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
+        //             this._template=tem;
+        //         }
+        //         else if(tem && tem.nodeType==1){
+        //             this._template=tem.outerHTML;
+        //         }
+        //         resolve(this._template);
+        //     })
+        // }
+
+        getTemplateToLoad(){
+            var engine = this.getTemplateEngine();
+            return  this.querySelector("template")||    //node
+                    this.src||                          //uri
+                    this.template()||                   //string
+                    this.element||
+                    "/src/./index" + (engine.ext||"") + ".html" //TODO: default but ignores <Config.TEMPLATE_NAMES_USE_ENGINE_EXTENSION>
+        }
+
+
+        async onConnected(data) { 
+            await this.render(data);
+        }
+        
+        async render(data={}) {
+            if(this.isExistingDomNode(this.element)){
+                this.onTemplateRendered(temNode);
+                return
+            }
+            // debugger;
+            var t = this._template;
+            if (t) {
+                var html = await this.evalTemplate(t, data);
+                var temNode = html.toDomElement();
+                    temNode = temNode.content;
+                if (!this.inShadow()) {
+                    this.slots.forEach(slot => {
+                        var slotName = slot.getAttribute('slot');
+                        var placeholder = temNode.querySelector(`slot[name="${slotName}"]`);
+                        if( placeholder){
+                            if(!placeholder.hasAttribute("append")){
+                                placeholder.innerHTML="";
+                            }
+                        }
+                        (placeholder||temNode).appendChild(slot)
+                    })
+                }
+                if(this.element){
+                    this.innerHTML = "";
+                    this.appendChild(temNode);
+                }
+                else{
+                    this.root.innerHTML = "";
+                    this.root.appendChild(temNode);
+                }
+                this.onTemplateRendered(temNode);
+            }
+        }
+
+        template(){return null}
+
+        async evalTemplate(template, data) {
+            var eng = this.getTemplateEngine();
+            return await eng.parse(template, data, this);
+        }
+
+        getTemplateEngine() {//TODO: Need to make it configurable, see <Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE>
+            return window.customTemplateEngines.default;
+        }
+
+        async connectedCallback() {
+            if( this._is_connected){return;}
+            this._is_connected=true;
+            var html = await this.loadTemplate();
+            this.onTemplateLoaded();
+        }
+
+        async onTemplateLoaded() {
+            this.slots = this.getSlots();
+            this.setClassList();
+            this.setPrototypeInstance();
+            this.defineAncestralStyleList();
+            
+            await this.onConnected();
+            await this.setStyleDocuments();
+        }
+
+        getSlots() { return Array.from(this.children) }
+
+
+        onTemplateRendered(){
+            this.initializeChildComponents();
+        }
+        
+        static get observedAttributes() {
+            return ['src'];
+        }
+
+        get src() {
+            return this.getAttribute('src');
+        }
+
+        set src(val) {
+            this.setAttribute('src', val)
+        }
+
+        inShadow() {
+            return this.hasAttribute('shadow');
+        }
+
+        attachShadow(options) {
+            this._usesShadow = true;
+            return super.attachShadow(options);
+        }
+
+        async attributeChangedCallback(name, oldValue, newValue) {
+            if (name == "src"){
+                if(!this._is_connected){return;}
+                else {
+                    var html = await this.loadTemplate();
+                    await this.onConnected()
+                }
+            }
+        }
+
+        cssStyle(){ return "" }
+
+        onLoadInstanceStylesheet(){ return true }
+
+        static defineAncestors(){
+            this.ancestors=[];
+            var a=this;
+            while(a && this.ancestors.push(a)){
+                  a = a.prototype.ancestor}
+        }
+
+        static defineAncestralClassList(){
+            this.prototype.classes = [];
+            for(let ancestor of this.ancestors){
+                var proto = ancestor.prototype;
+                if( proto['@cascade']||ancestor==this){
+                    this.prototype.classes.unshift(proto.classname)
+                } else { break }
+            }
+        }
+
+        defineAncestralStyleList(){
+            var stylesheets = this.prototype["stylesheets"] = this.prototype["stylesheets"]||[];
+            if(this.onLoadInstanceStylesheet()){
+                stylesheets.push(this.getNSStyleSheet(this.namespace))
+            }
+            stylesheets.push(...this.prototype["@stylesheets"]||[]);
+            if(!this['@cascade']){
+                return
+            }
+            var ancestor = this.__proto.ancestor
+
+            while(ancestor) {
+                if( ancestor != w3c.ui.WebComponent && 
+                    ancestor != w3c.ui.Application  &&
+                    ancestor != core.ui.World       &&
+                    ancestor.prototype.onLoadInstanceStylesheet() ){
+                    
+                    stylesheets.unshift(...ancestor.prototype["@stylesheets"]||[]);
+                    stylesheets.unshift(this.getNSStyleSheet(ancestor.prototype.namespace));
+                    ancestor = ancestor.prototype.ancestor;
+
+                    //TODO: What if current ancestor is not cascading?
+                    //TODO: What if the next ancestor is not cascading?
+                    // if(!ancestor.prototype['@cascade']){
+                    //     break;
+                    // }
+                } else { 
+                    break 
+                }
+            }
+        }
+
+        getNSStyleSheet(ns){
+            return relativeToAbsoluteFilePath("/src/./index.css",ns);
+        }
+
+        setClassList() {
+            this.className = this.className + (this["@cascade"]? 
+                " " + (this.__proto.classes.join(" ")).trim():
+                " " + this.classname);
+        }
+
+        getStyleSheets() {
+            var styles = this["stylesheets"]||[];
+            if(styles.length<=0 && this.onLoadInstanceStylesheet()){styles.push(this.getNSStyleSheet(this.namespace))}
+            return styles.reverse();
+        }
+
+        async setStyleDocuments() {
+            await this.loadcss(this.getStyleSheets());
+            this.setStylesheet();
+            this.onStyleComputed(this.stylesheets);
+        }
+
+        async loadcss(urls) {
+            return new Promise(async (resolve,reject) => {
+                if(this.__proto._css_loaded && !this.inShadow()){
+                    resolve(true);
+                    return
+                }
+                this.__proto._css_loaded=true;
+                urls=urls.reverse();
+                var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets|| {};
+                for(let path of urls){
+                    path = this.onLoadStyle(path);
+                    if((path && !stylesheets[path]) || this.inShadow()){
+                        var tagName = /^http/.test(path) ? "link" : "style";
+                        var tag = document.createElement(tagName);
+                        // this.onAppendStyle(tag);
+                            tag.setAttribute("type", 'text/css');
+                            tag.setAttribute("rel",  'stylesheet');
+                            tag.setAttribute("href",  path);
+                            tag.setAttribute("component", this.namespace);
+                            stylesheets[path] = tag;
+                            if(tagName.toLowerCase() == "style"){
+                                var _cssText = await window.imports(path);
+                                if( _cssText){
+                                    _cssText = this.onTransformStyle(_cssText);
+                                    _cssText && this.setCssTextAttribute(_cssText, tag);
+                                    this.onAppendStyle(tag);
+                                    this.onStylesheetLoaded(tag);
+                                }
+                            }
+                    }
+                }
+                resolve(true);
+            })
+        }
+
+        onLoadStyle(url){ return url }
+        
+
+        setPrototypeInstance() {
+            this.setAttribute("namespace", this.namespace);
+            this.prototype = this;
+        }
+
+        initializeChildComponents (el){//TODO: called everytime for all components, need to optimize.
+            el = el||this.root;
+            var nodes = this.querySelectorAll("*");
+                nodes = [].slice.call(nodes);
+                nodes.forEach(n => {
+                    if(n && n.nodeType == 1) {
+                        var tag = n.tagName.toLowerCase();
+                        var c = window.registered_tags[tag];
+                        c && c.define(c.prototype,true);
+                    }
+                })
+        }
+
+        isAnyPartOfElementInViewport(el=this.root) {
+            var rect = el.getBoundingClientRect();
+            var v = (rect.top  <= window.innerHeight) && ((rect.bottom) >= 0);
+            var h = (rect.left <= window.innerWidth)  && ((rect.right)  >= 0);
+            return (v && h);
+        }
+    }
+);
+window.WebComponent = window.WebComponent||w3c.ui.WebComponent;
+cascade(w3c.ui.WebComponent,true);
+
+
+;
+
+namespace `w3c.ui` (
+	class Application extends w3c.ui.WebComponent {
+	    constructor(el) {
+	        super(el);
+	        window.application = this;
+	    }
+	}
+);
+window.Application = window.Application||w3c.ui.Application;
+
+
+
+namespace `core.http` (
+    class Router {
+        constructor(app,hostWindow){
+        	this.window = hostWindow;
+        	this.application = app;
+
+            var hashchangeCb = this.application.onHashChange?
+                this.application.onHashChange.bind(this.application):
+                this.onHashChange.bind(this);
+
+            this.window.addEventListener("hashchange", (e)=> hashchangeCb(e), false)
+            if(this.window.location.hash.length > 0){
+                hashchangeCb()
+            }
+        }
+
+        onHashChange (e){
+            var ns = this.window.location.hash.split("#")[1];
+            var scrollTo = ns.split("/");
+            ns=scrollTo[0];
+            scrollTo = scrollTo[1];
+            var nspath = ns.replace(/\./g, "/");
+
+            if(!NSRegistry[ns]){
+                this.application.onLoadingActivity &&
+                this.application.onLoadingActivity(ns);
+                var filename_path = `${Config.SRC_PATH}${nspath}/${Config.FILENAME}`;
+                //TODO: add logic for debug path, see bootloader how it uses .src.js and .min.js
+                var path = filename_path.replace("*", Config.USE_COMPRESSED_BUILD ? "min.":"");
+                var cl = new core.http.ClassLoader;
+                cl.load(ns, Config.ROOTPATH + path, data => this.onActivityLoaded(ns,NSRegistry[ns],scrollTo));
+            } else {    
+                this.application.onResumeActivity && 
+                this.application.onResumeActivity(NSRegistry[ns],scrollTo);
+                this.onActivityLoaded(ns,NSRegistry[ns],scrollTo)
+            }
+        }
+
+        destroy(activityInstance){
+            this.activities = this.activities||{};
+            delete this.activities[activityInstance.namespace];
+        }
+
+        onActivityLoaded(ns,_class,scrollTo){
+            this.activities = this.activities||{};
+            var c = this.activities[ns]||new _class;
+            this.application.onExitCurrentActivity && 
+            this.application.onExitCurrentActivity(this.current_activity)
+            
+            this.application.onEnterActivity && 
+            this.application.onEnterActivity(c,scrollTo);
+
+            this.activities[ns] = c;
+            this.current_activity=c;
+        }
+    }
+);
+
+
+
+namespace `w3c.ui` (
+	class RoutableApplication extends w3c.ui.Application {
+
+        async onConnected(data){
+            await this.render(data);
+            this.router = new core.http.Router(this,window);// <- onConnected, best place
+        }
+
+        onEnterActivity(c) {
+            console.log("onEnterActivity", c);
+            var slot = this.querySelector('#activitySlot');
+            slot.appendChild(c);
+            this.currentActivity = c;
+            // this.onEnterActivityRestoreScroll(scrollToElement) //TODO: need to uncomment and support scroll
+            this.dispatchEvent("onactivityshown", c);
+        }
+
+        onExitCurrentActivity(c) {
+            // this.onExitActivitySaveScroll()
+            console.log("onExitCurrentActivity", c);
+            var slot = this.querySelector('#activitySlot');
+            slot.innerHTML = "";
+        }
+
+        onResumeActivity(c) {
+            console.log("onResumeActivity", c);
+            this.dispatchEvent("topichanged", {});
+        }
+
+        onLoadingActivity(c) {
+            // application.dispatchEvent("showsplash")
+            console.log("onLoadingActivity", c);
+            this.dispatchEvent("topichanged", {});
+        }
+	}
+);
+
+
+
+;
+
+namespace `core.ui` (
+    class World extends w3c.ui.Application {
+        constructor(el) {
+            super(el);
+            window.sprites = [];
+        }
+
+        onUpdate(time){
+            window.sprites.forEach(sprite => sprite.onUpdate(time))
+        }
+
+        onDraw(interpolation){
+            if(this.context){
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+            window.sprites.forEach(sprite => sprite.onDraw(interpolation,this.context))
+        }
+
+        onEnd(fps, panic){
+            if (panic) {
+                var discardedTime = Math.round(MainLoop.resetFrameDelta());
+                console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
+            }
+        }
+    }
+);
+window.World = window.World||core.ui.World;
+
+
+function Ecmascript6ClassTranspiler() { }
+Ecmascript6ClassTranspiler.prototype.imports = window.imports;
+Ecmascript6ClassTranspiler.prototype.transpile = function (src, doc) {
+    var doTranspile = Config.ENABLE_TRANSPILER;
+    if (doTranspile) {
+        src = this.transpileToLevel(src);
+        return src;
+    } else {
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transpileToLevel = function (src) {
+    var nsReg = /namespace\s?`([^\s`]*)/;
+    var clsReg = /class\s+([^\s]*)[\s\n\t]?[\{|extends]/;
+
+    var nsMatch = src.match(nsReg);
+    var classMatch = src.match(clsReg);
+    if(!nsMatch && !classMatch){
+        return this.transipleImportsDestructuring(src);
+    }
+    else {
+        nsMatch = nsMatch ? nsMatch[1] : "";
+        classMatch = classMatch?classMatch[1]:"";
+        nsMatch = nsMatch + "." + classMatch;
+        src = this.transipleDecoratorFields(nsMatch, src);
+        src = this.transipleClassFields(nsMatch, src);
+        src = this.transipleImportsDestructuring(src);
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleDecoratorFields = function (ns,src) {
+    var regex = /@([^\W]*)\({1}([^\;]*)\){1};{1}/gm; //Feb 7 2019 - to support @matchmedia queries having ('s)
+    var props = [];
+    if (ns) {
+        src = src.replace(regex, (full, method, args) => {
+            props.push(`${method}(${ns}, ${args});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, method, args) => {
+            return "";
+        });
+        fullsrc = src;
+    }
+    return fullsrc;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (src) {
+    var regex = /import\s\{([^\}]*)\}\sfrom\s([^;]*)/gm;
+    src = src.replace(regex, (full, destructured_var, src_path) => {
+        destructured_var = destructured_var.replace(/\s+as\s+/gm, ":");
+        return `var {${destructured_var}} = (()=> {\nimport ${src_path};\n})();`;
+    });
+    src = src.replace("return", "return");
+    return src;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleClassFields = function (ns, src) {
+    var regex = new RegExp(
+        /(\@static|@public|\@private)\s+([^\s]*)\s+\=([^\;]*)\;/gm
+    );
+    var props = [];
+
+    if (ns) {
+        src = src.replace(regex, (full, type, name, val) => {
+            type = type.replace("@", "");
+            props.push(`field(${ns}, "${type}", "${name}", ${val});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, type, name, val) => {
+            return "";
+        });
+        fullsrc = src;
+    }
+    return fullsrc;
+};
+
+namespace `core.http` ( 
+    class ClassLoader {
+        constructor (){
+            this.es6Transpiler = new Ecmascript6ClassTranspiler();
+            window.run = this.run.bind(this);//TODO:check dynamic transpilation
+            return this;
+        }
+
+        run(src, cb){
+            this.build(src, output => {
                 var head   = document.getElementsByTagName("head").item(0);
                 var script = document.createElement("script");
                 script.setAttribute("type", "text/javascript");
                 script.setAttribute("charset", (Config.CHARSET || "utf-8"));
                 script.text = output;
                 head.appendChild(script);
-                if(NSRegistry[_namespace]) {
-                    var data = {Class: NSRegistry[_namespace], source: output, path: filepath};
-                    self.dispatchEvent("load", data, self)
-                } else {
-                    console.error("Unable to load src: ", [_namespace,filepath])
-                }
+                cb(script);
             });
-        };
-
-        var cfFailure = function(src, xhr){
-            self.dispatchEvent("fail", xhr, self)
         }
 
-        var src;
-        
-        if(filepath) {
-            src = await es6Transpiler.imports(filepath)
-        }
-        else {
-            var paths_to_try = es6Transpiler.pathsToTry(_namespace);
-            src = await es6Transpiler.imports(paths_to_try[0],false)||
-                  await es6Transpiler.imports(paths_to_try[1],false);
+        async load (ns, filepath, cb) {
+            var cfFailure = xhr => cb?cb(xhr):null;
+            var src = await window.imports(filepath);
+                src ? this.run(src,cb) : cfFailure(src,"no xhr"); 
         }
 
-        src?cbSuccess(src):cfFailure(src,"no xhr");   
-    }
-});
-traits(core.http.ClassLoader,[new Observer]);
+        async build(src, cb) {
+            src = this.es6Transpiler.transpile(src);
+            var reg = /^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;
 
-/*********************************************************************
- ::USAGE::
- 
-    var c = new core.http.ClassLoader;
-    
-    c.addEventListener("load", function(data){
-        console.info(data)
-    });
-    c.addEventListener("fail", function(){
-        alert("failed")
-    });
-    
-    c.load("com.Employee")
- **********************************************************************/
-;
-
-namespace("core.http.ModuleLoader", class {
-
-    constructor (){
-        this.observations = [];
-        this.subscribers  = {};
-        return this;
-    }
-    
-    load(ns,filepath){
-        var head  = document.getElementsByTagName("head").item(0);
-        var script = document.createElement("script");
-        script.setAttribute("type", "module");
-        script.setAttribute("charset", (Config.CHARSET || "utf-8"));
-        script.src = filepath;
-        head.appendChild(script);
-        var data = {};
-        this.dispatchEvent("load", data, self)
-    }
-});
-traits(core.http.ModuleLoader,[new Observer]);
-
-/*********************************************************************
- ::USAGE::
- 
-    var c = new core.http.ModuleLoader;
-    
-    c.addEventListener("load", function(data){
-        console.info(data)
-    });
-    c.addEventListener("fail", function(){
-        alert("failed")
-    });
-    
-    c.load("com.Employee")
- **********************************************************************/
-;
-// require core/http/Router
-// require core/data/EventBus
-// require core/http/NetDetect
-namespace("core.traits.ResourcePathTransformer");
-
-core.traits.ResourcePathTransformer = {
-    resourcepath : function(url, ns){
-        url = url.replace(/\$\{ns\}/gm, ns.replace(/\./gim,"/"));
-        return Config.ROOTPATH + url;
-    },
-    
-    relativeToAbsoluteFilePath : function(path, ns, appendRoot){
-        appendRoot = (typeof appendRoot=="boolean")?
-            appendRoot : true;
-        var apppath = (Config.ROOTPATH && appendRoot) ? 
-            (Config.ROOTPATH + "/") : "";
-        ns = ns||this.namespace;
-        ns = ns.replace(/\./gim,"/");
-
-        if(path.indexOf("~/") >= 0){
-            path = path.replace("~/", apppath);
-        } else if(path.indexOf("/./") >= 0){
-            path = apppath + path.replace("./", ns+"/");
-        } 
-        else if(path.indexOf("http") == 0){
-            return path;
+            while (reg.test(src)) {
+                var match = src.match(reg);
+                var ns = match[1];
+                src = src.replace(reg, this.es6Transpiler.transpile(
+                    (window.imported_classes[ns] ? ";" : await this.imports(match))||""
+                ))
+            } cb(`(async ()=>{ ${src} })()`);
         }
-        else{
-            if(path.indexOf(Config.ROOTPATH)<0){
-                path = apppath + path
+
+        async imports(match){
+            var res=null;
+            var paths = this.pathsToTry(match);
+            for(let path of paths){
+                var res = await window.imports(path);
+                if(res){break}
             }
+            return res;
         }
-        path = /http:/.test(path)? path : path.replace("//","/");
-        // var conf_ext = Config.TEMPLATE_NAMES_USE_ENGINE_EXTENSION;
-        // var useEngineExtensions = (typeof conf_ext == "boolean")?conf_ext:false;
-        // if(path.indexOf(".html")>=0 && engine && useEngineExtensions){
-        //     path = path.replace(/\.html/, engine.ext+".html");
-        // }
-        return path;
-    }
-};
-;
-// require core/traits/InitializeApplicationData
-// require core/data/StorageManager
-// require core/data/CircularBuffer
-// require libs/rison.js
-// require libs/TemplateEnginePlugins.js
-// require core/traits/Paginator.js
 
-
-//TODO: Remove core.vo.Account from build
-//-------------------MODELS--------------------
-// require core/vo/Model
-// require core/vo/Account
-
-
-//TODO: Remove DataController and StorageController from build
-//----------------CONTROLLERS------------------
-// require core/controllers/DataController
-// require core/controllers/StorageController
-
-//---------------------UI----------------------
-// require core/ui/WebComponent
-// require core/ui/ModalScreen
-
-
-// import 'w3c/ui/Binding.js';
-
-namespace("core.ui.templating.CustomTemplateEngines", class {
-    constructor(){
-        this.engines = {}
-        this.defaultMimetype = Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE||"template/literals";
-    }
-
-    define(mimeType, engine){
-        if(!this.engines[mimeType]){
-            this.engines[mimeType] = engine;
-            engine.install();
-        }
-    }
-
-    get default (){
-        return this.engines[this.defaultMimetype];
-    }
-
-    set default (mimeType){
-        this.defaultMimetype = mimeType;
-    }
-})
-
-window.customTemplateEngines = new core.ui.templating.CustomTemplateEngines;
-
-
-;
-(() => {
-    /**
-     * An engine implements below required props/methods.
-     * TemplateLiterals {} is a built in engine. 
-     * 
-     * This is an adapter design. In this case, eval()
-     * takes a template & data and uses native Function
-     * to handle template expansion.
-     * 
-     * install() should handle installation of 3rd
-     * party libs to adapt template parsing if needed.
-     * eval() will then delegate to api and return 
-     * expanded template to the caller. 
-     */
-    TemplateLiterals = {
-        name : "TemplateLiterals",
-        ext : ".es6",
-        eval : function(tempStr, data, self){
-            var parse = (tempStr, templateVars) => {
-                return new Function("return `"+tempStr +"`;").call(templateVars);
+        pathsToTry(match){
+            var ns = match[1];
+            if(/\.m?js$/.test(ns)){
+                return [ns]
             }
-            return parse(tempStr, data)
-            // return eval('`'+tempStr+'`');
-        },
-        isAvailable : function(){
-            return true
-        },
-
-        install : function(){
-            console.log("TemplateLiterals template engine installed successfully.")
-        }
-    };
-
-    window.customTemplateEngines.define("template/literals", TemplateLiterals);
-})();
-
-;
-
-namespace("w3c.ui.WebComponent", class extends HTMLElement {
-
-    constructor() {
-        super();
-    }
-
-    appendStyleSheet (stylesheet){
-		var headNode 		= application.head;
-		var configscript 	= application.configscript;
-		headNode.insertBefore(stylesheet, configscript);
-    }
-
-    adopts(orphan){
-        orphan && orphan.parentNode.replaceChild(this,orphan)
-        orphan && this.appendChild(orphan);
-    }
-
-    replaces(orphan){
-        debugger;
-        orphan && orphan.parentNode.replaceChild(this,orphan);
-    }
-
-    dispatchEvent (type, data, details={bubbles:true, cancelable:true, composed:true}, element=this){
-    	var evt = document.createEvent("Event");
-		evt.initEvent(type, details.bubbles, details.cancelable);
-		evt.data = data;
-		
-		return super.dispatchEvent(evt);
-    }
-
-    bind (el, evtName, handler){
-        var self=this;
-        // el = (el instanceof core.ui.Binding)?
-        //     el : this;
-
-        if(typeof el == "string") {
-            this.addEventListener(evtName, (e)=>{
-                // console.warn(e.target)
-                var t = this.getRealTargetFromEvent(e,el);
-                if(t) {
-                    handler({target:t, originalEvent:e});
-                }
-            }, true);
-            // var _handler = function(e){
-            //     debugger;
-                // var t = self.getRealTargetFromEvent(e,el);
-                // if(t) {
-                //     handler({target:t, originalEvent:e});
-                // }
-            // };
-            // this.addEventListener(evtName, _handler, false);
-            // var b = new core.ui.Binding(this, evtName, _handler);
-            // return b;
-        } else {
-            el.addEventListener(evtName, handler, false);
-            // if(!(el instanceof core.ui.Binding)){
-            //     var b = new core.ui.Binding(el, evtName, handler);
-            //     return b;
-            // }
+            ns=ns.replace(/\./gm,"/");
+            var root = Config.SRC_PATH;
+            var paths   = [];
+            match[0].includes("!") ? 
+            paths.push(root+ns + ".js"):null;
+            paths.push(root+ns + "/index.js")
+            paths.push(root+ns + "/index.min.js");
+            return paths;
         }
     }
+);
 
-    getParentBySelectorUntil  ( elem, terminator, selector ) {
-        elem = elem || this;
-        var parent_node = null;
-        for ( ; elem && elem !== document; elem = elem.parentNode ) {
-            if ( terminator ) {
-                if ( elem.matches( terminator ) ) break;
-            }
-            if ( selector ) {
-                if ( elem.matches( selector ) ) {
-                    parent_node =  elem;
-                    break;
-                }
-            }
-        }
-        return parent_node;
-    }
 
-    getRealTargetFromEvent  (e, selector, terminator){
-        var el = e.composedPath()[0]
-        if(el.matches(selector)){return el}
-        // var el = e.composedPath()[0];//e.target;
-        // debugger;
-        // return this.getParentBySelectorUntil(el, terminator, selector);
-    }
+!function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.returns&&(module.exports=a.MainLoop)}(this);
 
-    onStylesheetLoaded (style){}
-
-    cssTransform (css){
-        var ns = this.namespace;
-        css = css.replace(/resource\([\'\"]?([^\'\"]*)[\'\"]?\)/mg, 
-            (full,m1) => "url(" + this.resourcepath(m1, ns) + ")"
-        );
-		return css;
-    }
-    
-    setCssTextAttribute(_cssText, stylenode){
-		if (stylenode && stylenode.styleSheet) {
-            stylenode.styleSheet.cssText = _cssText;
-        }
-        else {
-            stylenode.appendChild(document.createTextNode(_cssText));
-        }
-	}
-
-    async setElement(el){
-        var self=this;
-        if(el){
-            this.innerHTML = el.innerHTML;
-            el.parentNode.replaceChild(this,el);
-            //set this.element to null ?
+document.addEventListener("DOMContentLoaded", e => {
+  async function bootup() {
+    var ns = document.body.getAttribute("namespace");
+        ns = ns||Config.NAMESPACE;
+    if (Config.DYNAMICLOAD) {
+      var filename_path = Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + Config.FILENAME;
+      var path = Config.USE_COMPRESSED_BUILD ? 
+        filename_path.replace("*", Config.DEBUG ? "src.":"min."):
+        filename_path.replace("*","");
+      var c = (Config.ENABLE_TRANSPILER) ?
+        new core.http.ClassLoader :
+        null;
+        c.load(ns, Config.ROOTPATH + path, async function init(res) {
+          Config.USE_COMPRESSED_BUILD=false;
+          if(!NSRegistry[ns]) {
+            await wait(1000/30);
+            init();
             return;
-        }
-        var tpath = this.getAttribute("template");
-        // if external template= attrb, use it
-        if(tpath){
-            var ns = this.namespace;
-                ns = ns.replace(/\./gim,"/");
-            var opts = {cache: "force-cache"};
-            tpath = tpath.replace("/./", "/"+ns+"/");
-            this._template = await imports(tpath,opts);
-            return;
-        }
-        else {
-            // else if inline html uses a slot, 
-            // then use internal template
-            var slot = this.querySelector("[slot]");
-            this._template = slot ? 
-                this.template():
-                null;
-            return
-        }
-    }
-    
-    onConnected(){}
-
-    render(data){
-        var t = this._template;
-        if(t){
-            // this.root = this.root || 
-            //     this.attachShadow({mode: 'open'});
-            this.root = this;
-            var html = data ? 
-                this.evalTemplate(t, data) : t;
-
-            var temNode = html.toDomElement();
-            this.root.innerHTML="";
-            this.root.appendChild(temNode.content);
-            this.onTemplateRendered();
-        }
-    }
-
-    onTemplateRendered(){}
-
-    async connectedCallback(){
-        await this.setElement(this.element);
-        this.setClassList();
-        // this.initializeChildComponents();
-        this.setPrototypeInstance();
-        this.setStyleDocuments();
-        this.onConnected();
-    }
-
-    setStyleDocuments (){
-        // this.createStyleDocument();
-        // this.setClassList();
-        this.loadcss(this.getStyleSheets());
-    }
-
-    getStyleSheets (){
-        // debugger;
-        var ancestor    = this.ancestor;
-        var classes     = [];
-        var ancestors   = [];
-        var stylesheets = [];
-        
-        //debugger;
-        if(this["@cascade"]) {
-            while(ancestor){
-                var p = ancestor.prototype;
-                var styles = p["@stylesheets"]||[];
-                    ancestors.unshift(ancestor);
-                    for(var i=0; i<=styles.length-1; i++){ 
-                        stylesheets.push(this.relativeToAbsoluteFilePath(styles[i], p.namespace, false));     
-                    }
-                    
-                // if(p["@cascade"]) {
-                //     ancestor = p.ancestor;
-                // }
-                // else { ancestor=null; break; }
-
-                ancestor = p["@cascade"]?
-                    p.ancestor : null;
-            };
-
-            // var this_styles = this["@stylesheets"]||[];
-            // for(var i=0; i<=this_styles.length-1; i++){ 
-            //     stylesheets.unshift(this.relativeToAbsoluteFilePath(this_styles[i],this.namespace, false));     
-            // }
-        }
-        else {
-            // var this_styles = ([].concat(this["@stylesheets"]||[]));
-            // for(var i=0; i<=this_styles.length-1; i++){ 
-            //     stylesheets.unshift(this.relativeToAbsoluteFilePath(this_styles[i],this.namespace, false));     
-            // }
-        }
-        var this_styles = this["@stylesheets"]||[];
-        for(var i=0; i<=this_styles.length-1; i++){ 
-            stylesheets.unshift(this.relativeToAbsoluteFilePath(this_styles[i],this.namespace, false));     
-        }
-        return stylesheets;
-    }
-
-
-    
-
-
-    async loadcss(url){
-        var self=this;
-        var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets||{};
-        // if (!stylesheets) {
-        //     window.loaded_stylesheets = {};
-        //     stylesheets = window.loaded_stylesheets;}
-        if(stylesheets[url]){
-            self.onStylesheetLoaded(stylesheets[url]); 
-            return;
-        }   
-        var styles = (url||this["@stylesheets"]);
-
-        if(styles) {
-            if(styles instanceof Array) {
-                styles = styles.reverse();
-                // for(var i=0; i<=styles.length-1; i++) {
-                //     var path = styles[i];
-                //     this.loadcss(path);
-                // }
-                styles.forEach(path => this.loadcss(path))
-            }
-            else if(typeof styles === "string" && styles.indexOf("http") != 0) {
-                //var path = this.resourcepath(styles);
-                var path = styles;
-                if(stylesheets[path]){return}
-                    
-                var stylenode= document.createElement('style');
-                    stylenode.setAttribute("type", 'text/css');
-                    stylenode.setAttribute("rel", 'stylesheet');
-                    // stylenode.setAttribute("href", path);
-                    stylenode.setAttribute("media", 'all');
-                    stylenode.setAttribute("component", this.namespace||"");
-                    //head.appendChild(stylenode);
-                    this.appendStyleSheet(stylenode);
-                    stylesheets[path] = stylenode;
-                    var _cssText = await window.imports(path);
-                        _cssText = self.cssTransform(_cssText);
-                        self.setCssTextAttribute(_cssText, stylenode); 
-                        self.onStylesheetLoaded(stylenode);
-                    /*var oXMLHttpRequest;
-                        oXMLHttpRequest = new XMLHttpRequest;
-                        oXMLHttpRequest.open("GET", path, true);
-                        oXMLHttpRequest.setRequestHeader("Content-type", "text/css");
-                        if(oXMLHttpRequest.overrideMimeType){
-                            oXMLHttpRequest.overrideMimeType("text/css")
-                        }
-
-                        oXMLHttpRequest.onreadystatechange  = function() {
-                            if (this.readyState == XMLHttpRequest.DONE) {
-                                //if (this.status == 200) {
-                                    var _cssText = self.cssTransform(this.responseText);
-                                    self.setCssTextAttribute(_cssText, stylenode); 
-                                    self.onStylesheetLoaded(stylenode);           
-                                //}
-                            }
-                        }
-                        oXMLHttpRequest.send(null);*/
-            }
-            else if(styles && styles.indexOf("http") == 0){
-                var cssNode = document.createElement('link');
-                cssNode.type = 'text/css';
-                cssNode.setAttribute("component", this.namespace||"");
-                cssNode.rel = 'stylesheet';
-                cssNode.href = styles;
-                this.appendStyleSheet(cssNode);
-                stylesheets[styles] = cssNode;
-                self.onStylesheetLoaded(cssNode);
-            }
-            else{
-                try{console.warn("Unable to resolve path to stylesheet. Invalid uri: '" + styles + "'")} catch(e){}
-            }
-        }
-        else {}
-        
-    }
-
-
-    
-
-    //TODO: new proposal for simpler use and DIP
-    evalTemplate(template, data){
-        var eng = this.getTemplateEngine();
-        return eng.eval(template, data, this);
-    }
-
-    getTemplateEngine(){
-        return window.customTemplateEngines.default;
-    }
-
-    setPrototypeInstance (){
-        this.setAttribute("namespace",this.namespace);
-		this.prototype = this;
-    }
-    
-    setClassList (){
-        var classes=[];
-        if(this['@cascade'] == true){
-            var ancestor = this.ancestor;
-            while(ancestor && ancestor.prototype['@cascade'] ==true){
-                var proto = ancestor.prototype;
-                classes.unshift(proto.classname)
-                ancestor = proto.ancestor;
-                if(!ancestor||ancestor == HTMLElement) {
-                    break;
-                }
-            }
-        }
-        classes.push(this.classname);
-        //TODO:leaves a leading space in front, trim it.
-        this.className += (" " + classes.join(" "));
-    }
-
-
-
-    // async fetch(path,bool){
-    //     var self=this;
-    //     return new Promise( async (resolve, reject) => {  
-    //         if(bool){
-    //             var res = await fetch(path,{cache: "force-cache"});
-    //             var html = await res.text();
-                
-    //             resolve( html);
-    //         } else {
-    //             var xhttp = new XMLHttpRequest();
-    //                 xhttp.onreadystatechange = function() {
-    //                     if (this.readyState == 4 && this.status == 200) {
-    //                         self.constructor.prototype.loaded_html = this.responseText;
-    //                         resolve(this.responseText);
-    //                     }
-    //                 };
-    //                 xhttp.open("GET", path, false);
-    //                 xhttp.send();
-    //         }
-    //     })
-    // }
-
-
-    
-
-    // initializeChildComponents (el){
-	//     el = el||this;
-	// 	var self=this;
-    //     var nodes = this.querySelectorAll("*[namespace]");
-    //         nodes = [].slice.call(nodes);
-    //         nodes.forEach(n => {
-    //             if(n && n.nodeType == 1) { 
-    //                 var ns = n.getAttribute("namespace");
-    //                 var c = NSRegistry[ns];
-    //                 c && new c(n);
-    //             }
-    //         })
-    // }
-    
-    
-});
-
-
-transpile(w3c.ui.WebComponent,'es7');
-traits(w3c.ui.WebComponent,[
-    core.traits.ResourcePathTransformer
-]);
-
-transpile(w3c.ui.WebComponent,"es7");
-cascade(w3c.ui.WebComponent,true);
-;
-
-;
-
-
-namespace("w3c.ui.Application", class extends w3c.ui.WebComponent {
-    constructor(element) {
-        super(element);
-        window.application = this;
-        this.head           = document.getElementsByTagName("head")[0];
-        this.configscript   = document.querySelector("script[id='config']")||
-                              document.querySelector("script");
-    }
-
-    template(){return ""}
-
-});
-
-;
-
-//TODO: Remove ModalScreen from build. Let apps import as needed.
-
-
-//TODO: Remove processes/activities from build. Not used by framework. let apps import as needed
-//--------------------- ACTIVITIES + PROCESSES ----------------------
-// require core/processes/Activity
-// require core/processes/ActivityProcessMonitor
-// require core/processes/URIActivityMonitor
-// require core/ui/Activity
-
-
-
-//-----------------BOOTLOADER------------------
-;
-;
-
-document.addEventListener("DOMContentLoaded", function(){ 
-	function bootup(){
-    
-    var ns = Config.NAMESPACE;
-    if(Config.DYNAMICLOAD) {
-          var filename_path  = ("src/" + ns.replace(/\./g,"/") + "/index");
-          var path;
-
-          if(Config.USE_COMPRESSED_BUILD){
-            path = filename_path + ".min.js";
-            console.log("compressed: " + path);
           }
-          else {
-            path = filename_path + ".js";
-            console.log("non-compressed: " + path);
-          }
-          var c = (Config.ENABLE_TRANSPILER)?
-            new core.http.ClassLoader:
-            new core.http.ModuleLoader;
-            c.addEventListener("load", data => init(ns), false);
-            c.load(ns,Config.ROOTPATH+path);
-
-          // if(Config.ENABLE_TRANSPILER) {
-          //   var c = new core.http.ClassLoader;
-          //       c.addEventListener("load", data => init(ns), false);
-          //       c.load(ns,Config.ROOTPATH+path);
-          // } else {
-          //   var c = new core.http.ModuleLoader;
-          //       c.addEventListener("load", data => init(ns), false);
-          //       c.load(ns,Config.ROOTPATH+path);
-          // }
-
-    } 
-    else {
-      init(ns);
-    }
-  };	
-  
-	function init(ns){
-    var timerId;
-    var App = NSRegistry[ns];
-    if(App) {
-      timerId && clearTimeout(timerId);
-      if(App.prototype.classname == "ApplicationContainer"){
-          window.application = new App(document);
-      }
-    }
-    else { 
-      timerId = setTimeout(() => init(ns),100);
+          var app = window.application = (
+            window.application||new NSRegistry[ns](document.body)
+          );
+          (app instanceof core.ui.World) ? 
+            MainLoop
+              .setUpdate(app.onUpdate.bind(app))
+              .setDraw(app.onDraw.bind(app))
+              .setEnd(app.onEnd.bind(app))
+              .start() : null;
+        });
     }
   };
 
-	bootup();
-}, false);
-;
-
-
-/*
-namespace("core.Application", {
-    '@inherits' : core.ui.WebComponent,
-    '@cascade'  : true,
-    '@traits'   : [],
-    '@stylesheets' : [],
-    
-
-    preInitialize : function(model, element) {
-        window.application  = this;
-        this.head           = document.getElementsByTagName("head")[0];
-        this.configscript   = document.querySelector("script[id='config']")||
-                              document.querySelector("script");
-        core.data.StorageManager.initialize(Config.StorageManager.STORE_KEY);
-        Session.StorageManager = core.data.StorageManager;
-
-        this.session = new core.controllers.StorageController;//TODO: deprecate and remove StorageController
-        this.parent(model, element.body||element);
-        return this;
-    },
-
-
-    initialize : function () {
-        var self = this;
-        this.parent(arguments);
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
-
-    isUserSessionValid : function(){
-        if(!this.account) {
-            this.account = new core.vo.Account(this.db.user);//TODO: force sub-class apps to implement this? It is a unique domain check
-        };
-        return this.account.isValid();
-    },
-
-    onRender : function(e){
-        var self=this;
-        setTimeout(function(){self.element.style.opacity=1;},Config.FOUCDELAY);
-    },
-
-    getLocationHash : function(){
-        var hash = location.hash.replace("#","");
-        var params = rison.decode(hash);
-        return params;
-    },
-
-    setLocationHash : function(params){
-        location.hash = "#" + rison.encode(params);
-    },
-
-    globalzindex : 600000,
-    
-    absoluteZindex : function(nodeReference){
-        this.globalzindex = this.globalzindex + 1;
-        return this.globalzindex;
-    },
-
-    onDeviceReady : function(){
-        if(navigator.splashscreen){
-            navigator.splashscreen.hide();
-        }
-    },
-
-    redirect : function(appPath){
-        window.postMessage({
-            type:"redirect",
-            url: appPath
-        }, "*");
-    }
-});
-
-*/
+  ("cordova" in window) ? 
+    document.addEventListener('deviceready', ()=>{
+      AndroidFullScreen && AndroidFullScreen.immersiveMode(e=>{}, e=>{});
+      bootup()
+    }, false) : bootup()
+}, false); })()
