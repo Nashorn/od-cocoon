@@ -19,9 +19,24 @@ var Config = window.Config = window.Config||{
 try{module.returns = Config;}catch(e){}
 
 
-
 //
-//
+Object.defineProperty(Object.prototype, 'toQueryString', {
+  enumerable: false,
+  configurable: false,
+  value: function(obj,prefix) {
+    obj=obj||this;
+    var str = [];
+    for(var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+        str.push(typeof v == "object" ?
+          this.toQueryString(v, k) :
+          k + "=" + v);
+      }
+    }
+    return str.join("&");
+  }
+});
 if(!String.prototype.toDomElement){
     String.prototype.toDomElement = function(){
       var n = document.createRange().createContextualFragment(this.toString())
@@ -101,13 +116,6 @@ window.imports = async function (x, opts, isError) {
     });
 };
 //
-// window._achild = Element.prototype.appendChild;
-// Element.prototype.appendChild = function(el) {
-//     return window._achild.apply(this, [el.element?el.element:el]);
-// };
-// function transpile(target, level){}
-// window.transpile=transpile;
-
 function relativeToAbsoluteFilePath(path, ns, appendRoot){
     ns = ns||this.namespace;
     ns = ns.replace(/\./gim,"/");
@@ -163,11 +171,11 @@ function traits(target, __traits){
 window.traits = traits;
 
 window.cascade = function cascade(target,shouldCascade){
-	target.prototype['@cascade'] = shouldCascade;
+    target.prototype['@cascade'] = shouldCascade;
 }
 
 window.prop = function prop(target,key,val){
-	target.prototype[key] = val;
+    target.prototype[key] = val;
 }
 
 window.tag = function tag(target, name){
@@ -222,7 +230,6 @@ window.field = function field(target, type, key, val){
         return func
     };
 })(typeof window !="undefined" ? window : global);
-
 (()=> {
   var modulemap = window.modulemap ={};
   window.require = window.require||async function importModule(url) {
@@ -282,97 +289,7 @@ Observer.prototype = {
 };
 window.Observer=Observer;
 
-
-namespace `core.traits` (
-    class Paginator {
-        constructor(options) {
-            this.data = options.data;
-            this.pageSize = options.pageSize;
-            this.currentPage=("currentPage" in options)? options.currentPage:0;
-        }
-
-        next(){
-            if(this.currentPage==this.totalpages()){this.currentPage--};
-            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
-            this.currentPage++;
-            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
-            this.dispatchEvent("next", {currentPage:this.currentPage});
-            return d;
-        }
-
-        update(){
-            var d = this.data.slice((this.currentPage-1)*this.pageSize, (this.currentPage)*this.pageSize);
-            this.dispatchEvent("change", {type: "next", currentPage:this.currentPage});
-            return d;
-        }
-
-        previous(){
-            if(this.currentPage<=1){this.currentPage=1;}
-            else{this.currentPage--}
-            var previousPage = this.currentPage;
-            var d = this.data.slice((previousPage*this.pageSize)-this.pageSize, (previousPage)*this.pageSize);
-            this.dispatchEvent("change", {type: "previous", currentPage:this.currentPage});
-            this.dispatchEvent("previous", {currentPage:this.currentPage});
-            return d;
-        }
-
-        current(){
-            if(this.currentPage<=1){this.currentPage=1;}
-            if(this.currentPage==this.totalpages()){this.currentPage--};
-            var d = this.data.slice(this.currentPage*this.pageSize, (this.currentPage+1)*this.pageSize);
-            return d;
-        }
-
-        pagenumber(){
-            return this.currentPage;
-        }
-
-        totalpages(){
-            return Math.ceil(this.data.length/this.pageSize);
-        }
-
-        totalrecords(){
-            return this.data.length;//Math.ceil(this.data.length/this.pageSize);
-        }
-
-        islastpage(){
-            return this.currentPage >= this.totalpages();
-        }
-
-        isfirstpage(){
-            return this.currentPage <= 1;
-        }
-
-        resetindex(){
-            this.currentPage = 0;
-        }
-
-        first(){
-            this.resetindex();
-            this.dispatchEvent("change", {type: "first", currentPage:this.currentPage});
-            return this.next();
-        }
-
-        last(){
-            this.currentPage = this.totalpages();
-            this.dispatchEvent("change", {type: "last", currentPage:this.currentPage});
-        }
-
-        resizepage(size){
-            this.pageSize = size || this.pageSize;
-            this.resetindex();
-            this.dispatchEvent("change", {type: "resize", currentPage:this.currentPage});
-        }
-
-        pagesize(){
-            return this.pageSize;
-        }
-    }
-);
-
-traits(core.traits.Paginator,[new Observer]);
-
-
+// mport 'node_modules/od-paginator/paginator.js';
 
 namespace `core.drivers.storage` (
     class IStorageInterface {
@@ -422,11 +339,10 @@ namespace `core.data` (
                 query={};
                 cb=null;
             }
+            debugger;
             return new Promise((resolve,reject) =>{
                 this.IRequestStorage.remove((result, error)=>{
                     cb?cb(result, error):resolve(result, error);
-                    // cb && cb(result, error);
-                    // resolve(result, error)
                 },query)
             })
         }
@@ -460,20 +376,12 @@ namespace `core.data` (
 
         static onDataReceived (data, xhr){
             var self=this;
-            data = this.onInitializeModelDataObjects(data);
+            data = this.transform(data);
             this.setData(data.table||data.name, data);
         }
 
-        static setData (name,data){
-            if(data && data.items){
-                for(let obj of data.items){
-                    this.add(obj, (res)=> {});
-                    // this.constructor.prototype.push(obj)
-                }
-            }
-        }
-
-        static onInitializeModelDataObjects (data){
+        static transform (data, xhr){
+            return data;
             /*var tablename = data.table;
             var items = data.items||[];
             for(var i=0; i<=items.length-1; i++) {
@@ -483,197 +391,54 @@ namespace `core.data` (
                 data.items.splice(i,1, modelObject);
             }
             ;*/
-            return data;
+        }
+
+        static setData (name,data){
+            if(data && data.items){
+                for(let obj of data.items){
+                    this.add(obj, (res)=> {});
+                }
+            }
+        }
+
+        static onInitializeModelDataObjects (data){
+            return this.transform(data);
         }
 
         static async seed (uri, params, force){
-            if(!this.isSeedable()) {
-                this.prototype.dispatchEvent("loaded", {controller: this}, this);
-                return
-            };
-            force = (typeof force == "boolean") ? force:false;
-            uri = uri || this.prototype.seeds;
-            if(!this.loaded || force){
-                this.loaded=true;
-                await fetch(uri[Config.ENVIRONMENT]) 
-                    .then(async res => this.onDataReceived(await res.json(), null))
-                    .catch(e => console.log("Error in " +this.namespace +"#seed():\n", e))
-                    .finally(_ => this.prototype.dispatchEvent("loaded", {controller: this}, this))
-            } else {
-                this.prototype.dispatchEvent("loaded", {controller: this}, this);
-            }
+            return new Promise(async (resolve,reject) =>{
+                // debugger;
+                if(!this.isSeedable()) {
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    resolve();
+                    return;
+                };
+                force = (typeof force == "boolean") ? force:false;
+                uri = uri || this.prototype.seeds;
+                if(!this.loaded || force){
+                    this.loaded=true;
+                    var response = await fetch(uri[Config.ENVIRONMENT]);
+                    var json = await response.json();
+                    var res = this.onDataReceived(json);
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    resolve(res)
+                } else {
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    resolve()
+                }  
+            })
         }
     }
 );
 
+Collection = window.Collection = core.data.Repository;
 traits(core.data.Repository, [new Observer]);
 
+//mport 'src/core/drivers/storage/Cursor.js';
+//mport 'src/core/drivers/storage/Memory.js';
 
-
-/**
- * @desc Device for simulating a NoSQL database such as
- * mongo or local storage because of common api. This 
- * device is handy during testing.
- */
-namespace `core.drivers.storage`(
-    class Cursor extends Array{
-        constructor (cursor){
-            var items = (typeof cursor == "object" && cursor.all)?cursor.all():[];
-            super(...items);
-            this.cursor = cursor ;
-            this.setPaginator();
-        }
-
-        setPaginator(){
-            this.paginator = new core.traits.Paginator({
-                data:this, pageSize:4
-            });
-            this.next = this.paginator.next.bind(this.paginator);
-            this.previous = this.paginator.previous.bind(this.paginator);
-            this.current = this.paginator.current.bind(this.paginator);
-            this.first = this.paginator.first.bind(this.paginator);
-            this.pagenumber = this.paginator.pagenumber.bind(this.paginator);
-            this.totalpages = this.paginator.totalpages.bind(this.paginator);
-            this.islastpage = this.paginator.islastpage.bind(this.paginator);
-        }
-        
-
-        // next(){
-        //     var skip = this.page_size * (this.page_num - 1)
-        // }
-
-        // sort (sortCriteria){
-        //     alert("asd")
-        //     console.log("items before sort", this.cursor.all());
-        //     this.cursor.sort(sortCriteria)
-        //     console.log("items after sort", this.cursor.all());
-        // }
-
-        all(){
-            return this;
-        }
-
-        skip(num){
-            this._skip = num;
-            // var take = 2;
-            // var end = skip+take;
-            return this.slice(this._skip)
-        }
-
-        take(num){
-            this._limit = this._skip+num;
-            return this.slice(this._skip,this._limit)
-        }
-
-        sort(attrb, order){
-            // console.log(this.sort())
-            super.sort(function(a, b) {
-                
-                var nameA = a[attrb].toUpperCase(); // ignore upper and lowercase
-                var nameB = b[attrb].toUpperCase(); // ignore upper and lowercase
-                if(order){
-                    if (nameA < nameB) {
-                        return -1;
-                    }
-                    if (nameA > nameB) {
-                        return 1;
-                    }
-                
-                    // names must be equal
-                    return 0;
-                } else {
-                    if (nameA < nameB) {
-                        return 1;
-                    }
-                    if (nameA > nameB) {
-                        return -1;
-                    }
-                
-                    // names must be equal
-                    return 0;
-                }
-            });
-            return this;
-        }
-    }
-);
- 
-
-
-
-
-/**
- * @desc Device for simulating a NoSQL database using
-   local memory. Good for development/testing, not for
-   use in prod env.
- */
-namespace `core.drivers.storage` (
-    class Memory extends core.drivers.storage.IStorageInterface {
-        constructor (collection, storage_device){
-            super(collection, storage_device);
-            if(!mingo) { 
-                console.error(this.namespace + " requires npm mingo to be installed.");
-            }
-            Session.State.db = Session.State.db||{};
-            this.setCollection(collection.classname||collection.prototype.classname);
-        }
-
-        isSeedingEnabled(){
-            return true;
-        }
-
-        setCollection (name){
-            if(typeof Session.State.db[name] != "object"){
-                Session.State.db[name] = [];
-            }
-            this.collection = Session.State.db[name];
-        }
-
-        add(obj, cb){
-            this.collection.push(obj);
-            cb&&cb(obj,null);
-            return obj;
-        }
-        
-        find(cb,query){
-            query = new mingo.Query(query||{});
-            let cursor = query.find(this.collection);
-            // var res = this.collection;//just hand back all
-            var c = new core.drivers.storage.Cursor(cursor)
-            // cb(c,null);
-            cb&&cb(c,null);
-            return c;
-        }
-
-        remove(query, cb){
-            query = new mingo.Query(query||{});
-            let cursor = query.find(this.collection);
-            // var res = this.collection;//just hand back all
-            var c = new core.drivers.storage.Cursor(cursor);
-            var res = c.all()||[];
-            var removed=[];
-            res.forEach(o => {
-                // console.log("should remove", o)
-                for(var i=0; i<=this.collection.length-1; i++){
-                    if(this.collection[i]._id == o._id){
-                        this.collection.splice(i,1);
-                        removed.push(o);
-                    }
-                }
-            });
-            cb && cb(removed,null);
-            return removed;
-        }
-    }
-);
- 
-
-
-
-
-
-namespace `core.ui.templating` (
-    class CustomTemplateEngines {
+namespace `core.drivers.templating` (
+    class Manager {
         constructor(){
             this.engines = {}
             this.defaultMimetype = Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE||"template/literals";
@@ -700,7 +465,7 @@ namespace `core.ui.templating` (
     }
 );
 
-window.customTemplateEngines = new core.ui.templating.CustomTemplateEngines;
+window.customTemplateEngines = new core.drivers.templating.Manager;
 
 
 (() => {
@@ -759,7 +524,7 @@ namespace `w3c.ui` (
             !!css && !this.__proto._style_defined ? 
                 (this.onAppendStyle(
                     `<style>\n${css}\n</style>`.toDomElement()),
-                    this.__proto._style_defined=true
+                    this.__proto._style_defined=false
                 ) : null;
         }
 
@@ -838,7 +603,6 @@ namespace `w3c.ui` (
                     }
                 }, bool);
             } else {
-                // super.addEventListener(evtName, handler, bool);
                 if(this.isExistingDomNode(this.element)){
                     this.element.addEventListener(evtName, handler, bool);
                 }
@@ -874,7 +638,7 @@ namespace `w3c.ui` (
 
         onTransformStyle(cssText){
             if(!this.inShadow()){
-                return cssText.replace(/\:host\s+/gm, `.${this.classname} `)
+                return cssText.replace(/\:host[\s\t\n]*/gm, `.${this.classname} `)
             } else{
                 return cssText;
             }
@@ -911,28 +675,9 @@ namespace `w3c.ui` (
             })
         }
 
-        // async loadTemplate() {
-        //     return new Promise(async (resolve, reject) => {
-        //         var tem  =  this.getTemplateToLoad();
-                
-        //         if(/\/*\.html$/.test(tem)){
-        //             var src=this.src||tem;//TODO: bug here?
-        //             var opts = { cache: "force-cache" };//TODO: use cache policy from appconfig.js
-        //             src = src.replace("/./", "/" + this.namespace.replace(/\./gim, "/") + "/");
-        //             this._template = await imports(src, opts);
-        //         }
-        //         else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
-        //             this._template=tem;
-        //         }
-        //         else if(tem && tem.nodeType==1){
-        //             this._template=tem.outerHTML;
-        //         }
-        //         resolve(this._template);
-        //     })
-        // }
-
         getTemplateToLoad(){
             var engine = this.getTemplateEngine();
+
             return  this.querySelector("template")||    //node
                     this.src||                          //uri
                     this.template()||                   //string
@@ -950,7 +695,6 @@ namespace `w3c.ui` (
                 this.onTemplateRendered(temNode);
                 return
             }
-            // debugger;
             var t = this._template;
             if (t) {
                 var html = await this.evalTemplate(t, data);
@@ -1122,20 +866,19 @@ namespace `w3c.ui` (
         }
 
         async loadcss(urls) {
+            if(!this.__proto._css_loaded){
+                this.__proto._css_loaded={}
+            }
             return new Promise(async (resolve,reject) => {
-                if(this.__proto._css_loaded && !this.inShadow()){
-                    resolve(true);
-                    return
-                }
-                this.__proto._css_loaded=true;
                 urls=urls.reverse();
                 var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets|| {};
                 for(let path of urls){
+                    if(this.__proto._css_loaded[path] && !this.inShadow()){continue}
                     path = this.onLoadStyle(path);
+                    this.__proto._css_loaded[path]=true;
                     if((path && !stylesheets[path]) || this.inShadow()){
                         var tagName = /^http/.test(path) ? "link" : "style";
                         var tag = document.createElement(tagName);
-                        // this.onAppendStyle(tag);
                             tag.setAttribute("type", 'text/css');
                             tag.setAttribute("rel",  'stylesheet');
                             tag.setAttribute("href",  path);
@@ -1192,113 +935,85 @@ cascade(w3c.ui.WebComponent,true);
 ;
 
 namespace `w3c.ui` (
-	class Application extends w3c.ui.WebComponent {
-	    constructor(el) {
-	        super(el);
-	        window.application = this;
-	    }
-	}
-);
-window.Application = window.Application||w3c.ui.Application;
+    class Application extends w3c.ui.WebComponent {
+        constructor(el) {
+            super(el);
+            window.application = this;
+        }
 
-
-
-namespace `core.http` (
-    class Router {
-        constructor(app,hostWindow){
-        	this.window = hostWindow;
-        	this.application = app;
-
-            var hashchangeCb = this.application.onHashChange?
-                this.application.onHashChange.bind(this.application):
-                this.onHashChange.bind(this);
-
-            this.window.addEventListener("hashchange", (e)=> hashchangeCb(e), false)
-            if(this.window.location.hash.length > 0){
-                hashchangeCb()
+        async onConnected(data){
+            await super.onConnected(data);
+            if(this.onEnableRouting()){
+                await require('/src/core/http/Router.js');
+                this.router = new core.http.Router(this,window);
             }
         }
 
-        onHashChange (e){
-            var ns = this.window.location.hash.split("#")[1];
-            var scrollTo = ns.split("/");
-            ns=scrollTo[0];
-            scrollTo = scrollTo[1];
-            var nspath = ns.replace(/\./g, "/");
+        async onEnableRouting(){ 
+            return false;
+        }
 
-            if(!NSRegistry[ns]){
-                this.application.onLoadingActivity &&
-                this.application.onLoadingActivity(ns);
-                var filename_path = `${Config.SRC_PATH}${nspath}/${Config.FILENAME}`;
-                //TODO: add logic for debug path, see bootloader how it uses .src.js and .min.js
-                var path = filename_path.replace("*", Config.USE_COMPRESSED_BUILD ? "min.":"");
-                var cl = new core.http.ClassLoader;
-                cl.load(ns, Config.ROOTPATH + path, data => this.onActivityLoaded(ns,NSRegistry[ns],scrollTo));
-            } else {    
-                this.application.onResumeActivity && 
-                this.application.onResumeActivity(NSRegistry[ns],scrollTo);
-                this.onActivityLoaded(ns,NSRegistry[ns],scrollTo)
+        onExitActivitySaveScroll(){
+            if(this.currentActivity){
+                this.currentActivity._scrollpos = this.currentActivity.parentNode.scrollTop;
             }
         }
 
-        destroy(activityInstance){
-            this.activities = this.activities||{};
-            delete this.activities[activityInstance.namespace];
+        onEnterActivityRestoreScroll(scrollToElement=null){
+            if(this.currentActivity){
+                if(scrollToElement){
+                    wait(100).then(_=> {
+                        var el = this.currentActivity.querySelector("#"+scrollToElement);
+                        if (el) {
+                            el.scrollIntoView({
+                                behavior : "smooth",
+                                block : "start"
+                            });
+                        }
+
+                    })
+                } else {
+                    this.currentActivity.parentNode.scrollTop = this.currentActivity._scrollpos||0;
+                }
+            }
         }
 
-        onActivityLoaded(ns,_class,scrollTo){
-            this.activities = this.activities||{};
-            var c = this.activities[ns]||new _class;
-            this.application.onExitCurrentActivity && 
-            this.application.onExitCurrentActivity(this.current_activity)
-            
-            this.application.onEnterActivity && 
-            this.application.onEnterActivity(c,scrollTo);
+        onEnterActivity(c,scrollToElement){
+            console.log("onEnterActivity", c);
+            var slot = this.onFindActivitySlot();
+                slot.appendChild(c);
+            this.currentActivity = c;
+            this.onEnterActivityRestoreScroll(scrollToElement)
+            this.dispatchEvent("onactivityshown",c);
+        }
 
-            this.activities[ns] = c;
-            this.current_activity=c;
+        onFindActivitySlot(){
+            var slot = this._activitySlot||this.querySelector('slot[name="content"]')||this.querySelector('div[name="content"]');
+            if(!slot) {
+                console.warn(`${this.namespace}#onFindActivitySlot() - unable to find a <slot|div name='content'></slot|div> for loading views. Using <body> as fallback.`)
+            }
+            this._activitySlot = slot;
+            return slot||this
+        }
+
+        onExitCurrentActivity(c){
+            this.onExitActivitySaveScroll()
+            console.log("onExitCurrentActivity", c);
+            var slot = this.onFindActivitySlot();
+                slot.innerHTML="";
+        }
+
+        onResumeActivity(c){
+            console.log("onResumeActivity", c);
+        }
+
+        onLoadingActivity(c){
+            // application.dispatchEvent("showsplash")
+            console.log("onLoadingActivity", c);
         }
     }
 );
-
-
-
-namespace `w3c.ui` (
-	class RoutableApplication extends w3c.ui.Application {
-
-        async onConnected(data){
-            await this.render(data);
-            this.router = new core.http.Router(this,window);// <- onConnected, best place
-        }
-
-        onEnterActivity(c) {
-            console.log("onEnterActivity", c);
-            var slot = this.querySelector('#activitySlot');
-            slot.appendChild(c);
-            this.currentActivity = c;
-            // this.onEnterActivityRestoreScroll(scrollToElement) //TODO: need to uncomment and support scroll
-            this.dispatchEvent("onactivityshown", c);
-        }
-
-        onExitCurrentActivity(c) {
-            // this.onExitActivitySaveScroll()
-            console.log("onExitCurrentActivity", c);
-            var slot = this.querySelector('#activitySlot');
-            slot.innerHTML = "";
-        }
-
-        onResumeActivity(c) {
-            console.log("onResumeActivity", c);
-            this.dispatchEvent("topichanged", {});
-        }
-
-        onLoadingActivity(c) {
-            // application.dispatchEvent("showsplash")
-            console.log("onLoadingActivity", c);
-            this.dispatchEvent("topichanged", {});
-        }
-	}
-);
+window.Application = window.Application||w3c.ui.Application;
 
 
 
