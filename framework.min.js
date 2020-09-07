@@ -179,8 +179,10 @@ window.prop = function prop(target,key,val){
 }
 
 window.tag = function tag(target, name){
-    target.prototype["ns-tagname"]=name;
-    try{window.customElements.define(name, target);}catch(e){}
+    target.prototype["ns-trait-tagname"]=name;
+    try{
+        target.define(target.prototype)
+    }catch(e){console.error(e)}
     return;
 }
 
@@ -566,12 +568,27 @@ namespace `w3c.ui` (
             return el && el.parentNode && el.parentNode.nodeType==1
         }
 
+        // static define(proto,bool){
+        //     var ce = window.customElements;
+        //     var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
+        //     if(/\-/.test(tag)){
+        //         if(ce.get(tag)){return}
+        //         proto["ns-tagname"] = tag;
+        //         this.defineAncestors();
+        //         this.defineAncestralClassList();
+        //         try{ce && ce.define(tag, this);}
+        //         catch(e){console.error(e)}
+        //     }     
+        // }
         static define(proto,bool){
+            // debugger;
             var ce = window.customElements;
             var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
+                tag = /\-/.test(tag)?tag:proto["ns-trait-tagname"];
             if(/\-/.test(tag)){
                 if(ce.get(tag)){return}
                 proto["ns-tagname"] = tag;
+                delete proto["ns-trait-tagname"]
                 this.defineAncestors();
                 this.defineAncestralClassList();
                 try{ce && ce.define(tag, this);}
@@ -583,7 +600,7 @@ namespace `w3c.ui` (
             var css = this.cssStyle();
             !!css && !this.__proto._style_defined ? 
                 (this.onAppendStyle(
-                    `<style>\n${css}\n</style>`.toDomElement()),
+                    `<style>\n${this.onTransformStyle(css)}\n</style>`.toDomElement()),
                     this.__proto._style_defined=false
                 ) : null;
         }
@@ -698,7 +715,7 @@ namespace `w3c.ui` (
 
         onTransformStyle(cssText){
             if(!this.inShadow()){
-                return cssText.replace(/\:host[\s\t\n]*/gm, `.${this.classname} `)
+                return cssText.replace(/\:+host/gm, `.${this.classname}`)
             } else{
                 return cssText;
             }
