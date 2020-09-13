@@ -1027,7 +1027,7 @@ namespace `w3c.ui` (
         }
 
         async onEnableRouting(){ 
-            return false;
+            return this.querySelector('slot[name="content"]')||this.querySelector('div[name="content"]');;
         }
 
         onExitActivitySaveScroll(){
