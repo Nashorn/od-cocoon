@@ -16,7 +16,7 @@ var Config = window.Config = window.Config||{
     DEBUG:true
 };
 
-try{module.returns = Config;}catch(e){}
+try{module.exports = Config;}catch(e){}
 
 
 //
@@ -1057,103 +1057,8 @@ window.WebComponent = window.WebComponent||w3c.ui.WebComponent;
 cascade(w3c.ui.WebComponent,true);
 
 
-
-namespace `core.ui` (
-    class ChildComponent extends w3c.ui.WebComponent {
-        constructor (element){
-            super(element);
-        }
-
-        //Child components never gets defined right away as the w3c spec says 
-        //they should for normal web components. Child components are (see w3c/moz: window.customElements.define)
-        //defined by their parent component owners during render 
-        //of parent (see: w3c.ui.WebComponent.initializeChildComponents())
-
-        //defined means the component gets connected to the DOM, fully initialized and rendered.
-        //onConnected normally fires where a call to render() shows the template.
-        //this never happens with a child component automatically, again, parents
-        //control when this happens.
-
-        //override define() to stop auto definition
-        static define(proto,bool){
-            var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
-            if(/\-/.test(tag)){
-                proto["ns-tagname"] = tag;
-                window.registered_tags=window.registered_tags||{};
-                window.registered_tags[tag]=this;
-                if(!bool || this.isDefined){return}
-                try {
-                    this.defineAncestors();
-                    this.defineAncestralClassList();
-                    window.customElements && window.customElements.define(tag, this);
-                    this.isDefined=true;
-                }
-                catch(e){console.error(e)}
-            }       
-        }
-    }
-);
-
-
-
-namespace `core.ui` (
-    class ChildComponent extends w3c.ui.WebComponent {
-        constructor (element){
-            super(element);
-        }
-
-        //Child components never gets defined right away as the w3c spec says 
-        //they should for normal web components. Child components are (see w3c/moz: window.customElements.define)
-        //defined by their parent component owners during render 
-        //of parent (see: w3c.ui.WebComponent.initializeChildComponents())
-
-        //defined means the component gets connected to the DOM, fully initialized and rendered.
-        //onConnected normally fires where a call to render() shows the template.
-        //this never happens with a child component automatically, again, parents
-        //control when this happens.
-
-        //override define() to stop auto definition
-        static define(proto,bool){
-            var tag = proto.classname.replace(/([a-zA-Z])(?=[A-Z0-9])/g, (f,m)=> `${m}-`).toLowerCase();
-            if(/\-/.test(tag)){
-                proto["ns-tagname"] = tag;
-                window.registered_tags=window.registered_tags||{};
-                window.registered_tags[tag]=this;
-                if(!bool || this.isDefined){return}
-                try {
-                    this.defineAncestors();
-                    this.defineAncestralClassList();
-                    window.customElements && window.customElements.define(tag, this);
-                    this.isDefined=true;
-                }
-                catch(e){console.error(e)}
-            }       
-        }
-    }
-);
-
-
-
-namespace `core.ui` (
-    class ProtectedChildComponent extends core.ui.ChildComponent {
-        async onConnected(){
-            application.onAuthStateChanged(async user => {
-              if (user) {
-                await super.onConnected(user);
-                this.classList.add("authenticated")
-              }
-            })
-        }
-
-        onLoadInstanceStylesheet(){return false}
-    }
-);
-
-
-
-
-
-
+// mport 'src/core/ui/ChildComponent.js';
+// mport 'src/core/ui/ProtectedChildComponent.js';
 ;
 
 namespace `w3c.ui` (
@@ -1316,12 +1221,24 @@ Ecmascript6ClassTranspiler.prototype.transipleDecoratorFields = function (ns,src
 }
 
 Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (src) {
-    var regex = /import\s\{([^\}]*)\}\sfrom\s([^;]*)/gm;
+    if(/webpack/.test(src)||typeof module == "object"){return src}
+    var regex = /import\s\{+([^\}]*)\}+\sfrom\s([^;]*)/gm;
+        src = src.replace(regex, (full, destructured_var, src_path) => {
+            destructured_var = destructured_var.replace(/\s+as\s+/gm, ":");
+            return `var {${destructured_var}} = (()=> {\nimport ${src_path};\n})();`;
+        });
+    src = this.transipleExportsDestructuring(src)
+    return src;
+}
+
+
+Ecmascript6ClassTranspiler.prototype.transipleExportsDestructuring = function (src) {
+    var regex = /module\.exports[\s\t\n]*\=[\s\t\n]*([^\;\(]*)?/gm;
     src = src.replace(regex, (full, destructured_var, src_path) => {
-        destructured_var = destructured_var.replace(/\s+as\s+/gm, ":");
-        return `var {${destructured_var}} = (()=> {\nimport ${src_path};\n})();`;
+        return `return {${destructured_var}}`;
     });
-    src = src.replace("return", "return");
+    src = src.replace(["e","x","p","o","r","t"," ", "d","e","f","a","u","l","t"].join(""), "return");
+    src = src.replace(["e","x","p","o","r","t"].join(""), "return");
     return src;
 }
 
@@ -1414,13 +1331,9 @@ namespace `core.http` (
 );
 
 
-!function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.returns&&(module.exports=a.MainLoop)}(this);
+!function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.exports&&(module.exports=a.MainLoop)}(this);
 
 document.addEventListener("DOMContentLoaded", e => {
-  var link = function(func,scope){
-    func.self=scope;
-    return func;
-  }
   async function bootup() {
     var ns = document.body.getAttribute("namespace");
         ns = ns||Config.NAMESPACE;
@@ -1442,21 +1355,17 @@ document.addEventListener("DOMContentLoaded", e => {
           var app = window.application = (
             window.application||new NSRegistry[ns](document.body)
           );
-          (app instanceof core.ui.World) ? 
-            MainLoop
-              .setBegin(app.onUpdate)
-              .setUpdate(app.onFixedUpdate)
-              .setDraw(app.onDraw)
-              .setEnd(app.onUpdateEnd)
-              .setSimulationTimestep(app.getSimulationTimestep())
-              .start() : null;
-            // MainLoop
-            //   .setBegin(link(app.onUpdate, app))
-            //   .setUpdate(link(app.onFixedUpdate,app))
-            //   .setDraw(link(app.onDraw,app))
-            //   .setEnd(link(app.onUpdateEnd,app))
-            //   .setSimulationTimestep( linkapp.getSimulationTimestep())
-            //   .start() : null;
+            if(app instanceof core.ui.World) {
+              var af=1;
+              try{eval("class T {do=()=>{}}")}catch(e){af=0}
+              MainLoop
+                .setBegin(af?app.onUpdate:app.onUpdate.bind(app))
+                .setUpdate(af?app.onFixedUpdate:app.onFixedUpdate.bind(app))
+                .setDraw(af?app.onDraw:app.onDraw.bind(app))
+                .setEnd(af?app.onUpdateEnd:app.onUpdateEnd.bind(app))
+                .setSimulationTimestep(app.getSimulationTimestep())
+                .start();
+            }
         });
     }
   };
@@ -1466,4 +1375,6 @@ document.addEventListener("DOMContentLoaded", e => {
       AndroidFullScreen && AndroidFullScreen.immersiveMode(e=>{}, e=>{});
       bootup()
     }, false) : bootup()
-}, false); })()
+}, false);
+
+ })()
