@@ -1,1 +1,1890 @@
-(async (global)=>{ var _0x48f6c2=_0x3524;(function(_0x1193cd,_0x2ff75b){var _0x52fcef=_0x3524;var _0x48b547=_0x1193cd();while(!![]){try{var _0x5f10b2=-parseInt(_0x52fcef(0x109))/0x1+parseInt(_0x52fcef(0x10a))/0x2+-parseInt(_0x52fcef(0x10b))/0x3*(parseInt(_0x52fcef(0x10c))/0x4)+-parseInt(_0x52fcef(0x10d))/0x5*(-parseInt(_0x52fcef(0x10e))/0x6)+-parseInt(_0x52fcef(0x10f))/0x7+-parseInt(_0x52fcef(0x110))/0x8*(-parseInt(_0x52fcef(0x111))/0x9)+-parseInt(_0x52fcef(0x112))/0xa*(-parseInt(_0x52fcef(0x113))/0xb);if(_0x5f10b2===_0x2ff75b){break;}else{_0x48b547['push'](_0x48b547['shift']());}}catch(_0x39ae80){_0x48b547['push'](_0x48b547['shift']());}}}(_0x5260,0x66e12));global[_0x48f6c2(0x114)]={'version':_0x48f6c2(0x115)};console[_0x48f6c2(0x116)]('v'+global[_0x48f6c2(0x114)]['version']);var Config=global?.['top']?.[_0x48f6c2(0x117)]?global[_0x48f6c2(0x118)][_0x48f6c2(0x117)]:{'NAMESPACE':null,'USE_COMPRESSED_BUILD':![],'FILENAME':'index.*js','DYNAMICLOAD':!![],'CHARSET':'utf-8','ROOTPATH':'../../../','SRC_PATH':_0x48f6c2(0x119),'ENVIRONMENT':'prod','LOGGING':!![],'ENABLE_TRANSPILER':!![],'DEFAULT_TEMPLATE_ENGINE_MIMETYPE':_0x48f6c2(0x11a),'TEMPLATE_NAMES_USE_ENGINE_EXTENSION':![],'IMPORTS_CACHE_POLICY':{'cache':_0x48f6c2(0x11b),'priority':'high'},'DEBUG':!![],'DEFAULT_VIEW':_0x48f6c2(0x11c),'ROUTER':'system.http.Router','AUTOLOAD_IMPORT_MAPS':!![],'IMPORT_MAPS':!![],'USES_NAMESPACE_FOR_TAGNAMES':!![],'ARROW_FUNCTIONS_FOR_WORLD_LOOP':!![]};global[_0x48f6c2(0x117)]=Config;try{module[_0x48f6c2(0x11d)]=Config;}catch(_0x4b217f){};String['prototype']['toNode']=function(_0x2c69ee=![]){var _0xa9fd7d=_0x48f6c2;var _0x260851=document['createRange']()[_0xa9fd7d(0x11e)](this[_0xa9fd7d(0x11f)]());return _0x2c69ee?_0x2c69ee:_0x260851[_0xa9fd7d(0x120)];};String[_0x48f6c2(0x121)]['toDomElement']=function(){var _0x2a8f1f=_0x48f6c2;console['warn'](_0x2a8f1f(0x122));return this['toNode']();};var wait=sleep=_0x35a37f=>new Promise((_0x4f7d5c,_0x2c89a8)=>setTimeout(_0x4f7d5c,_0x35a37f));global['wait']=wait;function reflect(_0x23c59a,_0x48b2aa){var _0x2e909c=_0x48f6c2;for(let _0x506564 of Reflect[_0x2e909c(0x123)](_0x48b2aa)){if(typeof _0x506564!=Symbol&&!/Symbol|namespace|constructor|ancestor|classname|prototype|name/[_0x2e909c(0x124)](_0x506564)){let _0x1b9fcf=Object[_0x2e909c(0x125)](_0x48b2aa,_0x506564);Object[_0x2e909c(0x126)](_0x23c59a,_0x506564,_0x1b9fcf);}}_0x23c59a['traits']=_0x23c59a[_0x2e909c(0x127)]||{};_0x23c59a['traits'][_0x48b2aa['constructor'][_0x2e909c(0x128)]]=_0x48b2aa[_0x2e909c(0x129)];};Function[_0x48f6c2(0x121)][_0x48f6c2(0x12a)]=function(..._0x252bd2){var _0x3e1c4c=_0x48f6c2;let _0x30ff14=class extends this{};for(let _0x414283 of _0x252bd2){if(typeof _0x414283==_0x3e1c4c(0x12b)){reflect(_0x30ff14[_0x3e1c4c(0x121)],_0x414283);}else{reflect(_0x30ff14[_0x3e1c4c(0x121)],_0x414283['prototype']);}}return _0x30ff14;};if(Config['LOGGING']==![]){for(var k in console){console[k]=function(){};}}window['toAbsoluteURL']=function(_0x5cdbb5){var _0x316c05=_0x48f6c2;const _0x596118=document[_0x316c05(0x12c)]('a');_0x596118[_0x316c05(0x12d)](_0x316c05(0x12e),_0x5cdbb5);return _0x596118[_0x316c05(0x12f)](![])[_0x316c05(0x12e)];};window[_0x48f6c2(0x130)]=function(_0x534e90){return NSRegistry[_0x534e90];};window[_0x48f6c2(0x131)]=window[_0x48f6c2(0x131)]||{};window[_0x48f6c2(0x132)]=async function(_0xb5df4f,_0x55fc68,_0x53efed){var _0x5b32ee=_0x48f6c2;_0x55fc68=_0x55fc68||Config[_0x5b32ee(0x133)]||{'cache':_0x5b32ee(0x11b)};return new Promise(async(_0x28c178,_0xfe654c)=>{var _0xcbbb74=_0x5b32ee;var _0x216366=_0xb5df4f;_0x216366=_0x216366[_0xcbbb74(0x134)](/^\/+/,Config[_0xcbbb74(0x135)]);var _0x23fc86=_0xcbbb74(0x136)+toAbsoluteURL(_0x216366)||_0x216366;if(window[_0xcbbb74(0x131)][_0xb5df4f]){_0x28c178(window[_0xcbbb74(0x131)][_0xb5df4f]);return;}try{const _0x256aa2=await fetch(_0x216366,_0x55fc68);if(_0x256aa2['ok']){var _0x4dd7e7=await _0x256aa2[_0xcbbb74(0x137)]();window[_0xcbbb74(0x131)][_0xb5df4f]=_0x4dd7e7;_0x28c178(_0x4dd7e7);}else{var _0x4dd7e7=await _0x256aa2[_0xcbbb74(0x137)]();throw new Error();console[_0xcbbb74(0x138)](_0x23fc86);_0x28c178('');}}catch(_0x3448ab){try{var _0x403926=new XMLHttpRequest();_0x403926[_0xcbbb74(0x139)](_0xcbbb74(0x13a),_0x216366,![]);_0x403926[_0xcbbb74(0x13b)](null);}catch(_0x31a6f2){console['error'](_0xcbbb74(0x136)+toAbsoluteURL(_0x216366),_0x31a6f2);_0x28c178('');}if(_0x403926[_0xcbbb74(0x13c)]==0x0||_0x403926[_0xcbbb74(0x13c)]==0xc8){_0x4dd7e7=_0x403926['responseText'];window[_0xcbbb74(0x131)][_0xb5df4f]=_0x4dd7e7;_0x28c178(_0x4dd7e7);}else{_0xfe654c(_0xcbbb74(0x136)+toAbsoluteURL(_0x216366));throw new Error();_0x28c178('');}}});};function relativeToAbsoluteFilePath(_0x48b7c1,_0x492d04,_0x58e74b){var _0x512c2c=_0x48f6c2;_0x492d04=_0x492d04||this[_0x512c2c(0x13d)];_0x492d04=_0x492d04['replace'](/\./gim,'/');if(_0x48b7c1[_0x512c2c(0x13e)](_0x512c2c(0x13f))>=0x0){_0x48b7c1=_0x48b7c1['replace']('./',_0x492d04+'/');}if(/^\.\//['test'](_0x48b7c1)){_0x48b7c1=_0x48b7c1['replace']('./',Config[_0x512c2c(0x140)]+_0x492d04+'/');}_0x48b7c1=/http:/[_0x512c2c(0x124)](_0x48b7c1)?_0x48b7c1:_0x48b7c1[_0x512c2c(0x134)]('//','/');return _0x48b7c1;}global[_0x48f6c2(0x141)]=relativeToAbsoluteFilePath;window[_0x48f6c2(0x142)]=function stylesheets(_0x198dd7,_0x1b5c3f){var _0x574edd=_0x48f6c2;_0x198dd7['prototype'][_0x574edd(0x143)]=[];console[_0x574edd(0x144)](_0x574edd(0x145)+_0x198dd7[_0x574edd(0x121)][_0x574edd(0x13d)]+_0x574edd(0x146));_0x1b5c3f&&_0x1b5c3f[_0x574edd(0x147)](_0x5d6a9d=>{var _0x1da625=_0x574edd;var _0x29f994=relativeToAbsoluteFilePath(_0x5d6a9d,_0x198dd7[_0x1da625(0x121)][_0x1da625(0x13d)],![]);_0x198dd7[_0x1da625(0x121)]['@stylesheets'][_0x1da625(0x148)](_0x29f994);});};window[_0x48f6c2(0x149)]=function cascade(_0x812429,_0x7934f){var _0x344cab=_0x48f6c2;_0x812429[_0x344cab(0x121)][_0x344cab(0x14a)]=_0x7934f;};window['prop']=function prop(_0x4eec63,_0x459725,_0x29d37f){var _0x49180e=_0x48f6c2;_0x4eec63[_0x49180e(0x121)][_0x459725]=_0x29d37f;};window['theme']=function(_0x170a2c,_0x1c1ac2){var _0x58eee0=_0x48f6c2;_0x170a2c['prototype'][_0x58eee0(0x14b)]=_0x1c1ac2;};window[_0x48f6c2(0x14c)]=function tag(_0x1d5bb6,_0x118987){var _0x26d917=_0x48f6c2;if(_0x1d5bb6['is']){return;}_0x1d5bb6[_0x26d917(0x121)][_0x26d917(0x14d)]=_0x118987;try{_0x1d5bb6['define'](_0x1d5bb6[_0x26d917(0x121)]);}catch(_0x597680){console[_0x26d917(0x138)](_0x597680);}console[_0x26d917(0x144)]('@tag\x20decorator\x20on\x20class\x20\x27'+_0x1d5bb6['prototype'][_0x26d917(0x13d)]+'\x27\x20is\x20deprecated');return;};window['field']=function field(_0x1a16df,_0x490fe6,_0x25d294,_0x5b9c7b){var _0x2dc6a5=_0x48f6c2;_0x1a16df=_0x490fe6==_0x2dc6a5(0x14e)?_0x1a16df:_0x1a16df[_0x2dc6a5(0x121)];_0x1a16df[_0x25d294]=_0x5b9c7b;};;(function(_0x4fc40a){var _0x46b5ea=_0x48f6c2;_0x4fc40a['NSRegistry']=_0x4fc40a[_0x46b5ea(0x14f)]||{};try{_0x4fc40a[_0x46b5ea(0x150)]=class{};}catch(_0x428fd5){};_0x4fc40a['namespace']=function(_0x2a1001){var _0x3c3843=_0x46b5ea;_0x2a1001=_0x2a1001[0x0];/\.\*$/[_0x3c3843(0x124)](_0x2a1001)?_0x4ee921(_0x2a1001[_0x3c3843(0x151)](/\.\*$/)[0x0],{}):null;return/\.\*$/[_0x3c3843(0x124)](_0x2a1001)?_0x4ee921(_0x2a1001[_0x3c3843(0x151)](/\.\*$/)[0x0],{}):function(..._0x5c0987){var _0x1fb9ce=_0x3c3843;let _0x3c1230='';_0x5c0987['forEach'](_0x16b93a=>{var _0x3050ac=_0x3524;_0x16b93a=_0x16b93a||{};var _0x579da0=_0x2a1001['match'](/\.([A-Z]+[a-zA-Z0-9\_]*)\b$/);var _0xf81b6e=_0x16b93a['prototype']||_0x16b93a;_0xf81b6e[_0x3050ac(0x152)]=_0x579da0?_0x579da0[0x1]:_0x16b93a[_0x3050ac(0x128)];_0x3c1230=_0x2a1001+'.'+_0xf81b6e[_0x3050ac(0x152)];var _0x42a9f8=NSRegistry[_0x3c1230];if(_0x42a9f8&&_0x42a9f8[_0x3050ac(0x121)]instanceof WebComponent){return;}_0xf81b6e['namespace']=_0x3c1230;return _0x4fc40a[_0x3050ac(0x14f)][_0x3c1230]=typeof _0x16b93a=='function'?_0x4ee921(_0x3c1230,_0xdf2a19(_0x16b93a||{})):_0x4ee921(_0x2a1001,_0x16b93a||{}),delete _0x16b93a[_0x3050ac(0x13d)],delete _0x16b93a[_0x3050ac(0x152)];});return _0x4fc40a[_0x1fb9ce(0x14f)][_0x3c1230];};};var _0x4ee921=function(_0x53731e,_0x4d35de){var _0xb10517=_0x46b5ea;var _0x1b4fb5=_0x53731e[_0xb10517(0x151)](/\./g);var _0x157fd3=_0x1b4fb5['pop']();var _0x4cced6=_0x1b4fb5[_0xb10517(0x153)]((_0x12ea6d,_0x39a6a2)=>_0x12ea6d[_0x39a6a2]?_0x12ea6d[_0x39a6a2]:_0x12ea6d[_0x39a6a2]={},_0x4fc40a);_0x4cced6[_0x157fd3]=_0x4d35de;return _0x4cced6[_0x157fd3];};var _0x1cd9ed=function(_0x401125){var _0x51ce16=_0x46b5ea;var _0x550618=_0x401125['split'](/\./g);return _0x550618[_0x51ce16(0x153)]((_0x39e049,_0x4c6d44)=>_0x39e049&&_0x39e049[_0x4c6d44]?_0x39e049[_0x4c6d44]:null,_0x4fc40a);};_0x4fc40a[_0x46b5ea(0x154)]=_0x1cd9ed;var _0xdf2a19=function(_0x33a683){var _0x5a0bbd=_0x46b5ea;try{var _0x286ef3=_0x33a683[_0x5a0bbd(0x121)];_0x286ef3[_0x5a0bbd(0x155)]=_0x286ef3[_0x5a0bbd(0x156)][_0x5a0bbd(0x129)];try{_0x33a683['define'](_0x286ef3);}catch(_0x267866){};return _0x33a683;}catch(_0x5493f3){return _0x33a683;}return _0x33a683;};}(this));((()=>{var _0x28fb20=_0x48f6c2;var _0x485299=window[_0x28fb20(0x157)]={};async function _0x1a785b(_0x5539a8){var _0x3fe8d3=_0x28fb20;_0x5539a8=(window['importmap'][_0x5539a8]||_0x5539a8)[_0x3fe8d3(0x134)](/^\/+/,Config[_0x3fe8d3(0x135)]);var _0x1a2b99=toAbsoluteURL(_0x5539a8);var _0x38f44=_0x485299[_0x1a2b99];if(_0x38f44){return _0x38f44;};return new Promise(async(_0x5792fc,_0x4287a2)=>{var _0x557559=_0x3fe8d3;if(_0x38f44){_0x5792fc(_0x38f44);};var _0x4527c4=document[_0x557559(0x12c)](_0x557559(0x158));_0x4527c4[_0x557559(0x159)]=_0x557559(0x15a);_0x4527c4[_0x557559(0x15b)]=()=>_0x4287a2(new Error('404:\x20'+_0x1a2b99));_0x4527c4[_0x557559(0x15c)]=()=>{var _0x3fe773=_0x557559;_0x5792fc(_0x485299[_0x1a2b99]);URL['revokeObjectURL'](_0x4527c4[_0x3fe773(0x15d)]);_0x4527c4['remove']();};const _0x1b25f4=_0x557559(0x15e)+_0x1a2b99+_0x557559(0x15f)+_0x1a2b99+_0x557559(0x160);const _0x38f5cc=new Blob([_0x1b25f4],{'type':_0x557559(0x161)});_0x4527c4['src']=URL[_0x557559(0x162)](_0x38f5cc);document[_0x557559(0x163)][_0x557559(0x164)](_0x4527c4);});};window[_0x28fb20(0x165)]=_0x1a785b;if(typeof require==_0x28fb20(0x166)){window[_0x28fb20(0x167)]=_0x1a785b;}})());class Observer{[_0x48f6c2(0x168)](_0x15373c,_0x4f95ba,_0xd98041){var _0x53c4e5=_0x48f6c2;this['subscribers']=this[_0x53c4e5(0x169)]||{};if(!this[_0x53c4e5(0x169)][_0x15373c]){this[_0x53c4e5(0x169)][_0x15373c]=[];}this[_0x53c4e5(0x169)][_0x15373c][_0x53c4e5(0x16a)]({'name':_0x15373c,'func':_0x4f95ba});}[_0x48f6c2(0x16b)](_0x6eef05,_0x5b4be2,_0x4d37d4=this||window){var _0x19329c=_0x48f6c2;this[_0x19329c(0x169)]=this[_0x19329c(0x169)]||{};var _0x1723f1=this[_0x19329c(0x169)][_0x6eef05]||[];_0x1723f1[_0x19329c(0x147)](_0x98b0ac=>_0x98b0ac['func'][_0x19329c(0x16c)](_0x4d37d4,_0x5b4be2));}[_0x48f6c2(0x16d)](_0x3ebcbc,_0x8d167e){var _0x39a30d=_0x48f6c2;this[_0x39a30d(0x169)]=this['subscribers']||{};var _0xbe46a1=this['subscribers'][_0x3ebcbc]||[];_0xbe46a1[_0x39a30d(0x16e)](_0x53ca6d=>_0x53ca6d['name']===_0x3ebcbc&&_0x53ca6d['func']===_0x8d167e);}};window[_0x48f6c2(0x16f)]=window['IEventTarget']=Observer;namespace`domain`(class IStorageDriver{constructor(_0x16c0e7,_0x48c3dd){var _0x423307=_0x48f6c2;console[_0x423307(0x116)](_0x423307(0x170)+_0x16c0e7['prototype']['classname'],this);}['isSeedingEnabled'](){return![];}static['driver'](){var _0x21a2c4=_0x48f6c2;return Config[_0x21a2c4(0x171)]||this;}[_0x48f6c2(0x172)](){}[_0x48f6c2(0x173)](){}[_0x48f6c2(0x174)](){}[_0x48f6c2(0x175)](_0x180ffa){}[_0x48f6c2(0x176)](_0x6a245f,_0x15fbe4){}[_0x48f6c2(0x177)](_0x488e18,_0xee5821){}['remove'](_0x2801b5,_0x55f8e9){}['find'](_0x3632dc,_0x3220e6){}[_0x48f6c2(0x178)](_0x28628c,_0x35a0c3,_0x27392f){}});namespace`domain.collections`(class Repository extends IEventTarget{static get[_0x48f6c2(0x179)](){var _0x17260f=_0x48f6c2;var _0x115f60=this[_0x17260f(0x121)];var _0xd197ec=_0x115f60[_0x17260f(0x17a)]||_0x115f60[_0x17260f(0x17b)];_0xd197ec=typeof _0xd197ec=='string'?NSRegistry[_0xd197ec]:_0xd197ec;this[_0x17260f(0x17c)]=this['interface']||new _0xd197ec(this);if(_0x115f60[_0x17260f(0x17a)]){console[_0x17260f(0x144)](_0x17260f(0x17d),_0x115f60['namespace']);}return this['interface'];}static[_0x48f6c2(0x17e)](){var _0x49c634=_0x48f6c2;return this[_0x49c634(0x179)][_0x49c634(0x17f)]();}static[_0x48f6c2(0x172)](){var _0x10b6e1=_0x48f6c2;this['storage'][_0x10b6e1(0x172)]();}static async['add'](_0x273f9b,_0x55aae8){var _0x4b450b=_0x48f6c2;var _0x173b0c=await this[_0x4b450b(0x179)][_0x4b450b(0x176)](_0x273f9b,_0x55aae8);return _0x173b0c;}static async[_0x48f6c2(0x177)](_0x322d37,_0x54d6ac){var _0x583797=_0x48f6c2;var _0x467ee8=await this['storage'][_0x583797(0x177)](_0x322d37,_0x54d6ac);return _0x467ee8;}static async[_0x48f6c2(0x180)](_0x45a361){var _0x2634ea=_0x48f6c2;var _0x39c1eb=await this[_0x2634ea(0x179)][_0x2634ea(0x180)](_0x45a361);return _0x39c1eb;}static async[_0x48f6c2(0x16e)](_0x39514a={},_0x2a5a1b){return new Promise((_0x570741,_0xae6987)=>{var _0x4cc504=_0x3524;this[_0x4cc504(0x179)][_0x4cc504(0x16e)]((_0x31f9ca,_0x5590d5)=>{_0x2a5a1b?_0x2a5a1b(_0x31f9ca,_0x5590d5):_0x570741(_0x31f9ca,_0x5590d5);},_0x39514a);});}static async[_0x48f6c2(0x181)](_0x3ce396={},_0x4a8646){return new Promise((_0x57097e,_0x3d3a43)=>{var _0xb9189e=_0x3524;this[_0xb9189e(0x179)][_0xb9189e(0x181)]((_0x13db13,_0x319636)=>{_0x4a8646?_0x4a8646(_0x13db13,_0x319636):_0x57097e(_0x13db13,_0x319636);},_0x3ce396);});}static[_0x48f6c2(0x182)](_0x4deb9e,_0x1a88b8){var _0xbcbe22=_0x48f6c2;var _0x276c0d=this;_0x4deb9e=this[_0xbcbe22(0x183)](_0x4deb9e);this[_0xbcbe22(0x184)](_0x4deb9e[_0xbcbe22(0x185)]||_0x4deb9e[_0xbcbe22(0x128)],_0x4deb9e);}static[_0x48f6c2(0x183)](_0x343e0d,_0x1a76a6){return _0x343e0d;}static[_0x48f6c2(0x184)](_0x3ee77a,_0x591b98){var _0x7fa7a1=_0x48f6c2;if(_0x591b98&&_0x591b98[_0x7fa7a1(0x186)]){for(let _0x4d4fb3 of _0x591b98[_0x7fa7a1(0x186)]){this['add'](_0x4d4fb3,_0x48627c=>{});}}}static[_0x48f6c2(0x187)](_0x38c7d3){return this['transform'](_0x38c7d3);}static async[_0x48f6c2(0x188)](_0xaafda2=this[_0x48f6c2(0x121)][_0x48f6c2(0x189)],_0x250994,_0x45b452){return new Promise(async(_0x1ac8c8,_0x154096)=>{var _0x1f3418=_0x3524;if(!this[_0x1f3418(0x17e)]()){this['prototype'][_0x1f3418(0x16b)](_0x1f3418(0x18a),{'controller':this},this);_0x1ac8c8();return;};_0x45b452=typeof _0x45b452==_0x1f3418(0x18b)?_0x45b452:![];if(_0x45b452||!this[_0x1f3418(0x179)]['isSeeded']()){var _0x4f4735=await fetch(_0xaafda2[Config[_0x1f3418(0x18c)]]);var _0x2755de=await _0x4f4735['json']();var _0x24990e=this[_0x1f3418(0x182)](_0x2755de);this['storage'][_0x1f3418(0x174)](!![]);this[_0x1f3418(0x172)]();this[_0x1f3418(0x121)][_0x1f3418(0x16b)](_0x1f3418(0x18a),{'controller':this},this);_0x1ac8c8(_0x24990e);}else{this[_0x1f3418(0x121)][_0x1f3418(0x16b)]('loaded',{'controller':this},this);this['storage'][_0x1f3418(0x174)](!![]);this['commit']();_0x1ac8c8();}});}});Collection=window[_0x48f6c2(0x18d)]=domain[_0x48f6c2(0x18e)][_0x48f6c2(0x18f)];namespace`system.machines`(class Automata extends Array{constructor(){super();}get['state'](){return this[0x0];}[_0x48f6c2(0x190)](_0x51c3f4,_0x2aefe4){var _0x29f0d3=_0x48f6c2;var _0x4fcae3=this[0x0];_0x4fcae3&&_0x4fcae3[_0x29f0d3(0x191)]&&_0x4fcae3[_0x29f0d3(0x192)]();_0x4fcae3&&(_0x4fcae3['isSleeping']=![]);_0x4fcae3&&!_0x4fcae3[_0x29f0d3(0x191)]&&_0x4fcae3['onUpdate']&&_0x4fcae3['onUpdate'](_0x51c3f4,_0x2aefe4);}[_0x48f6c2(0x193)](_0x189211){var _0x413628=_0x48f6c2;var _0x1d6021=this[0x0];_0x1d6021&&!_0x1d6021[_0x413628(0x191)]&&_0x1d6021['onFixedUpdate']&&_0x1d6021[_0x413628(0x193)](_0x189211);}['onDraw'](_0x16c99d){var _0x35acfa=_0x48f6c2;var _0xbeef85=this[0x0];_0xbeef85&&!_0xbeef85[_0x35acfa(0x191)]&&_0xbeef85['onDraw']&&_0xbeef85[_0x35acfa(0x194)](_0x16c99d);}[_0x48f6c2(0x16a)](_0x216674){var _0x39ac91=_0x48f6c2;if(this[0x0]==_0x216674){return;}this[0x0]&&this[0x0][_0x39ac91(0x195)]();this[0x0]&&(this[0x0][_0x39ac91(0x191)]=!![]);_0x216674&&!_0x216674[_0x39ac91(0x196)]&&_0x216674[_0x39ac91(0x197)]();_0x216674&&_0x216674['onAwake']();_0x216674[_0x39ac91(0x191)]=![];this[_0x39ac91(0x148)](_0x216674);}[_0x48f6c2(0x198)](_0x5683a4){var _0x11cfa4=_0x48f6c2;if(_0x5683a4){var _0x4c5b05=this[0x0];if(_0x4c5b05&&_0x4c5b05==_0x5683a4){if(!_0x4c5b05[_0x11cfa4(0x199)]){_0x4c5b05[_0x11cfa4(0x195)]();_0x4c5b05[_0x11cfa4(0x191)]=!![];}else{_0x4c5b05['onExit']();this[0x0]=null;}this['shift']();this[0x0][_0x11cfa4(0x192)]();this[0x0][_0x11cfa4(0x191)]=![];}}else{var _0x16e84c=this[_0x11cfa4(0x19a)]();_0x16e84c[_0x11cfa4(0x195)]();this[0x0]&&this[0x0]['onAwake']();this[0x0][_0x11cfa4(0x191)]=![];}}});namespace`system.machines`(class State{constructor(_0x140ded,_0x5bbcb7){var _0x55cea5=_0x48f6c2;this['element']=_0x140ded;this[_0x55cea5(0x19b)]=_0x5bbcb7||_0x140ded[_0x55cea5(0x19b)]||_0x140ded[_0x55cea5(0x19c)];}[_0x48f6c2(0x192)](){var _0x50f83f=_0x48f6c2;console[_0x50f83f(0x116)](this[_0x50f83f(0x13d)]+_0x50f83f(0x19d));}[_0x48f6c2(0x195)](){var _0x1f0199=_0x48f6c2;console[_0x1f0199(0x116)](this[_0x1f0199(0x13d)]+'\x20Sleeping');}[_0x48f6c2(0x197)](_0x2c2ff5){var _0x52de74=_0x48f6c2;this[_0x52de74(0x196)]=!![];console['log'](this[_0x52de74(0x13d)]+_0x52de74(0x19e));}['onExit'](){var _0x2afe6c=_0x48f6c2;console[_0x2afe6c(0x116)](this[_0x2afe6c(0x13d)]+'\x20Exit');}[_0x48f6c2(0x190)](_0x3341d9,_0x470041){}[_0x48f6c2(0x193)](_0x1f3b60){}[_0x48f6c2(0x194)](_0xc41076){}});global[_0x48f6c2(0x19f)]=global[_0x48f6c2(0x19f)]||system['machines']['State'];namespace`system.http`(class Router{constructor(_0x57e9c1,_0x5c207d){var _0x4965af=_0x48f6c2;this[_0x4965af(0x1a0)]={};this['preloaded']={};this[_0x4965af(0x1a1)]=_0x5c207d;this[_0x4965af(0x1a2)]=_0x57e9c1;var _0x30f621=this[_0x4965af(0x1a2)][_0x4965af(0x1a3)]?this[_0x4965af(0x1a2)][_0x4965af(0x1a3)][_0x4965af(0x1a4)](this['application']):this['onHashChange'][_0x4965af(0x1a4)](this);this[_0x4965af(0x1a1)]['addEventListener'](_0x4965af(0x1a5),_0x5c9864=>_0x30f621(_0x5c9864),![]);if(this['window']['location'][_0x4965af(0x1a6)][_0x4965af(0x1a7)]>0x0){_0x30f621();}}['preload'](){var _0x2a1c72=_0x48f6c2;var _0x13b285=new system[(_0x2a1c72(0x1a8))][(_0x2a1c72(0x1a9))]();if('requestIdleCallback'in window){window[_0x2a1c72(0x1aa)](_0x2a56ad=>{var _0x6ec224=_0x2a1c72;var _0xd9d007=this[_0x6ec224(0x1a2)]['onRequestPreloadable']();_0xd9d007[_0x6ec224(0x147)](async _0x37899c=>{var _0x1aa7c0=_0x6ec224;_0x37899c=_0x37899c[_0x1aa7c0(0x151)]('#')[0x1];_0x37899c=_0x37899c['split']('/')[0x0];if(NSRegistry[_0x37899c]){return;}if(!this[_0x1aa7c0(0x1ab)][_0x37899c]){try{var _0x55377d=await _0x13b285[_0x1aa7c0(0x1ac)](_0x37899c);if(_0x55377d){var _0x104927=NSRegistry[_0x37899c];_0x104927&&_0x104927[_0x1aa7c0(0x1ad)]();this['preloaded'][_0x37899c]=_0x104927;}}catch(_0x4248e7){console[_0x1aa7c0(0x144)]('Unable\x20to\x20preload:\x20',_0x37899c);}}});},{'timeout':0x3e8});}}async[_0x48f6c2(0x1a3)](_0xcc1c70){var _0x38cc34=_0x48f6c2;var _0xe5f616=this[_0x38cc34(0x1a1)][_0x38cc34(0x1ae)]['hash'][_0x38cc34(0x151)]('#')[0x1];if(!_0xe5f616){return;}var _0x195039=_0xe5f616[_0x38cc34(0x151)]('?el=');_0xe5f616=_0x195039[0x0];_0x195039=_0x195039[0x1];if(!NSRegistry[_0xe5f616]){this[_0x38cc34(0x1a2)][_0x38cc34(0x1af)](_0xe5f616);await new system[(_0x38cc34(0x1a8))][(_0x38cc34(0x1a9))]()[_0x38cc34(0x1ac)](_0xe5f616);}this['onActivityLoaded'](_0xe5f616,NSRegistry[_0xe5f616],_0x195039);}async['onActivityLoaded'](_0x4e8872,_0x24a478,_0x4a2878){var _0x2af7=_0x48f6c2;await wait(0x64);var _0x2033d6=this[_0x2af7(0x1a2)]['onFindActivitySlot']()['querySelector'](_0x2af7(0x1b0)+_0x4e8872+'\x27]');if(_0x2033d6){this[_0x2af7(0x1a2)]['onEnterActivity'](_0x2033d6,_0x4a2878);this[_0x2af7(0x1a0)][_0x4e8872]=_0x2033d6;this[_0x2af7(0x1b1)]=_0x2033d6;return;}var _0x5eb5d0=this[_0x2af7(0x1a0)][_0x4e8872]||new _0x24a478();this['current_activity']&&this['application'][_0x2af7(0x1b2)](this[_0x2af7(0x1b1)]);this[_0x2af7(0x1a2)][_0x2af7(0x1b3)](_0x5eb5d0,_0x4a2878);this[_0x2af7(0x1a0)][_0x4e8872]=_0x5eb5d0;this['current_activity']=_0x5eb5d0;this[_0x2af7(0x1ad)]();}[_0x48f6c2(0x1b4)](_0x29fdc8){var _0xf4245c=_0x48f6c2;this[_0xf4245c(0x1a0)]=this['activities']||{};delete this[_0xf4245c(0x1a0)][_0x29fdc8['namespace']];}});namespace`core.drivers.templating`(class Manager{constructor(){var _0x4738b0=_0x48f6c2;this[_0x4738b0(0x1b5)]={};this[_0x4738b0(0x1b6)]=Config[_0x4738b0(0x1b7)]||_0x4738b0(0x11a);}[_0x48f6c2(0x1b8)](_0x288fcc,_0x1cf886){var _0x2c846b=_0x48f6c2;if(!this[_0x2c846b(0x1b5)][_0x288fcc]){this[_0x2c846b(0x1b5)][_0x288fcc]=_0x1cf886;_0x1cf886[_0x2c846b(0x1b9)]();}}[_0x48f6c2(0x1ba)](_0x2601e4){var _0x5597bc=_0x48f6c2;return this[_0x5597bc(0x1b5)][_0x2601e4];}get[_0x48f6c2(0x1bb)](){var _0x4519c2=_0x48f6c2;return this[_0x4519c2(0x1b5)][this['defaultMimetype']];}set[_0x48f6c2(0x1bb)](_0x3bd56d){var _0x570290=_0x48f6c2;this[_0x570290(0x1b6)]=_0x3bd56d;}});window[_0x48f6c2(0x1bc)]=new core[(_0x48f6c2(0x1bd))][(_0x48f6c2(0x1be))][(_0x48f6c2(0x1bf))]();((()=>{var _0x5723ee=_0x48f6c2;var _0x1e2a78={'name':_0x5723ee(0x1c0),'ext':'','parse':function(_0x56f86c,_0x1cb847,_0x20f034){var _0x2abfd5=(_0x4162a3,_0x280005)=>{var _0x4b467b=_0x3524;return new Function('return\x20`'+_0x4162a3+'`;')[_0x4b467b(0x16c)](_0x280005);};return _0x2abfd5(_0x56f86c,_0x1cb847);},'install':function(){}};window[_0x5723ee(0x1bc)][_0x5723ee(0x1b8)](_0x5723ee(0x11a),_0x1e2a78);})());namespace`system.drivers.watchers`(class Watcher{static[_0x48f6c2(0x1c1)](_0x852171,_0x5a395c,_0x286bd1,_0x1758b2=!![],_0x51bc93){var _0x3227e7=_0x48f6c2;var _0x4aac24={'object':_0x852171,'prop':_0x5a395c,'old':_0x852171[_0x5a395c],'val':_0x852171[_0x5a395c]||null,'value':_0x852171[_0x5a395c]||null};var _0x3ce36b=()=>{var _0x56e39f=_0x3524;_0x4aac24[_0x56e39f(0x1c2)]=_0x4aac24[_0x56e39f(0x1c3)]=_0x852171[_0x5a395c];_0x4aac24[_0x5a395c]=_0x4aac24[_0x56e39f(0x1c3)];_0x286bd1?_0x286bd1(_0x4aac24):_0x51bc93[_0x56e39f(0x1c3)][_0x852171['id']]=_0x852171[_0x5a395c];};if(_0x852171[_0x3227e7(0x168)]){_0x852171[_0x3227e7(0x168)](_0x3227e7(0x1c4),_0x3ce36b,![]);_0x852171['addEventListener']('change',_0x3ce36b,![]);}_0x1758b2&&_0x286bd1?_0x286bd1(_0x4aac24):null;return{'unwatch':function(){var _0x3b4552=_0x3227e7;_0x852171[_0x3b4552(0x16d)](_0x3b4552(0x1c4),_0x3ce36b,![]);_0x852171['removeEventListener'](_0x3b4552(0x1c5),_0x3ce36b,![]);}};}});namespace`core.ui`(class WebComponent extends HTMLElement{constructor(_0x3fcf4f,_0x252e49={}){var _0x3e97ec=_0x48f6c2;super();this[_0x3e97ec(0x1c6)]=_0x252e49;this[_0x3e97ec(0x1c7)]=_0x3fcf4f;this[_0x3e97ec(0x1c8)]=this[_0x3e97ec(0x129)][_0x3e97ec(0x121)];if(this[_0x3e97ec(0x1c9)](this[_0x3e97ec(0x1c7)])){this['root']=this[_0x3e97ec(0x1c7)];this['connectedCallback']();}else{this[_0x3e97ec(0x1ca)]=this[_0x3e97ec(0x1cb)]&&/<\s*\btemplate\b/[_0x3e97ec(0x124)](this[_0x3e97ec(0x1cb)])?this[_0x3e97ec(0x1cb)]:null;this[_0x3e97ec(0x1cc)]=this[_0x3e97ec(0x1cd)]||this['inShadow']()?this['attachShadow']({'mode':_0x3e97ec(0x139)}):this[_0x3e97ec(0x1c7)]||this;}}static get[_0x48f6c2(0x1ce)](){var _0x1446b0=_0x48f6c2;var _0x5d4bb9=this[_0x1446b0(0x121)][_0x1446b0(0x13d)];return Config[_0x1446b0(0x140)]+_0x5d4bb9[_0x1446b0(0x134)](/\./g,'/')+_0x1446b0(0x1cf);}async[_0x48f6c2(0x1d0)](){return new Promise(async(_0x2161bf,_0x328799)=>{var _0x5b0490=_0x3524;var _0x5e5b50=this[_0x5b0490(0x1d1)]();var _0x337a12=Config[_0x5b0490(0x133)]||{'cache':_0x5b0490(0x11b)};if(/\/*\.html$/[_0x5b0490(0x124)](_0x5e5b50)){var _0x1fd490=this[_0x5b0490(0x15d)]||_0x5e5b50;_0x1fd490=_0x1fd490['replace']('/./',this['namespace'][_0x5b0490(0x134)](/\./gim,'/')+'/');this['_template']=await window[_0x5b0490(0x132)](_0x1fd490);_0x2161bf(this['_template']);}else if(/<\s*\btemplate\b/[_0x5b0490(0x124)](_0x5e5b50)){this[_0x5b0490(0x1d2)]=_0x5e5b50;_0x2161bf(this['_template']);}else if(_0x5e5b50&&_0x5e5b50[_0x5b0490(0x1d3)]==0x1&&_0x5e5b50['tagName'][_0x5b0490(0x1d4)]()==_0x5b0490(0x1ce)){this[_0x5b0490(0x1d2)]=_0x5e5b50[_0x5b0490(0x1d5)];_0x2161bf(this[_0x5b0490(0x1d2)]);}else if(_0x5e5b50&&_0x5e5b50[_0x5b0490(0x1d3)]==0x1){this[_0x5b0490(0x1d2)]=_0x5b0490(0x1d6)+_0x5e5b50[_0x5b0490(0x1d5)]+'</template>';_0x2161bf(this['_template']);}else if(_0x5e5b50&&/^\s*class/[_0x5b0490(0x124)](_0x5e5b50[_0x5b0490(0x11f)]())){this['_template']=await imports(_0x5e5b50[_0x5b0490(0x1ce)],_0x337a12);_0x2161bf(this[_0x5b0490(0x1d2)]);}else{this[_0x5b0490(0x1d2)]=_0x5e5b50;_0x2161bf(this[_0x5b0490(0x1d2)]);}});}[_0x48f6c2(0x1d1)](){var _0x3863eb=_0x48f6c2;var _0x4063d1=this[_0x3863eb(0x1d7)]||this[_0x3863eb(0x1d8)]();var _0x3bd1c8=this[_0x3863eb(0x1d9)]();return this['querySelector'](_0x3863eb(0x1ce))||this['innerTemplate']||this[_0x3863eb(0x15d)]||this['template']||this[_0x3863eb(0x1c7)]||Config['SRC_PATH']+(_0x3863eb(0x13f)+_0x4063d1[_0x3863eb(0x1da)]+_0x3863eb(0x1db))+(_0x3bd1c8['ext']||'')+_0x3863eb(0x1dc);}get['isConnected'](){var _0x5f1f02=_0x48f6c2;return this[_0x5f1f02(0x1dd)];}async[_0x48f6c2(0x1de)](){var _0x3ba439=_0x48f6c2;if(this[_0x3ba439(0x1df)]){!this[_0x3ba439(0x1e0)]&&this[_0x3ba439(0x192)]();return;}this[_0x3ba439(0x1df)]=!![];await this[_0x3ba439(0x1e1)]();!this[_0x3ba439(0x1e0)]&&this[_0x3ba439(0x192)]();this['_is_dom_ready']=!![];}async[_0x48f6c2(0x1e1)](_0xe23195=this){var _0x530ca0=_0x48f6c2;await this[_0x530ca0(0x1d0)]();await this[_0x530ca0(0x1e2)]();await this['render'](_0xe23195);setTimeout(_0x2e03d0=>this[_0x530ca0(0x1e3)](),0x0);}async['disconnectedCallback'](){var _0x27c2bb=_0x48f6c2;await this[_0x27c2bb(0x1e4)]();!this[_0x27c2bb(0x1e0)]&&this[_0x27c2bb(0x195)]();}async[_0x48f6c2(0x1e4)](){}async[_0x48f6c2(0x1e5)](_0x4defa6={},_0x2f1517=this[_0x48f6c2(0x1d2)],_0x144f5c){var _0x15b10a=_0x48f6c2;if(this[_0x15b10a(0x1c9)](this[_0x15b10a(0x1c7)])){this['onTemplateRendered'](_0x5ac958);this[_0x15b10a(0x16b)](_0x15b10a(0x1e6),{'target':this});return;}if(_0x2f1517&&typeof _0x2f1517==_0x15b10a(0x1e7)){var _0x3dfc1f=await this[_0x15b10a(0x1e8)](_0x2f1517,_0x4defa6);var _0x5ac958=_0x3dfc1f[_0x15b10a(0x1e9)]();if(!_0x5ac958?.[_0x15b10a(0x1ea)]){console[_0x15b10a(0x138)](this['namespace']+_0x15b10a(0x1eb),{'template':this[_0x15b10a(0x1d2)],'owner':this[_0x15b10a(0x1ec)]});return;}_0x5ac958=_0x5ac958[_0x15b10a(0x1ea)];if(!this[_0x15b10a(0x1ed)]()&&this[_0x15b10a(0x1ee)]()){var _0x220ca8=_0x5ac958['querySelector'](_0x15b10a(0x1ef));if(_0x220ca8){let _0x5ae437=Array[_0x15b10a(0x1f0)](this[_0x15b10a(0x1f1)]);for(let _0x25ef9d of _0x5ae437){var _0x1a8617=_0x25ef9d['getAttribute'](_0x15b10a(0x1ef));var _0x541ac8=_0x1a8617==null?_0x5ac958[_0x15b10a(0x1f2)](_0x15b10a(0x1f3)):_0x5ac958['querySelector']('slot[name=\x22'+_0x1a8617+'\x22]')||null;if(_0x541ac8&&!_0x541ac8['emptied']){_0x541ac8[_0x15b10a(0x1cb)]='';_0x541ac8[_0x15b10a(0x1f4)]=!![];}_0x541ac8?_0x541ac8[_0x15b10a(0x164)](_0x25ef9d):_0x1a8617?_0x25ef9d[_0x15b10a(0x16e)]():null;}}}if(_0x144f5c){_0x144f5c['innerHTML']='';_0x144f5c[_0x15b10a(0x164)](_0x5ac958);}else{if(this['element']){this[_0x15b10a(0x1cb)]='';this[_0x15b10a(0x164)](_0x5ac958);}else{this['root'][_0x15b10a(0x1cb)]='';this[_0x15b10a(0x1cc)]['appendChild'](_0x5ac958);}}this[_0x15b10a(0x1f5)](_0x5ac958);}else if(_0x2f1517&&typeof _0x2f1517==_0x15b10a(0x1f6)&&_0x144f5c){_0x144f5c[_0x15b10a(0x1cb)]='';_0x4defa6[_0x15b10a(0x147)](_0x2f1517);}else if(_0x2f1517&&typeof _0x2f1517==_0x15b10a(0x1f6)){await this[_0x15b10a(0x1e5)](_0x4defa6,_0x2f1517[_0x15b10a(0x16c)](_0x4defa6));}}[_0x48f6c2(0x192)](){var _0x58a762=_0x48f6c2;if(this[_0x58a762(0x190)]||this[_0x58a762(0x194)]||this[_0x58a762(0x193)]){application[_0x58a762(0x1f7)]=application[_0x58a762(0x1f7)]||[];application[_0x58a762(0x1f7)]['push'](this);}}[_0x48f6c2(0x195)](){}['isExistingDomNode'](_0x450525){var _0x4372c9=_0x48f6c2;return _0x450525&&_0x450525[_0x4372c9(0x1ec)]&&_0x450525['parentNode'][_0x4372c9(0x1d3)]==0x1;}static[_0x48f6c2(0x1b8)](_0xeebfd4,_0x195ffb){var _0xe2cbdd=_0x48f6c2;_0xeebfd4[_0xe2cbdd(0x155)]=_0xeebfd4[_0xe2cbdd(0x156)][_0xe2cbdd(0x129)];var _0x56fdad=window['customElements'];var _0x252a20=/([a-zA-Z])(?=[A-Z0-9])/g;var _0x410844=(_0xeebfd4[_0xe2cbdd(0x129)]['is']?_0xeebfd4['constructor']['is']:Config[_0xe2cbdd(0x1f8)]?_0xeebfd4['namespace']:_0xeebfd4[_0xe2cbdd(0x129)][_0xe2cbdd(0x128)])['replace'](_0x252a20,(_0x1fc939,_0x1a203c)=>_0x1a203c+'-')[_0xe2cbdd(0x134)](/\./g,'-')[_0xe2cbdd(0x1d4)]();_0x410844=/\-/[_0xe2cbdd(0x124)](_0x410844)?_0x410844:_0xeebfd4['ns-trait-tagname'];if(/\-/['test'](_0x410844)){if(_0x56fdad['get'](_0x410844)){return;}_0xeebfd4[_0xe2cbdd(0x1f9)]=_0x410844;delete _0xeebfd4[_0xe2cbdd(0x14d)];this[_0xe2cbdd(0x1fa)]();this['defineAncestralClassList']();try{_0x56fdad&&_0x56fdad[_0xe2cbdd(0x1b8)](_0x410844,this);}catch(_0x313680){}}}static[_0x48f6c2(0x1ad)](_0x56e958){var _0x18b36e=_0x48f6c2;try{var _0x170b14=new this(null,_0x56e958);_0x170b14[_0x18b36e(0x1e0)]=!![];_0x170b14[_0x18b36e(0x1fb)][_0x18b36e(0x1fc)]=_0x18b36e(0x1fd);_0x170b14[_0x18b36e(0x1fb)][_0x18b36e(0x1fe)]='1px';_0x170b14[_0x18b36e(0x1fb)][_0x18b36e(0x1ff)]=_0x18b36e(0x200);document[_0x18b36e(0x201)]['appendChild'](_0x170b14);setTimeout(_0x442fe2=>_0x170b14[_0x18b36e(0x16e)](),0x3e8);}catch(_0x37d815){}}[_0x48f6c2(0x202)](){var _0x13f391=_0x48f6c2;if(this[_0x13f391(0x1ed)]()){var _0x1b3f69=this[_0x13f391(0x203)]();_0x1b3f69&&this[_0x13f391(0x204)]((_0x13f391(0x205)+this[_0x13f391(0x206)](_0x1b3f69,this[_0x13f391(0x129)])+_0x13f391(0x207))[_0x13f391(0x1e9)]());}else{var _0x1b3f69=this['cssStyle']();!!_0x1b3f69&&this[_0x13f391(0x1c8)]['_style']!=_0x1b3f69?(this[_0x13f391(0x204)](('<style>\x0a'+this['onTransformStyle'](_0x1b3f69,this[_0x13f391(0x129)])+'\x0a</style>')[_0x13f391(0x1e9)]()),this[_0x13f391(0x1c8)]['_style']=_0x1b3f69):null;}}[_0x48f6c2(0x12d)](_0x33d5ea,_0x3f1b92){var _0x1dc326=_0x48f6c2;return this[_0x1dc326(0x1c7)]?this[_0x1dc326(0x1cc)][_0x1dc326(0x12d)](_0x33d5ea,_0x3f1b92):super['setAttribute'](_0x33d5ea,_0x3f1b92);}[_0x48f6c2(0x1f2)](_0x4a681b,_0x48e0ec){var _0x4bb11a=_0x48f6c2;return this['inShadow']()||this[_0x4bb11a(0x1c7)]?this['root'][_0x4bb11a(0x1f2)](_0x4a681b):super['querySelector'](_0x4a681b);}[_0x48f6c2(0x208)](_0x436577,_0xb6196c){var _0x2fb6c9=_0x48f6c2;return this[_0x2fb6c9(0x1ed)]()||this['element']?this['root'][_0x2fb6c9(0x208)](_0x436577):super[_0x2fb6c9(0x208)](_0x436577);}[_0x48f6c2(0x204)](_0x6a651f){var _0x4c47db=_0x48f6c2;if(this[_0x4c47db(0x1ed)]()){try{var _0x5c9371=new CSSStyleSheet();_0x5c9371[_0x4c47db(0x134)](_0x6a651f[_0x4c47db(0x209)]);this[_0x4c47db(0x1cc)][_0x4c47db(0x20a)]=this['root'][_0x4c47db(0x20a)][_0x4c47db(0x20b)]([_0x5c9371]);}catch(_0x59e6cc){try{setTimeout(_0x268b89=>{var _0x1ad64c=_0x4c47db;var _0x4a16eb=document[_0x1ad64c(0x12c)](_0x1ad64c(0x1fb));_0x4a16eb[_0x1ad64c(0x12d)](_0x1ad64c(0x159),_0x1ad64c(0x20c));_0x4a16eb['setAttribute'](_0x1ad64c(0x20d),_0x1ad64c(0x20e));_0x4a16eb[_0x1ad64c(0x20f)]=_0x6a651f[_0x1ad64c(0x209)];this['root'][_0x1ad64c(0x164)](_0x4a16eb);},0x14);}catch(_0x4726c3){console[_0x4c47db(0x138)](_0x4726c3);}console[_0x4c47db(0x144)](this[_0x4c47db(0x13d)]+_0x4c47db(0x210));}}else{document[_0x4c47db(0x163)][_0x4c47db(0x164)](_0x6a651f);}}[_0x48f6c2(0x211)](_0x3e1a0a){}[_0x48f6c2(0x212)](_0x33d1f4){var _0x4b2342=_0x48f6c2;_0x33d1f4&&_0x33d1f4[_0x4b2342(0x1ec)][_0x4b2342(0x213)](this,_0x33d1f4);}[_0x48f6c2(0x16b)](_0x44627b,_0x1eb8da,_0x4f647c={'bubbles':!![],'cancelable':!![],'composed':!![]},_0x3899a0=this){var _0x508adc=_0x48f6c2;var _0x18ee46=typeof _0x44627b==_0x508adc(0x12b)?_0x44627b:new CustomEvent(_0x44627b,_0x4f647c);if(_0x1eb8da){_0x18ee46['data']=_0x1eb8da;};if(this[_0x508adc(0x1c7)]){return this[_0x508adc(0x1c7)][_0x508adc(0x16b)](_0x18ee46);}else{return super['dispatchEvent'](_0x18ee46);}}['on'](_0x429faa,_0x52cef4,_0x23ebe0=![],_0x5a3e05){var _0x475660=_0x48f6c2;this[_0x475660(0x168)](_0x429faa,_0x52cef4,_0x23ebe0,_0x5a3e05);}[_0x48f6c2(0x168)](_0x10db5c,_0x1cf803,_0x4c04f0=![],_0x1001ab){var _0x2c9f2a=_0x48f6c2;if(typeof _0x1001ab==_0x2c9f2a(0x1e7)){this[_0x2c9f2a(0x168)](_0x10db5c,_0x523045=>{var _0x5275f8=_0x2c9f2a;var _0x105247=_0x523045[_0x5275f8(0x214)]&&_0x523045[_0x5275f8(0x214)]()[_0x5275f8(0x181)](_0xb072f5=>_0xb072f5[_0x5275f8(0x215)]&&_0xb072f5[_0x5275f8(0x215)](_0x1001ab))||_0x523045[_0x5275f8(0x216)];_0x105247&&_0x105247[_0x5275f8(0x215)](_0x1001ab)&&(_0x523045[_0x5275f8(0x217)]=_0x105247)&&_0x1cf803(_0x523045);},_0x4c04f0);}else{if(this[_0x2c9f2a(0x1c9)](this['element'])){this[_0x2c9f2a(0x1c7)][_0x2c9f2a(0x168)](_0x10db5c,_0x1cf803,_0x4c04f0);if(_0x10db5c=='connected'){_0x1cf803({'target':this});}}else{return super['addEventListener'](_0x10db5c,_0x1cf803,_0x4c04f0);if(_0x10db5c=='connected'&&this[_0x2c9f2a(0x1df)]){_0x1cf803({'target':this});}}}}['onStylesheetLoaded'](_0x3a1b65){}[_0x48f6c2(0x206)](_0x2b206f,_0x135a25,_0x39e2e6=this[_0x48f6c2(0x13d)]){var _0x1d24f0=_0x48f6c2;_0x39e2e6=_0x39e2e6[_0x1d24f0(0x134)](/\./g,'/');var _0x29d45a=this[_0x1d24f0(0x1d7)]||this[_0x1d24f0(0x1d8)]();var _0x259722=_0x29d45a&&_0x29d45a['name']?_0x1d24f0(0x218)+_0x29d45a[_0x1d24f0(0x128)]+'\x22]':'';if(!this['inShadow']()){_0x2b206f=_0x2b206f[_0x1d24f0(0x134)](/\:host\(([^\)]*)\)/gm,(_0x4fc445,_0x4d73ea)=>_0x1d24f0(0x219)+_0x4d73ea);_0x2b206f=_0x2b206f[_0x1d24f0(0x134)](/\:host/gm,(_0xfb928d,_0x576394)=>_0x1d24f0(0x219)+(_0x259722||''));_0x2b206f=_0x2b206f['replace'](/\:+host/gm,'.'+_0x135a25[_0x1d24f0(0x128)]);_0x2b206f=_0x2b206f[_0x1d24f0(0x134)](/\.\//,Config[_0x1d24f0(0x140)]+_0x39e2e6+'/');return _0x2b206f;}if(this[_0x1d24f0(0x1ed)]()&&_0x259722){_0x2b206f=_0x2b206f[_0x1d24f0(0x134)](/\:host\(([^\)]*)\)/gm,(_0x429567,_0x21e3c7)=>_0x1d24f0(0x21a)+(_0x259722||'')+_0x21e3c7+')');_0x2b206f=_0x2b206f[_0x1d24f0(0x134)](/\:host\s+/gm,(_0x237691,_0x4613fd)=>_0x1d24f0(0x21a)+(_0x259722||'')+')\x20');}return _0x2b206f;}[_0x48f6c2(0x21b)](_0x216759,_0xb966cf){var _0x20fd7f=_0x48f6c2;if(_0xb966cf&&_0xb966cf[_0x20fd7f(0x21c)]){_0xb966cf[_0x20fd7f(0x21c)][_0x20fd7f(0x21d)]=_0x216759;}else{_0xb966cf[_0x20fd7f(0x164)](document[_0x20fd7f(0x21e)](_0x216759));}}[_0x48f6c2(0x1e3)](){}[_0x48f6c2(0x1ee)](){return!![];}async[_0x48f6c2(0x21f)](_0x96c7b4,_0x8320c7=this[_0x48f6c2(0x1cc)]){return new Promise(async(_0x4ca92f,_0x31862c)=>{requestAnimationFrame(async _0x48a220=>{var _0x3121c5=_0x3524;_0x8320c7[_0x3121c5(0x164)](_0x96c7b4);_0x4ca92f(_0x96c7b4);});});}[_0x48f6c2(0x164)](_0xe709e2){var _0x3bbb70=_0x48f6c2;return this[_0x3bbb70(0x1c7)]&&_0xe709e2!=this[_0x3bbb70(0x1c7)]?this[_0x3bbb70(0x1cc)][_0x3bbb70(0x164)](_0xe709e2):super[_0x3bbb70(0x164)](_0xe709e2);}async[_0x48f6c2(0x1e8)](_0x5eac1c,_0x524448){var _0xf05251=_0x48f6c2;var _0x350bea=this['getTemplateEngine']();return await _0x350bea[_0xf05251(0x220)](_0x5eac1c,_0x524448,this);}[_0x48f6c2(0x1d9)](){var _0x64bdb7=_0x48f6c2;return window[_0x64bdb7(0x1bc)][_0x64bdb7(0x1bb)];}async['onTemplateLoaded'](){var _0x19bd2b=_0x48f6c2;this[_0x19bd2b(0x221)]();this[_0x19bd2b(0x222)]();this[_0x19bd2b(0x223)]();await this[_0x19bd2b(0x224)]();}[_0x48f6c2(0x222)](){var _0x399351=_0x48f6c2;var _0x4c9747=this[_0x399351(0x1d7)]||this[_0x399351(0x1d8)]();_0x4c9747&&_0x4c9747[_0x399351(0x128)]&&this[_0x399351(0x12d)]('skin',_0x4c9747[_0x399351(0x128)]);}[_0x48f6c2(0x1f5)](){var _0x44a573=_0x48f6c2;this[_0x44a573(0x225)]();this[_0x44a573(0x226)]();this['dispatchEvent'](_0x44a573(0x1e6),{'target':this});}[_0x48f6c2(0x225)](){var _0x3a2d34=_0x48f6c2;if(this[_0x3a2d34(0x227)]){console[_0x3a2d34(0x144)](this['namespace']+_0x3a2d34(0x228));}var _0x96256=Array['from'](this[_0x3a2d34(0x208)](_0x3a2d34(0x229)));_0x96256['forEach'](_0x566d13=>!this[_0x566d13['id']]&&(this[_0x566d13['id']]=_0x566d13));}static get[_0x48f6c2(0x22a)](){var _0x4d4524=_0x48f6c2;return[_0x4d4524(0x15d)];}get[_0x48f6c2(0x15d)](){var _0x36aa8c=_0x48f6c2;return this[_0x36aa8c(0x22b)](_0x36aa8c(0x15d));}set[_0x48f6c2(0x15d)](_0x5f09eb){var _0x1e287f=_0x48f6c2;this[_0x1e287f(0x12d)](_0x1e287f(0x15d),_0x5f09eb);}[_0x48f6c2(0x1ed)](){var _0x4f9611=_0x48f6c2;return this['hasAttribute'](_0x4f9611(0x22c))||this[_0x4f9611(0x1cd)];}[_0x48f6c2(0x22d)](_0x240e66){var _0x30e08b=_0x48f6c2;this[_0x30e08b(0x22e)]=!![];return super[_0x30e08b(0x22d)](_0x240e66);}async[_0x48f6c2(0x22f)](_0x494f65,_0x40fe2a,_0x39acc8){var _0x29338f=_0x48f6c2;if(_0x494f65==_0x29338f(0x15d)){if(!this[_0x29338f(0x1df)]){return;}else{var _0x588071=await this[_0x29338f(0x1d0)]();await this[_0x29338f(0x1e1)]();}}}['cloneAttributes'](_0x2c8149=this,_0x5904de){var _0x2cad25=_0x48f6c2;return[..._0x5904de[_0x2cad25(0x230)]]['forEach'](_0x259deb=>{var _0x424118=_0x2cad25;_0x2c8149[_0x424118(0x12d)](_0x259deb[_0x424118(0x231)],_0x259deb[_0x424118(0x232)]);});}[_0x48f6c2(0x203)](){return'';}['onLoadInstanceStylesheet'](){var _0x4ffdab=_0x48f6c2;console[_0x4ffdab(0x144)](this['namespace']+_0x4ffdab(0x233));return this[_0x4ffdab(0x234)]();}static[_0x48f6c2(0x1fa)](){var _0x3a3709=_0x48f6c2;this[_0x3a3709(0x235)]=[];var _0xfe5d2a=this;while(_0xfe5d2a&&this[_0x3a3709(0x235)][_0x3a3709(0x16a)](_0xfe5d2a)){_0xfe5d2a=_0xfe5d2a['prototype']['ancestor'];}}static[_0x48f6c2(0x236)](){var _0xba261e=_0x48f6c2;this['prototype']['classes']=[];for(let _0xbbdbbb of this[_0xba261e(0x235)]){this['prototype'][_0xba261e(0x237)]['unshift'](_0xbbdbbb['prototype'][_0xba261e(0x129)][_0xba261e(0x128)]);}}[_0x48f6c2(0x238)](_0x2a6b21){var _0x24bfc0=_0x48f6c2;var _0x42b902=this[_0x24bfc0(0x1d7)]||this[_0x24bfc0(0x1d8)]();return relativeToAbsoluteFilePath(Config[_0x24bfc0(0x140)]+(_0x24bfc0(0x13f)+_0x42b902['path']+_0x24bfc0(0x239)),_0x2a6b21);}[_0x48f6c2(0x1d8)](){var _0x58f732=_0x48f6c2;if(this[_0x58f732(0x1d7)]){return this['__skin__'];}var _0x54d626=Config[_0x58f732(0x23a)]||this[_0x58f732(0x22b)](_0x58f732(0x23b))||this[_0x58f732(0x129)][_0x58f732(0x23b)]||'';var _0x1ec785=_0x54d626?_0x58f732(0x23c)+_0x54d626+'/':'';this['__skin__']={'name':_0x54d626,'path':_0x1ec785};return this[_0x58f732(0x1d7)];}[_0x48f6c2(0x221)](_0x287092=this['element']||this){var _0x4b9ea2=_0x48f6c2;var _0x156f0c=this[_0x4b9ea2(0x1c8)][_0x4b9ea2(0x237)]['filter'](_0x5ac219=>_0x5ac219!=_0x4b9ea2(0x23d));_0x287092[_0x4b9ea2(0x23e)]+='\x20'+_0x156f0c[_0x4b9ea2(0x23f)]('\x20')[_0x4b9ea2(0x240)]();_0x287092[_0x4b9ea2(0x23e)]=_0x287092['className'][_0x4b9ea2(0x240)]();}[_0x48f6c2(0x241)](){var _0x197bbb=_0x48f6c2;var _0x58abc4=this[_0x197bbb(0x121)][_0x197bbb(0x142)]=this[_0x197bbb(0x121)][_0x197bbb(0x142)]||[];return _0x58abc4[_0x197bbb(0x242)]();}async[_0x48f6c2(0x224)](){var _0x47efe6=_0x48f6c2;await this[_0x47efe6(0x243)]();this['setStylesheet']();this[_0x47efe6(0x211)](this[_0x47efe6(0x142)]);}[_0x48f6c2(0x244)](){return!![];}[_0x48f6c2(0x234)](){return!![];}async[_0x48f6c2(0x243)](){var _0xd728d=_0x48f6c2;var _0x1314fb=[WebComponent,Application,World,HTMLElement];var _0x10b149=this[_0xd728d(0x129)]['ancestors'][_0xd728d(0x242)]();var _0x365023=window[_0xd728d(0x245)]=window[_0xd728d(0x245)]||{};var _0xaf88e8=this['__skin__']||this['getSkin']();return new Promise(async(_0x1dba66,_0x423a42)=>{var _0x4c8417=_0xd728d;for(let _0x53d825 of _0x10b149){if(_0x53d825[_0x4c8417(0x128)]==_0x4c8417(0x23d)){continue;}if(!_0x1314fb['includes'](_0x53d825)&&_0x53d825['prototype']['hasOwnSkin']()){var _0x45f2e6=[];if(_0x53d825!=this[_0x4c8417(0x129)]&&this['hasParentSkin']()){if(_0x53d825[_0x4c8417(0x23b)]==_0xaf88e8[_0x4c8417(0x128)]||!_0x53d825[_0x4c8417(0x23b)]&&!_0xaf88e8[_0x4c8417(0x128)]){_0x45f2e6=_0x45f2e6[_0x4c8417(0x20b)]([relativeToAbsoluteFilePath(Config[_0x4c8417(0x140)]+(_0x4c8417(0x13f)+_0xaf88e8[_0x4c8417(0x1da)]+_0x4c8417(0x239)),_0x53d825[_0x4c8417(0x121)]['namespace'])]);_0x45f2e6=_0x45f2e6[_0x4c8417(0x20b)]((_0x53d825[_0x4c8417(0x121)][_0x4c8417(0x143)]||[])[_0x4c8417(0x242)]());}}else if(_0x53d825==this[_0x4c8417(0x129)]){if(this['hasOwnSkin']()){_0x45f2e6[_0x4c8417(0x16a)](this[_0x4c8417(0x238)](this[_0x4c8417(0x13d)]));}if(this[_0x4c8417(0x1c8)][_0x4c8417(0x246)]('@stylesheets')){_0x45f2e6[_0x4c8417(0x16a)](...this[_0x4c8417(0x1c8)][_0x4c8417(0x143)][_0x4c8417(0x242)]()||[]);}}for(let _0x50a722 of _0x45f2e6){if(_0x365023[_0x50a722]&&!this[_0x4c8417(0x1ed)]()){continue;}_0x50a722=this[_0x4c8417(0x247)](_0x50a722);if(_0x50a722&&!_0x365023[_0x50a722]||this['inShadow']()){!this[_0x4c8417(0x1ed)]()&&(_0x365023[_0x50a722]=!![]);var _0x50fb69=/^http/[_0x4c8417(0x124)](_0x50a722)?'link':'style';var _0x567c65=document[_0x4c8417(0x12c)](_0x50fb69);_0x567c65[_0x4c8417(0x12d)](_0x4c8417(0x159),'text/css');_0x567c65[_0x4c8417(0x12d)](_0x4c8417(0x20d),_0x4c8417(0x20e));_0x567c65[_0x4c8417(0x12d)](_0x4c8417(0x12e),_0x50a722);_0x567c65[_0x4c8417(0x12d)](_0x4c8417(0x248),_0x53d825[_0x4c8417(0x121)][_0x4c8417(0x13d)]);!this[_0x4c8417(0x1ed)]()&&await this[_0x4c8417(0x204)](_0x567c65);if(_0x50fb69=='style'){var _0x41231a;try{_0x41231a=await window[_0x4c8417(0x132)](_0x50a722);}catch(_0x261e3a){}if(_0x41231a){_0x41231a=this[_0x4c8417(0x206)](_0x41231a,_0x53d825);_0x41231a&&this[_0x4c8417(0x21b)](_0x41231a,_0x567c65);this[_0x4c8417(0x1ed)]()&&await this['onAppendStyle'](_0x567c65);this[_0x4c8417(0x249)](_0x567c65);}}else{document[_0x4c8417(0x163)][_0x4c8417(0x21f)](_0x567c65);}}}}}_0x1dba66(!![]);});}[_0x48f6c2(0x247)](_0x1ac9de){return _0x1ac9de;}['setPrototypeInstance'](){var _0x354ae1=_0x48f6c2;this[_0x354ae1(0x12d)](_0x354ae1(0x13d),this[_0x354ae1(0x13d)]);}['hasChildComponents'](){return![];}async['initializeChildComponents'](_0x280def=this[_0x48f6c2(0x1cc)]){var _0x488723=_0x48f6c2;var _0x2309c7=Array[_0x488723(0x1f0)](_0x280def[_0x488723(0x208)]('*[namespace]'));_0x2309c7&&_0x2309c7[_0x488723(0x1a7)]&&_0x2309c7[_0x488723(0x147)](async _0xbfa493=>{var _0x4cf33f=_0x488723;var _0x4b30de=_0xbfa493['getAttribute'](_0x4cf33f(0x13d));if(!classof(_0x4b30de)){var _0x55255a=new system[(_0x4cf33f(0x1a8))][(_0x4cf33f(0x1a9))]();await _0x55255a['import'](_0x4b30de);}});}[_0x48f6c2(0x24a)](_0x272110=this[_0x48f6c2(0x1cc)]){var _0xd443bc=_0x48f6c2;var _0x5f4775=_0x272110[_0xd443bc(0x24b)]();var _0x570a61=_0x5f4775[_0xd443bc(0x118)]<=window['innerHeight']&&_0x5f4775[_0xd443bc(0x24c)]>=0x0;var _0x2ef725=_0x5f4775[_0xd443bc(0x24d)]<=window[_0xd443bc(0x24e)]&&_0x5f4775[_0xd443bc(0x24f)]>=0x0;return _0x570a61&&_0x2ef725;}['watch'](_0x502ecb,_0x4047e0,_0x83a1ec=null,_0x2ccb34,_0x141314=system[_0x48f6c2(0x1bd)][_0x48f6c2(0x250)]['Watcher']){var _0x1e0d0e=_0x48f6c2;_0x502ecb=typeof _0x502ecb==_0x1e0d0e(0x1e7)?this[_0x1e0d0e(0x1f2)](_0x502ecb):_0x502ecb;if(_0x502ecb){return _0x141314['watch'](_0x502ecb,_0x4047e0,_0x83a1ec,_0x2ccb34,this);}}['getBoundingClientRect'](_0x1ee787){var _0x575f95=_0x48f6c2;var _0x1540e9=_0x1ee787?_0x1ee787[_0x575f95(0x24b)]():super[_0x575f95(0x24b)]();_0x1540e9['center']={'x':_0x1540e9['left']+_0x1540e9[_0x575f95(0x1fc)]/0x2,'y':_0x1540e9['top']+_0x1540e9['height']/0x2};return _0x1540e9;}});global[_0x48f6c2(0x251)]=global[_0x48f6c2(0x251)]||core['ui'][_0x48f6c2(0x251)];global['Component']=global[_0x48f6c2(0x252)]||core['ui']['WebComponent'];namespace`w3c.ui`(core['ui'][_0x48f6c2(0x251)]);namespace`core.ui`(class Component2D extends WebComponent{constructor(_0x4a932b,_0x30059d={}){var _0x37540b=_0x48f6c2;super(_0x4a932b,_0x30059d={});this['behaviors']=this[_0x37540b(0x19b)]=new system[(_0x37540b(0x253))][(_0x37540b(0x254))]();}[_0x48f6c2(0x192)](){var _0x16d58f=_0x48f6c2;if(this[_0x16d58f(0x190)]||this['onDraw']||this['onFixedUpdate']){application[_0x16d58f(0x1f7)]=application[_0x16d58f(0x1f7)]||[];application[_0x16d58f(0x1f7)][_0x16d58f(0x16a)](this);}}[_0x48f6c2(0x255)](){if(this['namespace']=='core.ui.Component2D'){return![];}return!![];}});window[_0x48f6c2(0x256)]=window['Component2D']||core['ui'][_0x48f6c2(0x256)];cascade(core['ui'][_0x48f6c2(0x256)],![]);;namespace`core.ui`(class Application extends core['ui']['WebComponent']{constructor(_0x259f17){var _0x330aff=_0x48f6c2;super(_0x259f17);window[_0x330aff(0x1a2)]=this;}[_0x48f6c2(0x192)](){}['onFixedUpdate'](_0x45df69){var _0x570168=_0x48f6c2;if(this[_0x570168(0x257)]){this[_0x570168(0x1f7)]&&this[_0x570168(0x1f7)][_0x570168(0x147)](_0x5af525=>_0x5af525[_0x570168(0x193)](_0x45df69));}}[_0x48f6c2(0x190)](_0x4b0657,_0x59f57b){var _0x501a51=_0x48f6c2;if(this[_0x501a51(0x257)]){this[_0x501a51(0x1f7)]&&this[_0x501a51(0x1f7)]['forEach'](_0x4dc309=>_0x4dc309[_0x501a51(0x190)](_0x4b0657,_0x59f57b));}}['onDraw'](_0x534917){var _0x5b9640=_0x48f6c2;if(this[_0x5b9640(0x257)]){this[_0x5b9640(0x1f7)]&&this[_0x5b9640(0x1f7)][_0x5b9640(0x147)](_0x4bd7a1=>_0x4bd7a1[_0x5b9640(0x194)](_0x534917));}}[_0x48f6c2(0x258)](_0x95c6,_0x21ba6d){var _0x3fdae6=_0x48f6c2;if(_0x21ba6d){var _0x34f57f=Math[_0x3fdae6(0x259)](MainLoop[_0x3fdae6(0x25a)]());}}[_0x48f6c2(0x25b)](){return 0x3e8/0x78;}async[_0x48f6c2(0x1e1)](_0x12e0f8){var _0x171302=_0x48f6c2;await super[_0x171302(0x1e1)](_0x12e0f8);MainLoop[_0x171302(0x25c)]();if(this[_0x171302(0x25d)]()){var _0x2ac2c9=this['getRouteHandler']();this[_0x171302(0x25e)]=new _0x2ac2c9(this,window);}}[_0x48f6c2(0x25f)](){var _0x36626f=_0x48f6c2;return NSRegistry[Config[_0x36626f(0x260)]];}['onRequestPreloadable'](){var _0x149c1f=_0x48f6c2;let _0x37348f=this[_0x149c1f(0x208)]('a[preload]');let _0x2ebf15=Array['from'](_0x37348f)[_0x149c1f(0x261)](_0x40723a=>{var _0x127432=_0x149c1f;_0x40723a[_0x127432(0x262)](_0x127432(0x1ad));return _0x40723a[_0x127432(0x22b)](_0x127432(0x12e));});return[...new Set(_0x2ebf15)];}[_0x48f6c2(0x25d)](){var _0x13e0ff=_0x48f6c2;this['_view_slot']=this[_0x13e0ff(0x1f2)](_0x13e0ff(0x263))||this[_0x13e0ff(0x1f2)](_0x13e0ff(0x264));return this[_0x13e0ff(0x265)];}['onExitActivitySaveScroll'](){var _0x297505=_0x48f6c2;if(this['currentActivity']){var _0x44b2b2=this[_0x297505(0x266)]();this[_0x297505(0x267)][_0x297505(0x268)]=_0x44b2b2[_0x297505(0x269)];}}[_0x48f6c2(0x26a)](_0x162636=null){var _0x1ef278=_0x48f6c2;if(this[_0x1ef278(0x267)]){if(_0x162636){wait(0x64)[_0x1ef278(0x26b)](_0x17b5dd=>{var _0x3cf63c=_0x1ef278;var _0x24d183=this['currentActivity'][_0x3cf63c(0x1f2)]('#'+_0x162636);if(_0x24d183){_0x24d183[_0x3cf63c(0x26c)]({'behavior':_0x3cf63c(0x26d),'block':'start'});}});}else{var _0xf2c18f=this['onFindScrollableSlotArea']();_0xf2c18f[_0x1ef278(0x269)]=this[_0x1ef278(0x267)][_0x1ef278(0x268)]||0x0;}}}[_0x48f6c2(0x266)](){var _0x47d6f1=_0x48f6c2;var _0x6a2049=this['onFindActivitySlot']();if(_0x6a2049 instanceof HTMLSlotElement){_0x6a2049=_0x6a2049[_0x47d6f1(0x1ec)];}return _0x6a2049;}[_0x48f6c2(0x26e)](){var _0x199059=_0x48f6c2;var _0x203bee=this[_0x199059(0x26f)]||this['_view_slot'];if(!_0x203bee){_0x203bee=document['body'];console['warn'](this[_0x199059(0x13d)]+_0x199059(0x270));}this[_0x199059(0x26f)]=_0x203bee;return _0x203bee||this;}[_0x48f6c2(0x1b3)](_0x1c2ac6,_0x2e9ba3,_0x49771c){var _0x20d349=_0x48f6c2;console['log'](_0x20d349(0x1b3),_0x1c2ac6);var _0x2d0a11=this[_0x20d349(0x26e)]();if(this[_0x20d349(0x271)]){this['lastActivity']['onBeforeSleep']&&this[_0x20d349(0x271)][_0x20d349(0x272)]();this[_0x20d349(0x271)]['remove']();this[_0x20d349(0x16b)](_0x20d349(0x273),this[_0x20d349(0x271)]);}else{_0x2d0a11[_0x20d349(0x1cb)]='';}_0x1c2ac6[_0x20d349(0x274)]&&_0x1c2ac6[_0x20d349(0x274)]();_0x2d0a11[_0x20d349(0x164)](_0x1c2ac6);setTimeout(_0x2213f9=>_0x49771c&&_0x49771c[_0x20d349(0x275)]&&_0x49771c['replaceHashes'](_0x1c2ac6),0x3e8);this[_0x20d349(0x267)]=_0x1c2ac6;this[_0x20d349(0x26a)](_0x2e9ba3);this[_0x20d349(0x16b)]('onactivityshown',_0x1c2ac6);this[_0x20d349(0x16b)](_0x20d349(0x276),_0x1c2ac6);}[_0x48f6c2(0x1b2)](_0x3ed9ce){var _0x160132=_0x48f6c2;this[_0x160132(0x277)]();console[_0x160132(0x116)](_0x160132(0x1b2),_0x3ed9ce);this['lastActivity']=_0x3ed9ce;}[_0x48f6c2(0x1af)](_0x140e8e){console['log']('onLoadingActivity',_0x140e8e);}});window['Application']=window[_0x48f6c2(0x278)]||core['ui'][_0x48f6c2(0x278)];namespace`w3c.ui`(core['ui'][_0x48f6c2(0x278)]);;namespace`core.ui`(class World extends core['ui']['Application']{constructor(_0x52e47d){super(_0x52e47d);}[_0x48f6c2(0x190)](_0x1916e4,_0x255105){}[_0x48f6c2(0x193)](){}[_0x48f6c2(0x194)](_0x1f9e99){}['onUpdateEnd'](_0x16904d,_0x639436){var _0x175b73=_0x48f6c2;if(_0x639436){var _0x4608a5=Math[_0x175b73(0x259)](MainLoop['resetFrameDelta']());}}[_0x48f6c2(0x25b)](){return 0x3e8/0x78;}});global[_0x48f6c2(0x279)]=global[_0x48f6c2(0x279)]||core['ui']['World'];!function(_0x8cfe7c){var _0x85a967=_0x48f6c2;function _0x1c5242(_0x1af077){if(_0x152c18=_0xd7fd99(_0x1c5242),!(_0x1af077<_0x5ebcfb+_0x598c6e)){for(_0x3bec1e+=_0x1af077-_0x5ebcfb,_0x5ebcfb=_0x1af077,_0x56681b(_0x1af077,_0x3bec1e),_0x1af077>_0x4678a2+_0x3708af&&(_0x156321=_0x5917b5*_0x3dd183*0x3e8/(_0x1af077-_0x4678a2)+(0x1-_0x5917b5)*_0x156321,_0x4678a2=_0x1af077,_0x3dd183=0x0),_0x3dd183++,_0x340c38=0x0;_0x3bec1e>=_0x3cb585;)if(_0x1e972a(_0x3cb585),_0x3bec1e-=_0x3cb585,++_0x340c38>=0xf0){_0x5bb04b=!0x0;break;}_0x1a0e2e(_0x3bec1e/_0x3cb585),_0x3ec155(_0x156321,_0x5bb04b),_0x5bb04b=!0x1;}}var _0x3cb585=0x3e8/0x3c,_0x3bec1e=0x0,_0x5ebcfb=0x0,_0x156321=0x3c,_0x5917b5=0.9,_0x3708af=0x3e8,_0x4678a2=0x0,_0x3dd183=0x0,_0x340c38=0x0,_0x598c6e=0x0,_0x66c852=!0x1,_0x2c166d=!0x1,_0x5bb04b=!0x1,_0xfe93be=_0x85a967(0x12b)==typeof window?window:_0x8cfe7c,_0xd7fd99=_0xfe93be[_0x85a967(0x27a)]||(function(){var _0x118a89=Date['now'](),_0x6bd4e1,_0xa502fc;return function(_0x20b2a8){var _0x118894=_0x3524;return _0x6bd4e1=Date[_0x118894(0x27b)](),_0xa502fc=Math[_0x118894(0x27c)](0x0,_0x3cb585-(_0x6bd4e1-_0x118a89)),_0x118a89=_0x6bd4e1+_0xa502fc,setTimeout(function(){_0x20b2a8(_0x6bd4e1+_0xa502fc);},_0xa502fc);};}()),_0x2d0b8a=_0xfe93be[_0x85a967(0x27d)]||clearTimeout,_0x5f01f9=function(){},_0x56681b=_0x5f01f9,_0x1e972a=_0x5f01f9,_0x1a0e2e=_0x5f01f9,_0x3ec155=_0x5f01f9,_0x152c18;_0x8cfe7c[_0x85a967(0x27e)]={'getSimulationTimestep':function(){return _0x3cb585;},'setSimulationTimestep':function(_0x2f136e){return _0x3cb585=_0x2f136e,this;},'getFPS':function(){return _0x156321;},'getMaxAllowedFPS':function(){return 0x3e8/_0x598c6e;},'setMaxAllowedFPS':function(_0x552c6f){var _0x5ed849=_0x85a967;return'undefined'==typeof _0x552c6f&&(_0x552c6f=0x1/0x0),0x0===_0x552c6f?this[_0x5ed849(0x27f)]():_0x598c6e=0x3e8/_0x552c6f,this;},'resetFrameDelta':function(){var _0x4ac726=_0x3bec1e;return _0x3bec1e=0x0,_0x4ac726;},'setBegin':function(_0x1c97c3){return _0x56681b=_0x1c97c3||_0x56681b,this;},'setUpdate':function(_0x930188){return _0x1e972a=_0x930188||_0x1e972a,this;},'setDraw':function(_0x1f6037){return _0x1a0e2e=_0x1f6037||_0x1a0e2e,this;},'setEnd':function(_0x3515c7){return _0x3ec155=_0x3515c7||_0x3ec155,this;},'start':function(){return _0x2c166d||(_0x2c166d=!0x0,_0x152c18=_0xd7fd99(function(_0x318952){_0x1a0e2e(0x1),_0x66c852=!0x0,_0x5ebcfb=_0x318952,_0x4678a2=_0x318952,_0x3dd183=0x0,_0x152c18=_0xd7fd99(_0x1c5242);})),this;},'stop':function(){return _0x66c852=!0x1,_0x2c166d=!0x1,_0x2d0b8a(_0x152c18),this;},'isRunning':function(){return _0x66c852;}},_0x85a967(0x1f6)==typeof define&&define[_0x85a967(0x280)]?define(_0x8cfe7c['MainLoop']):_0x85a967(0x12b)==typeof module&&null!==module&&_0x85a967(0x12b)==typeof module[_0x85a967(0x11d)]&&(module[_0x85a967(0x11d)]=_0x8cfe7c[_0x85a967(0x27e)]);}(this);function Ecmascript6ClassTranspiler(){}Ecmascript6ClassTranspiler['prototype']['imports']=window[_0x48f6c2(0x132)];Ecmascript6ClassTranspiler[_0x48f6c2(0x121)]['transpile']=function(_0x588045,_0x5bc83f){var _0x2a0f5a=_0x48f6c2;var _0x32b27b=Config['ENABLE_TRANSPILER'];if(_0x32b27b){_0x588045=this[_0x2a0f5a(0x281)](_0x588045);return _0x588045;}else{return _0x588045;}};Ecmascript6ClassTranspiler['prototype']['transpileToLevel']=function(_0x953505){var _0x11f28f=_0x48f6c2;var _0x255dae=/namespace\s?`([^\s`]*)/;var _0x59fbe9=/class\s+([^\s]*)[\s\n\t]*[\{|extends]/;var _0x3ca398=_0x953505['match'](_0x255dae);var _0xe2a6c1=_0x953505[_0x11f28f(0x282)](_0x59fbe9);if(!_0x3ca398&&!_0xe2a6c1){return this[_0x11f28f(0x283)](_0x953505);}else{_0x3ca398=_0x3ca398?_0x3ca398[0x1]:'';_0xe2a6c1=_0xe2a6c1?_0xe2a6c1[0x1]:'';_0x3ca398=_0x3ca398+'.'+_0xe2a6c1;_0x953505=this[_0x11f28f(0x284)](_0x3ca398,_0x953505);_0x953505=this[_0x11f28f(0x285)](_0x3ca398,_0x953505);_0x953505=this[_0x11f28f(0x286)](_0x3ca398,_0x953505);_0x953505=this[_0x11f28f(0x283)](_0x953505);return _0x953505;}};Ecmascript6ClassTranspiler[_0x48f6c2(0x121)][_0x48f6c2(0x286)]=function(_0x81b65b,_0x4190a1){var _0x55f6e8=_0x48f6c2;if(/webpack/[_0x55f6e8(0x124)](_0x4190a1)||typeof module==_0x55f6e8(0x12b)){return _0x4190a1;}var _0x545fc9=/import\s+['"]+.{1}\/{1}([^;]*)['"]+;+/gm;_0x81b65b=_0x81b65b[_0x55f6e8(0x134)](/\./gm,'/');_0x4190a1=_0x4190a1[_0x55f6e8(0x134)](_0x545fc9,function(_0x3f2024,_0x3222bd){var _0x1c78c2=_0x55f6e8;return _0x1c78c2(0x287)+Config[_0x1c78c2(0x140)]+_0x81b65b+'/'+_0x3222bd+'\x27;';});return _0x4190a1;};Ecmascript6ClassTranspiler[_0x48f6c2(0x121)][_0x48f6c2(0x284)]=function(_0x1bbbae,_0x7d5fa1){var _0x526f68=_0x48f6c2;var _0x131b37=/@([^\W]*)\({1}([^\;]*)\){1};{1}/gm;var _0x373e59=[];if(_0x1bbbae){_0x7d5fa1=_0x7d5fa1[_0x526f68(0x134)](_0x131b37,(_0x1bb801,_0x44a73c,_0x3b9abd)=>{_0x373e59['push'](_0x44a73c+'('+_0x1bbbae+',\x20'+_0x3b9abd+');');return'';});var _0x1a0796=_0x7d5fa1+'\x0a'+_0x373e59[_0x526f68(0x23f)]('\x0a');}else{_0x7d5fa1=_0x7d5fa1[_0x526f68(0x134)](_0x131b37,(_0x956416,_0xa5f6e0,_0x22eeed)=>{return'';});_0x1a0796=_0x7d5fa1;}return _0x1a0796;};function _0x5260(){var _0x27c571=['interface','@public\x20device_driver\x20is\x20deprecated.\x20Use\x20@public\x20driver.\x20See:','isSeedable','isSeedingEnabled','all','find','onDataReceived','transform','setData','table','items','onInitializeModelDataObjects','seed','seeds','loaded','boolean','ENVIRONMENT','Collection','collections','Repository','onUpdate','isSleeping','onAwake','onFixedUpdate','onDraw','onSleep','isStarted','onStart','pop','isFinished','shift','machine','behaviors','\x20Awake','\x20Started','MonoBehavior','activities','window','application','onHashChange','bind','hashchange','hash','length','http','ClassLoader','requestIdleCallback','preloaded','import','preload','location','onLoadingActivity','*[namespace=\x27','current_activity','onExitCurrentActivity','onEnterActivity','destroy','engines','defaultMimetype','DEFAULT_TEMPLATE_ENGINE_MIMETYPE','define','install','getEngineByMimeType','default','customTemplateEngines','drivers','templating','Manager','TemplateLiterals','watch','val','value','input','change','options','element','__proto','isExistingDomNode','innerTemplate','innerHTML','root','shadowRoot','template','/index.html','loadTemplate','getTemplateToLoad','_template','nodeType','toLowerCase','outerHTML','<template>','__skin__','getSkin','getTemplateEngine','path','index','.html','_is_dom_ready','connectedCallback','_is_connected','is_preloading','onConnected','onTemplateLoaded','onRendered','onDisconnected','render','connected','string','evalTemplate','toNode','content','\x20-\x20invalid\x20<template>','parentNode','inShadow','isComposable','slot','from','children','querySelector','slot:not([name])','emptied','onTemplateRendered','function','component2d_instances','USES_NAMESPACE_FOR_TAGNAMES','ns-tagname','defineAncestors','style','width','1px','height','position','absolute','body','setStylesheet','cssStyle','onAppendStyle','<style>\x0a','onTransformStyle','\x0a</style>','querySelectorAll','innerText','adoptedStyleSheets','concat','text/css','rel','stylesheet','textContent','#onAppendStyle():\x20adoptedStyleSheets\x20not\x20yet\x20supported.\x20See\x20https://bugzilla.mozilla.org/show_bug.cgi?id=1520690.','onStyleComputed','replaces','replaceChild','composedPath','matches','target','matchedTarget','[skin=\x22',':host',':host(','setCssTextAttribute','styleSheet','cssText','createTextNode','append','parse','setClassList','setSkinAttribute','setPrototypeInstance','setStyleDocuments','onBindIDs','initializeChildComponents','onAutoQuerySelectIds','#onAutoQuerySelectIds()\x20is\x20deprecated.\x20Replace/implement\x20onBindIDs()\x20instead.','*[id]','observedAttributes','getAttribute','shadow','attachShadow','_usesShadow','attributeChangedCallback','attributes','nodeName','nodeValue','#onLoadInstanceStylesheet()\x20has\x20been\x20renamed.\x20Rename\x20method\x20to\x20hasOwnSkin().','hasOwnSkin','ancestors','defineAncestralClassList','classes','getNSStyleSheet','index.css','SKIN','skin','skins/','_mixin_','className','join','trim','getStyleSheets','reverse','loadcss','hasParentSkin','loaded_stylesheets','hasOwnProperty','onLoadStyle','component','onStylesheetLoaded','isAnyPartOfElementInViewport','getBoundingClientRect','bottom','left','innerWidth','right','watchers','WebComponent','Component','machines','Automata','onLoadInstanceStylesheet','Component2D','isConnected','onUpdateEnd','round','resetFrameDelta','getSimulationTimestep','start','onEnableRouting','router','getRouteHandler','ROUTER','map','removeAttribute','slot[name=\x22view-port\x22]','div[name=\x22view-port\x22]','_view_slot','onFindScrollableSlotArea','currentActivity','_scrollpos','scrollTop','onEnterActivityRestoreScroll','then','scrollIntoView','smooth','onFindActivitySlot','_activitySlot','#onFindActivitySlot()\x20-\x20unable\x20to\x20find\x20a\x20<slot|div\x20name=\x27view-port\x27></slot|div>\x20for\x20loading\x20views.\x20Using\x20<body>\x20as\x20fallback.','lastActivity','onBeforeSleep','sleep','onBeforeAwake','replaceHashes','awake','onExitActivitySaveScroll','Application','World','requestAnimationFrame','now','max','cancelAnimationFrame','MainLoop','stop','amd','transpileToLevel','match','transipleImportsDestructuring','transipleDecoratorFields','transipleClassFields','transipleRelativeFolderImports','import\x20\x27','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20var\x20_mod_\x20=\x20fromNS(',')?fromNS(','):await\x20load(',');\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20//\x20var\x20_mod_\x20=\x20',':await\x20load(',');\x20//usage:\x20import\x20*\x20as\x20global\x20from\x20display.components;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20Object.keys(_mod_).forEach(_exp\x20=>\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20if(global[_exp])\x20{Object.assign(_mod_[_exp],\x20global[_exp])}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20else\x20{global[_exp]\x20=\x20_mod_[_exp]}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20});','includes','var\x20','\x20=\x20await\x20load(','var\x20{',',\x20\x22','\x22,\x20\x22','\x22,\x20','es6Transpiler','run','getElementsByTagName','item','charset','CHARSET','no\x20xhr','USE_COMPRESSED_BUILD','src.','min.','Unable\x20to\x20import:\x20','build','transpile','(async\x20(global)=>{\x20','\x20})(this)','pathsToTry','.js','/index.js','importmap','IMPORT_MAPS','.importmap','DOMContentLoaded','script[namespace]','SPLASH','Config.SPLASH','duration','SPLASH_FADE_DELAY','opacity','DYNAMICLOAD','APP_WAITS_ON_SPLASH','FILENAME','isSimulation','world','ARROW_FUNCTIONS_FOR_WORLD_LOOP','setUpdate','setDraw','setSimulationTimestep','core.ui.Application','cordova','immersiveMode','594359sxsBYB','119656HmeCaz','389121rdWxMC','20pYfUfb','916585azFShN','24kMCNuO','2936234UFgnmr','8KOLMTd','3637737TDBVcr','410gyhJvQ','237831usnxzM','arc','5.2.0:06072022','log','Config','top','/src/','template/literals','force-cache','ui.views.Home','exports','createContextualFragment','toString','firstElementChild','prototype','.toDomElement()\x20is\x20deprecated.\x20Use\x20.toNode()','ownKeys','test','getOwnPropertyDescriptor','defineProperty','traits','name','constructor','with','object','createElement','setAttribute','href','cloneNode','classof','imported_classes','imports','IMPORTS_CACHE_POLICY','replace','ROOTPATH','404\x20import:\x20','text','error','open','GET','send','status','namespace','indexOf','/./','SRC_PATH','relativeToAbsoluteFilePath','stylesheets','@stylesheets','warn','@stylesheets\x20decorator\x20used\x20on\x20','\x20is\x20deprecated.\x20Use\x20css\x20@import\x20rule\x20in\x20default\x20.css\x20file\x20instead.','forEach','unshift','cascade','@cascade','theme','tag','ns-trait-tagname','static','NSRegistry','Meta','split','classname','reduce','fromNS','ancestor','__proto__','modulemap','script','type','module','onerror','onload','src','import\x20*\x20as\x20m\x20from\x20\x22','\x22;\x20modulemap[\x27','\x27]\x20=\x20m;','text/javascript','createObjectURL','head','appendChild','load','undefined','require','addEventListener','subscribers','push','dispatchEvent','call','removeEventListener','remove','Observer','storage\x20device\x20for\x20','IStorageDriver','commit','isSeeded','setSeeded','setCollection','add','update','sort','storage','device_driver','driver'];_0x5260=function(){return _0x27c571;};return _0x5260();}function _0x3524(_0x33e897,_0x1bc76e){var _0x5260a1=_0x5260();_0x3524=function(_0x35244e,_0x22b44d){_0x35244e=_0x35244e-0x109;var _0x55bd0e=_0x5260a1[_0x35244e];return _0x55bd0e;};return _0x3524(_0x33e897,_0x1bc76e);}Ecmascript6ClassTranspiler['prototype'][_0x48f6c2(0x283)]=function(_0x4b5208){var _0x4d14b8=_0x48f6c2;if(/webpack/[_0x4d14b8(0x124)](_0x4b5208)||typeof module=='object'){return _0x4b5208;}var _0x3be36b=/import(?:["'\s]*(?<dest>[\w*{}\n\r\t, ]+)from\s*)?(?<src>["'\s]?.*([@\w_-]+)["'\s]?.*);$/gm;_0x4b5208=_0x4b5208[_0x4d14b8(0x134)](_0x3be36b,(_0x269414,_0x727690,_0x97f671,_0x59c37c)=>{var _0x3ca7b4=_0x4d14b8;if(_0x727690){_0x727690=_0x727690[_0x3ca7b4(0x134)](/\s+as\s+/gm,':');_0x727690=_0x727690[_0x3ca7b4(0x134)](/[\{\}]/gm,'');if(_0x727690['includes']('*')&&(_0x727690['includes']('global')||_0x727690[_0x3ca7b4(0x134)](/\*\s/g,'')=='')){return _0x3ca7b4(0x288)+_0x97f671+_0x3ca7b4(0x289)+_0x97f671+_0x3ca7b4(0x28a)+_0x97f671+_0x3ca7b4(0x28b)+_0x97f671+'?'+_0x97f671+_0x3ca7b4(0x28c)+_0x97f671+_0x3ca7b4(0x28d);}else if(_0x727690[_0x3ca7b4(0x28e)]('*')){_0x727690=_0x727690[_0x3ca7b4(0x134)](/\*\:/gm,'');return _0x3ca7b4(0x28f)+_0x727690+_0x3ca7b4(0x290)+_0x97f671+');';}else{return _0x3ca7b4(0x291)+_0x727690+'}\x20=\x20fromNS('+_0x97f671+_0x3ca7b4(0x289)+_0x97f671+_0x3ca7b4(0x28a)+_0x97f671+');';}}return _0x269414;});return _0x4b5208;};Ecmascript6ClassTranspiler[_0x48f6c2(0x121)][_0x48f6c2(0x285)]=function(_0x43be31,_0xabb5f4){var _0x4d8152=_0x48f6c2;var _0x23396b=new RegExp(/(\@static|@public|\@private)[\s\t\n]+([^\s]*)\s+\=([^\;]*)\;/gm);var _0x5322f5=[];if(_0x43be31){_0xabb5f4=_0xabb5f4['replace'](_0x23396b,(_0x11d5db,_0x5481d8,_0xa4759a,_0x37496c)=>{var _0x26e149=_0x3524;_0x5481d8=_0x5481d8[_0x26e149(0x134)]('@','');_0x5322f5[_0x26e149(0x16a)]('field('+_0x43be31+_0x26e149(0x292)+_0x5481d8+_0x26e149(0x293)+_0xa4759a+_0x26e149(0x294)+_0x37496c+');');return'';});var _0x2f40ba=_0xabb5f4+'\x0a'+_0x5322f5[_0x4d8152(0x23f)]('\x0a');}else{_0xabb5f4=_0xabb5f4[_0x4d8152(0x134)](_0x23396b,(_0x53a02e,_0xda6cd7,_0x2725c2,_0x413130)=>{return'';});_0x2f40ba=_0xabb5f4;}return _0x2f40ba;};namespace`system.http`(class ClassLoader{constructor(){var _0x588412=_0x48f6c2;this[_0x588412(0x295)]=new Ecmascript6ClassTranspiler();window['run']=this[_0x588412(0x296)][_0x588412(0x1a4)](this);return this;}['run'](_0x58990c,_0x5ae034){this['build'](_0x58990c,_0x161aae=>{var _0xadf8ca=_0x3524;var _0x18dc46=document[_0xadf8ca(0x297)](_0xadf8ca(0x163))[_0xadf8ca(0x298)](0x0);var _0x2d2bd5=document[_0xadf8ca(0x12c)](_0xadf8ca(0x158));_0x2d2bd5['setAttribute'](_0xadf8ca(0x159),_0xadf8ca(0x161));_0x2d2bd5[_0xadf8ca(0x12d)](_0xadf8ca(0x299),Config[_0xadf8ca(0x29a)]||'utf-8');_0x2d2bd5[_0xadf8ca(0x137)]=_0x161aae;_0x18dc46[_0xadf8ca(0x164)](_0x2d2bd5);_0x5ae034(_0x2d2bd5);});}async[_0x48f6c2(0x165)](_0x56a32a,_0x1163a3,_0x29ad7f){var _0x174abf=_0x48f6c2;var _0x252327=_0x1c7e18=>_0x29ad7f?_0x29ad7f(_0x1c7e18):null;var _0xe05deb=await window[_0x174abf(0x132)](_0x56a32a,_0x1163a3);_0xe05deb?this['run'](_0xe05deb,_0x29ad7f):_0x252327(_0xe05deb,_0x174abf(0x29b));}async['import'](_0x5c0683,_0x2d240d=null){return new Promise(async(_0x3856d0,_0x295445)=>{var _0x310bc6=_0x3524;if(!_0x2d240d){var _0x2afe64=Config[_0x310bc6(0x140)]+_0x5c0683['replace'](/\./g,'/')+'/'+Config['FILENAME'];_0x2d240d=Config[_0x310bc6(0x29c)]?_0x2afe64['replace']('*',Config['DEBUG']?_0x310bc6(0x29d):_0x310bc6(0x29e)):_0x2afe64['replace']('*','');}let _0xbbea75;try{_0xbbea75=await window[_0x310bc6(0x132)](_0x2d240d);}catch(_0x3f2ef7){_0x295445(_0x3f2ef7);return;}if(_0xbbea75){this['run'](_0xbbea75,_0x5c3175=>_0x3856d0(_0x5c3175));}else{_0x295445(_0x310bc6(0x29f)+_0x2d240d);}});}async[_0x48f6c2(0x2a0)](_0x24ccb9,_0x4c8c44){var _0x43f07e=_0x48f6c2;_0x24ccb9=this[_0x43f07e(0x295)]['transpile'](_0x24ccb9);var _0x2366e6=/^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;while(_0x2366e6[_0x43f07e(0x124)](_0x24ccb9)){var _0xe2f911=_0x24ccb9[_0x43f07e(0x282)](_0x2366e6);var _0x598a94=_0xe2f911[0x1];_0x24ccb9=_0x24ccb9[_0x43f07e(0x134)](_0x2366e6,this[_0x43f07e(0x295)][_0x43f07e(0x2a1)]((window[_0x43f07e(0x131)][_0x598a94]?';':await this[_0x43f07e(0x132)](_0xe2f911))||''));}_0x4c8c44(_0x43f07e(0x2a2)+_0x24ccb9+_0x43f07e(0x2a3));}async['imports'](_0x297598){var _0x262205=_0x48f6c2;var _0x5bb537=null;var _0x45bb03=this[_0x262205(0x2a4)](_0x297598);for(let _0xf478a4 of _0x45bb03){var _0x5bb537=await window['imports'](_0xf478a4);if(_0x5bb537){break;}}return _0x5bb537;}['pathsToTry'](_0x26e2bb){var _0x2b90a4=_0x48f6c2;var _0x1a35cb=_0x26e2bb[0x1];if(/\.m?js$/[_0x2b90a4(0x124)](_0x1a35cb)){return[_0x1a35cb];}_0x1a35cb=_0x1a35cb[_0x2b90a4(0x134)](/\./gm,'/');var _0xad1a6b=Config[_0x2b90a4(0x140)];var _0x197cca=[];_0x26e2bb[0x0][_0x2b90a4(0x28e)]('!')?_0x197cca[_0x2b90a4(0x16a)](_0xad1a6b+_0x1a35cb+_0x2b90a4(0x2a5)):null;_0x1a35cb[_0x2b90a4(0x28e)]('@')?_0x197cca[_0x2b90a4(0x16a)](_0xad1a6b+_0x1a35cb[_0x2b90a4(0x134)]('@','')+'.js'):null;_0x197cca[_0x2b90a4(0x16a)](_0xad1a6b+_0x1a35cb+_0x2b90a4(0x2a6));_0x197cca[_0x2b90a4(0x16a)](_0xad1a6b+_0x1a35cb+'/index.min.js');return _0x197cca;}});async function importmap(){var _0x1498a5=_0x48f6c2;window[_0x1498a5(0x2a7)]=window[_0x1498a5(0x2a7)]||{};if(!Config[_0x1498a5(0x2a8)]){return;}const _0x5cd4c3=await(await fetch(Config[_0x1498a5(0x135)]+_0x1498a5(0x2a9)))[_0x1498a5(0x137)]();window[_0x1498a5(0x2a7)]=JSON['parse'](_0x5cd4c3)[_0x1498a5(0x132)];}document[_0x48f6c2(0x168)](_0x48f6c2(0x2aa),async _0xcd01d4=>{var _0x21ad35=_0x48f6c2;let _0x4d1249=![];try{await importmap();}catch(_0x4affb1){}await wait(0x32);let _0x22d435=(document[_0x21ad35(0x163)]['querySelector'](_0x21ad35(0x2ab))||document[_0x21ad35(0x201)])['getAttribute']('namespace')||Config['NAMESPACE'];if(Config[_0x21ad35(0x2ac)]){let _0x33584b=new system[(_0x21ad35(0x1a8))][(_0x21ad35(0x1a9))]();var _0x525311=await _0x33584b[_0x21ad35(0x1ac)](Config[_0x21ad35(0x2ac)],Config[_0x21ad35(0x140)]+Config['SPLASH'][_0x21ad35(0x134)](/\./gm,'/')+_0x21ad35(0x2a6))['catch'](_0x6d6505=>console[_0x21ad35(0x138)](_0x21ad35(0x2ad),_0x6d6505));var _0x33562b=classof(Config['SPLASH']);if(_0x33562b){var _0x45bc6f=new _0x33562b();_0x45bc6f['on'](_0x21ad35(0x18a),_0x5e0a70=>_0x4d1249=!![]);_0x45bc6f[_0x21ad35(0x12d)](_0x21ad35(0x2ae),Config[_0x21ad35(0x2af)]);document[_0x21ad35(0x201)][_0x21ad35(0x164)](_0x45bc6f);document[_0x21ad35(0x201)][_0x21ad35(0x1fb)][_0x21ad35(0x2b0)]=0x1;}}else{_0x4d1249=!![];};async function _0xa932b0(){var _0x2c6f15=_0x21ad35;if(_0x22d435&&Config[_0x2c6f15(0x2b1)]){if(Config[_0x2c6f15(0x2b2)]&&!_0x4d1249){await sleep(0x64);_0xa932b0();return;}else{var _0x9d05a3=Config[_0x2c6f15(0x140)]+_0x22d435[_0x2c6f15(0x134)](/\./g,'/')+'/'+Config[_0x2c6f15(0x2b3)];var _0x165330=Config['USE_COMPRESSED_BUILD']?_0x9d05a3[_0x2c6f15(0x134)]('*',Config['DEBUG']?_0x2c6f15(0x29d):_0x2c6f15(0x29e)):_0x9d05a3[_0x2c6f15(0x134)]('*','');let _0x59e06d=new system[(_0x2c6f15(0x1a8))]['ClassLoader']();_0x59e06d['import'](_0x22d435,_0x165330)[_0x2c6f15(0x26b)](async function _0xbd33e2(){var _0xddcf49=_0x2c6f15;if(!NSRegistry[_0x22d435]||!_0x4d1249){await wait(0x3e8/0x14);_0xbd33e2();return;}let _0x1718ab=window['application']=window[_0xddcf49(0x1a2)]||new NSRegistry[_0x22d435](document[_0xddcf49(0x201)]);if(typeof World=='function'&&_0x1718ab instanceof World||_0x1718ab&&_0x1718ab[_0xddcf49(0x2b4)]){window[_0xddcf49(0x2b5)]=_0x1718ab;let _0x2b3b24=0x1&&Config[_0xddcf49(0x2b6)]==!![];try{eval('class _0x5b746d {\n    [\'do\'] = () => {\n    };\n}');}catch(_0x212356){_0x2b3b24=0x0;}let _0x42c473=MainLoop;_0x1718ab['onUpdate']&&_0x42c473['setBegin'](_0x2b3b24?_0x1718ab[_0xddcf49(0x190)]:_0x1718ab['onUpdate']['bind'](_0x1718ab));_0x1718ab[_0xddcf49(0x193)]&&_0x42c473[_0xddcf49(0x2b7)](_0x2b3b24?_0x1718ab['onFixedUpdate']:_0x1718ab['onFixedUpdate'][_0xddcf49(0x1a4)](_0x1718ab));_0x1718ab[_0xddcf49(0x194)]&&_0x42c473[_0xddcf49(0x2b8)](_0x2b3b24?_0x1718ab[_0xddcf49(0x194)]:_0x1718ab[_0xddcf49(0x194)][_0xddcf49(0x1a4)](_0x1718ab));_0x1718ab[_0xddcf49(0x258)]&&_0x42c473['setEnd'](_0x2b3b24?_0x1718ab[_0xddcf49(0x258)]:_0x1718ab['onUpdateEnd']['bind'](_0x1718ab));_0x42c473[_0xddcf49(0x2b9)](_0x1718ab[_0xddcf49(0x25b)]());}});}}else{let _0x2c012a=new NSRegistry[(_0x2c6f15(0x2ba))](document[_0x2c6f15(0x201)]);await _0x2c012a[_0x2c6f15(0x226)]();}};_0x21ad35(0x2bb)in window?document['addEventListener']('deviceready',()=>{var _0x2bb6f9=_0x21ad35;AndroidFullScreen&&AndroidFullScreen[_0x2bb6f9(0x2bc)](_0x38af48=>{},_0x113e73=>{});_0xa932b0();},![]):_0xa932b0();},![]); })(this)
+(async (global)=>{ global.arc = {
+    version : "5.2.1:09102022"
+};
+console.log("v"+global.arc.version);
+var Config = global.Config = global.Config||{
+    NAMESPACE : null,
+    USE_COMPRESSED_BUILD : false,
+    FILENAME : "index.*js",
+    DYNAMICLOAD : true,
+    CHARSET : "utf-8",
+    ROOTPATH : "../../../",
+    SRC_PATH : "/src/",
+    ENVIRONMENT : "prod",
+    LOGGING : true,
+    ENABLE_TRANSPILER : true,
+    DEFAULT_TEMPLATE_ENGINE_MIMETYPE : "template/literals",
+    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false,//ex: "index.kruntch.html"
+    IMPORTS_CACHE_POLICY : { cache: "force-cache", priority: 'high'}, //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
+    DEBUG:true,
+    DEFAULT_VIEW : "ui.views.Home",
+    ROUTER : 'system.http.Router',
+    AUTOLOAD_IMPORT_MAPS : true,
+    IMPORT_MAPS:true,
+    USES_NAMESPACE_FOR_TAGNAMES : true,
+    ARROW_FUNCTIONS_FOR_WORLD_LOOP : true
+};
+global.Config = Config;
+try{module.exports = Config;}catch(e){}
+//
+// Object.defineProperty(Object.prototype, 'toQueryString', {
+//   enumerable: false,
+//   configurable: false,
+//   value: function(obj,prefix) {
+//     console.warn("#toQueryString() is deprecated. Replace with use URLSearchParams")
+//     obj=obj||this;
+//     var str = [];
+//     for(var p in obj) {
+//       if (obj.hasOwnProperty(p)) {
+//         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+//         str.push(typeof v == "object" ?
+//           this.toQueryString(v, k) :
+//           k + "=" + v);
+//       }
+//     }
+//     return str.join("&");
+//   }
+// });
+;String.prototype.toNode = function(fragment=false){
+  var n = document.createRange().createContextualFragment(this.toString())
+  return fragment?fragment:n.firstElementChild;
+}
+String.prototype.toDomElement = function(){
+  console.warn(".toDomElement() is deprecated. Use .toNode()")
+  return this.toNode();
+}
+//
+;var wait = sleep = ms => new Promise((r, j)=>setTimeout(r, ms));
+global.wait=wait;
+
+function reflect(target, source) {
+    for (let key of Reflect.ownKeys(source)) {
+        if(typeof key != Symbol && !/Symbol|namespace|constructor|ancestor|classname|prototype|name/.test(key)){
+            let desc = Object.getOwnPropertyDescriptor(source, key);
+            Object.defineProperty(target, key, desc);
+        }
+    }
+    target.traits=target.traits||{};
+    target.traits[source.constructor.name]=source.constructor;
+};
+
+Function.prototype.with = function(...mixin) {
+    let _mixin_ = class extends this {}
+
+    for(let m of mixin){
+        if(typeof m =="object") {
+            reflect(_mixin_.prototype, m);
+        } else{
+            reflect(_mixin_.prototype, m.prototype);
+        }
+    }
+    return _mixin_;
+};
+
+
+/*Function.prototype.as = function(...mixin) {
+    let _mixin_ = class extends this {
+        constructor(el,options){
+            super(el,options);
+            this.initialize && this.initialize(el,options);
+        }
+    }
+
+    for(let m of mixin){
+        if(typeof m =="object") {
+            reflect(_mixin_.prototype, m);
+        } else{
+            reflect(_mixin_.prototype, m.prototype);
+        }
+    }
+    if(mixin.length==1){
+        _mixin_.prototype.constructor = mixin[0].prototype.constructor;
+        _mixin_.ancestors = _mixin_.prototype.ancestors = mixin[0].ancestors;
+    }
+    return _mixin_;
+};*/
+
+
+// var HistogramByteComponentsAndKeyArray = function(inArray, l, r, getKey)
+// {
+//     var numberOfDigits = 4;
+//     var numberOfBins = 256;
+//     var inKeys = new Array(inArray.length);
+
+//     var count = new Array(numberOfDigits);
+//     for (var d = 0; d < numberOfDigits; d++)
+//     {
+//         count[d] = new Array(numberOfBins);
+//         for (var b = 0; b < numberOfBins; b++)
+//         count[d][b] = 0;
+//     }
+    
+//     for (var current = l; current <= r; current++) 
+//     {
+//         var value = getKey(inArray[current]);
+//         inKeys[current] = value;
+//         count[0][ value        & 0xff]++;
+//         count[1][(value >>  8) & 0xff]++;
+//         count[2][(value >> 16) & 0xff]++;
+//         count[3][(value >> 24) & 0xff]++;
+//     }
+//     return {
+//         count: count,
+//         inKeys: inKeys
+//     };
+// };
+
+// var originalSort=Array.prototype.sort;
+// Array.prototype.sort = function(getKey,bool=true) {
+//     if(!bool) {
+//         return originalSort.call(this)
+//     }
+//      var inputArray = this;
+// 		var numberOfBitsPerDigit = 8;
+// 		var numberOfBins = 1 << numberOfBitsPerDigit;
+// 		var numberOfDigits = 4;
+// 		var outputArray   = new Array(inputArray.length);
+// 		var outSortedKeys = new Array(inputArray.length);
+// 		var outputArrayHasResult = false;
+// 		var bitMask = numberOfBins - 1;
+// 		var shiftRightAmount = 0;
+// 		var d = 0;
+	
+// 		var retValue = HistogramByteComponentsAndKeyArray(inputArray, 0, inputArray.length - 1, getKey);
+// 		var count  = retValue.count;
+// 		var inKeys = retValue.inKeys;
+	  
+// 		var startOfBin = new Array(numberOfDigits);
+// 		for (d = 0; d < numberOfDigits; d++)
+// 		{
+// 		  startOfBin[d] = new Array(numberOfBins);
+// 		  startOfBin[d][0] = 0;
+// 		  for (var b = 1; b < numberOfBins; b++ )
+// 			startOfBin[d][b] = startOfBin[d][b - 1] + count[d][b - 1];
+// 		}
+		
+// 		d = 0;
+// 		while( bitMask != 0 )    
+// 		{
+// 		  var startOfBinLoc = startOfBin[d];
+	
+// 		  for (var current = 0; current < inputArray.length; current++)
+// 		  {
+// 			var endOfBinIndex = (inKeys[current] & bitMask) >> shiftRightAmount;
+// 			var index = startOfBinLoc[endOfBinIndex];
+// 			outputArray[  index] = inputArray[current];
+// 			outSortedKeys[index] = inKeys[    current];
+// 			startOfBinLoc[endOfBinIndex]++;
+// 		  }
+			
+// 			bitMask <<= numberOfBitsPerDigit;
+// 			shiftRightAmount += numberOfBitsPerDigit;
+// 			outputArrayHasResult = !outputArrayHasResult;
+// 			d++;
+			
+// 			var tmp = inputArray, inputArray = outputArray, outputArray = tmp;
+// 			var tmpKeys = inKeys;  inKeys = outSortedKeys;  outSortedKeys = tmpKeys;
+// 		}
+	
+// 		return outputArrayHasResult ? outputArray : inputArray;
+// 	};
+if (Config.LOGGING==false) {
+    for (var k in console) {console[k] = function () { } }
+}
+
+window.toAbsoluteURL = function(url) {
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    return a.cloneNode(false).href; 
+}
+
+window.classof = function(ns){ return NSRegistry[ns] }
+window.imported_classes = window.imported_classes || {};
+window.imports = async function (x, opts, isError) {
+    opts = opts || Config.IMPORTS_CACHE_POLICY || {cache:"force-cache"}
+    return new Promise(async (resolve, reject) => {
+        var path = x;
+        path = path.replace(/^\/+/, Config.ROOTPATH);
+        var error = "404 import: " + toAbsoluteURL(path)||path;
+        if (window.imported_classes[x]) {
+            resolve(window.imported_classes[x]);
+            return;
+        }
+        try {
+            const response = await fetch(path, opts);
+            if (response.ok) {
+                var src = await response.text();
+                window.imported_classes[x] = src;
+                resolve(src);
+            } else {
+                //then()-else{} when ran from server. catch() block never runs
+                var src = await response.text();
+                throw new Error;
+                console.error(error);
+                resolve("");//resolve() prevents app from breaking on 404
+            }
+        } catch (e) {
+            try{
+              var request = new XMLHttpRequest();
+              request.open('GET', path, false);
+              request.send(null);
+            } catch(xe){
+              console.error("404 import: " + toAbsoluteURL(path), xe);
+                resolve("");//resolve() prevents app from breaking on 404
+            }
+            if (request.status == 0 || request.status == 200) {
+                src = request.responseText;
+                window.imported_classes[x] = src;
+                resolve(src);
+            }
+            else {
+                reject("404 import: " + toAbsoluteURL(path))
+                throw new Error;
+                resolve("");
+            }
+        }
+    });
+};
+//
+function relativeToAbsoluteFilePath(path, ns, appendRoot){
+    ns = ns||this.namespace;
+    ns = ns.replace(/\./gim,"/");
+    if(path.indexOf("/./") >= 0){
+        path = path.replace("./", ns+"/");
+    } 
+    if(/^\.\//.test(path)){
+        path = path.replace("./", Config.SRC_PATH+ns+"/");
+    } 
+    path = /http:/.test(path)? path : path.replace("//","/");
+    return path;
+}
+global.relativeToAbsoluteFilePath = relativeToAbsoluteFilePath;
+
+window.stylesheets = function stylesheets (target, paths){
+    target.prototype['@stylesheets'] = [];
+    console.warn(`@stylesheets decorator used on ${target.prototype.namespace} is deprecated. Use css @import rule in default .css file instead.`)
+    paths && paths.forEach(p => {
+        var filepath = relativeToAbsoluteFilePath(p,target.prototype.namespace,false);
+        target.prototype['@stylesheets'].unshift(filepath)
+    });
+}
+
+window.cascade = function cascade(target,shouldCascade){
+    target.prototype['@cascade'] = shouldCascade;
+}
+
+window.prop = function prop(target,key,val){
+    target.prototype[key] = val;
+}
+
+window.theme = function(target, name){
+ target.prototype.theme = name
+}
+
+window.tag = function tag(target, name){
+    if(target.is){return}
+    target.prototype["ns-trait-tagname"]=name;
+    try{
+        target.define(target.prototype)
+    }catch(e){console.error(e)}
+    console.warn(`@tag decorator on class '${target.prototype.namespace}' is deprecated`);
+    return;
+}
+
+window.field = function field(target, type, key, val){
+    target = (type=="static") ? target : target.prototype;
+    target[key] = val;
+};
+
+
+
+; (function(env) {
+    env.NSRegistry = env.NSRegistry||{};
+    try{env.Meta= class{};}catch(e){};
+    env.namespace = function(ns){
+        ns = ns[0];
+        /\.\*$/.test(ns) ? createNS(ns.split(/\.\*$/)[0],{}):null;
+        return /\.\*$/.test(ns) ? 
+            createNS(ns.split(/\.\*$/)[0],{}):
+            function(...defs){
+                let fns="";
+                defs.forEach(def => {
+                    def=def||{};
+                    var nsparts=ns.match(/\.([A-Z]+[a-zA-Z0-9\_]*)\b$/);
+                    var k = def.prototype||def;
+                        k.classname = nsparts?nsparts[1]:def.name;
+                        fns = ns+"."+k.classname;
+                        var cls = NSRegistry[fns];
+                        if(cls && cls.prototype instanceof WebComponent){ return }
+                        k.namespace = fns;
+                        return env.NSRegistry[fns] = (typeof def == "function") ?
+                            createNS(fns,createClass(def||{})):
+                            createNS(ns,(def||{})), 
+                                delete def.namespace, 
+                                delete def.classname;
+                });
+                return env.NSRegistry[fns];
+            }
+    }
+    
+    var createNS = function(aNamespace, def){
+        var parts       = aNamespace.split(/\./g); 
+        var classname   = parts.pop();
+        var scope = parts.reduce((acc, next) => acc[next] ? 
+            acc[next] : (acc[next]={}), env);
+        scope[classname] = def;
+        return scope[classname];
+    };
+
+    var fromNS = function(ns){
+        var parts = ns.split(/\./g); 
+        return parts.reduce((acc, next) => acc&&acc[next] ? acc[next] : (null), env);
+    };
+    env.fromNS=fromNS;
+
+    var createClass = function(func){
+        try {
+            var proto  = func.prototype;
+                proto.ancestor = proto.__proto__.constructor;
+                try{  func.define(proto) } catch(e){};
+                return func;
+        } catch(e){ return func }
+        return func
+    };
+})(this);
+(()=> {
+  var modulemap = window.modulemap ={};
+  async function importModule(url) {
+    url = (window.importmap[url]||url).replace(/^\/+/, Config.ROOTPATH);
+    var absURL = toAbsoluteURL(url);
+    var mod=modulemap[absURL];
+    if (mod) { return mod};
+    return new Promise(async (resolve, reject) => {
+      if (mod) { resolve(mod)};
+      var s1 = document.createElement("script");
+          s1.type = "module";
+          s1.onerror = () => reject(new Error(`404: ${absURL}`));
+          s1.onload  = () => {
+            resolve(modulemap[absURL]); URL.revokeObjectURL(s1.src); s1.remove();
+          };
+      const loader = `import * as m from "${absURL}"; modulemap['${absURL}'] = m;`;
+      const blob = new Blob([loader], { type: "text/javascript" });
+      s1.src = URL.createObjectURL(blob);
+      document.head.appendChild(s1);
+    });
+  };
+
+  window.load = importModule;
+  if(typeof require == "undefined"){
+    window.require = importModule;
+  }
+})();
+class Observer {
+    addEventListener(name, cb, capture){
+        this.subscribers=this.subscribers||{};
+        if (!this.subscribers[name]) {
+            this.subscribers[name] = [];}
+        this.subscribers[name].push({name, func:cb});
+    }
+    
+    dispatchEvent(name, data, scope=this||window) {
+        this.subscribers=this.subscribers||{};
+        var cbs = this.subscribers[name]||[];
+            cbs.forEach(cb => cb.func.call(scope, data));  
+    }
+    
+    removeEventListener(name, cb){
+        this.subscribers=this.subscribers||{};
+        var subs = this.subscribers[name]||[];
+            subs.remove(i => i.name === name && i.func === cb);
+    }
+};
+window.Observer = window.IEventTarget = Observer;
+
+
+
+namespace `domain` (
+    class IStorageDriver {
+        constructor (collection, storage_device){
+            console.log(`storage device for ${collection.prototype.classname}`, this)
+        }
+
+        isSeedingEnabled(){
+            return false;
+        }
+        
+        static driver(){
+            return Config.IStorageDriver||this
+        }
+
+        commit(){}
+
+        isSeeded(){}
+
+        setSeeded(){}
+
+        setCollection (name){}
+
+        add(obj, cb){}
+
+        update(obj, cb){}
+ 
+        remove(cb,query){}
+
+        find(cb, query){}
+
+        sort(cursor, attrb, order){}
+    }
+);
+
+
+
+namespace `domain.collections` (
+    class Repository extends IEventTarget {
+        static get storage(){
+            var p = this.prototype;
+            var Storage = p.device_driver||p.driver;
+                Storage = typeof Storage=="string"?NSRegistry[Storage]:Storage;
+            this.interface = this.interface||new Storage(this);
+            if(p.device_driver){console.warn(`@public device_driver is deprecated. Use @public driver. See:`,p.namespace)}
+            return this.interface;
+        }
+
+        static isSeedable(){
+            return this.storage.isSeedingEnabled();
+        }
+
+        static commit() {
+            this.storage.commit();
+        }
+
+        static async add(obj,cb){
+            var results = await this.storage.add(obj,cb);
+            return results;
+        }
+
+        static async update(obj,cb){
+            var results = await this.storage.update(obj,cb);
+            return results;
+        }
+
+        static async all(cb){
+            var results = await this.storage.all(cb);
+            return results;
+        }
+
+        static async remove(query={},cb){
+            return new Promise((resolve,reject) =>{
+                this.storage.remove((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                },query)
+            })
+        }
+
+
+        static async find(query={},cb){
+            return new Promise((resolve,reject) =>{
+                this.storage.find((result, error)=>{
+                    cb?cb(result, error):resolve(result, error);
+                },query)
+            })
+        }
+
+        static onDataReceived (data, xhr){
+            var self=this;
+            data = this.transform(data);
+            this.setData(data.table||data.name, data);
+        }
+
+        static transform (data, xhr){
+            return data;
+        }
+
+        static setData (name,data){
+            if(data && data.items){
+                for(let obj of data.items){
+                    this.add(obj, (res)=> {});
+                }
+            }
+        }
+
+        static onInitializeModelDataObjects (data){
+            return this.transform(data);
+        }
+
+        static async seed (uri=this.prototype.seeds, params, force){
+            return new Promise(async (resolve,reject) =>{
+                if(!this.isSeedable()) {
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    resolve();
+                    return;
+                };
+                force = (typeof force == "boolean") ? force:false;
+                if(force||!this.storage.isSeeded()){
+                    var response = await fetch(uri[Config.ENVIRONMENT]);
+                    var json = await response.json();
+                    var res = this.onDataReceived(json);
+                    this.storage.setSeeded(true)
+                    this.commit();
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    resolve(res)
+                } else {
+                    this.prototype.dispatchEvent("loaded", {controller: this}, this);
+                    this.storage.setSeeded(true)
+                    this.commit();
+                    resolve()
+                }  
+            })
+        }
+    }
+);
+
+Collection = window.Collection = domain.collections.Repository;
+
+
+
+namespace `system.machines` (
+    class Automata extends Array {
+        constructor() {
+            super();
+        }
+
+        get state(){
+            return this[0]
+        }
+
+        //called by game loop
+        onUpdate(timestamp, delta){
+            var state = this[0];
+                //================AWAKE IF SLEEPING======
+                state&&state.isSleeping&&state.onAwake();
+                state&&(state.isSleeping=false);
+                //========================================
+                state&&!state.isSleeping&&state.onUpdate&&state.onUpdate(timestamp, delta);
+        }
+
+        //called by game loop
+        onFixedUpdate(time){
+            var state = this[0];
+                state&&!state.isSleeping&&state.onFixedUpdate&&state.onFixedUpdate(time);
+        }
+
+        //called by game loop
+        onDraw(interpolation){
+            var state = this[0];
+                state&&!state.isSleeping&&state.onDraw&&state.onDraw(interpolation);
+        }
+
+        
+
+        //called by user to push in a new Component
+        push(state){
+            if(this[0]==state){return}
+            this[0]&&this[0].onSleep();
+            this[0]&&(this[0].isSleeping=true);
+            state && !state.isStarted && state.onStart();
+            state && state.onAwake();
+            state.isSleeping=false
+            // this.pop();
+            this.unshift(state);
+        }
+
+        //called by machine
+        pop(item){
+            if(item){
+                var current = this[0];
+                if(current && current==item){
+                    if(!current.isFinished){
+                        current.onSleep()
+                        current.isSleeping=true;
+                    }
+                    else {
+                        current.onExit();
+                        this[0]=null;
+                    }
+                    this.shift();
+                    this[0].onAwake();
+                    this[0].isSleeping=false;
+                }
+            } else {
+                var s = this.shift();
+                    s.onSleep();
+                this[0] && this[0].onAwake()
+                this[0].isSleeping=false;
+            }   
+            // this.shift();
+        }
+    }
+);
+
+
+
+
+namespace `system.machines` (
+    class State {
+        constructor(element, machine){
+            this.element = element;
+            this.machine = machine||element.machine||element.behaviors;
+		}
+
+		//------------------------------MACHINE CALLED----------------------------
+
+        //Called when machine awakes this component. Usualy we hide/show onAwake.
+        //and do anything else like play music, sfx, animation etc
+        onAwake(){
+            console.log(this.namespace + " Awake");
+            // alert(this.sprite.x)
+        }
+
+        //Machine puts it to sleep.Usually hide itself, pause music, animate out.
+        onSleep(){
+            console.log(this.namespace + " Sleeping");
+        }
+
+        //Machine calls it once if never started, hence the isStarted flag. Usually,
+        //you append this component to DOM, which fires onConnected() above.
+        onStart(dir) {
+			this.isStarted=true;
+            console.log(this.namespace + " Started");
+		}
+
+
+        //Machine calls if isFinished is ever true. Destroy self and cleanup. 
+        onExit(){
+            console.log(this.namespace + " Exit")
+        }
+
+        //onUpdate, runs 1x per frame. Good place to handle user input
+       	onUpdate(timestamp, delta){
+            // Key.isUp(Key.ESC) && this.dispatchEvent("startmenu")
+        }
+
+
+        //runs many times per frame. Good place for physics/collision/ai
+        onFixedUpdate(time) {
+
+        }
+
+        //runs 1x per frame. Good place to paint
+        onDraw(interpolation){
+            // console.log(!this.sprite.iscolliding)
+		}
+    }
+);
+global.MonoBehavior = global.MonoBehavior||system.machines.State;
+
+
+namespace `system.http` (
+    class Router {
+        constructor(app,hostWindow){
+            this.activities = {};
+            this.preloaded={};
+        	this.window = hostWindow;
+        	this.application = app;
+
+            var hashchangeCb = this.application.onHashChange?
+                this.application.onHashChange.bind(this.application):
+                this.onHashChange.bind(this);
+
+            this.window.addEventListener("hashchange", (e)=> hashchangeCb(e), false)
+            if(this.window.location.hash.length > 0){
+                hashchangeCb()
+            }
+        }
+
+        preload(){
+            var c = new system.http.ClassLoader;
+            if ('requestIdleCallback' in window) {
+                window.requestIdleCallback(e =>{
+                    var preloadables = this.application.onRequestPreloadable();
+                        preloadables.forEach(async ns=>{
+                            ns = ns.split("#")[1];
+                            ns = ns.split("/")[0];
+                            if(NSRegistry[ns]){return}
+                            if(!this.preloaded[ns]) {
+                                try{
+                                    var script = await c.import(ns);
+                                    if(script){
+                                        var cls = NSRegistry[ns];
+                                        cls&&cls.preload();
+                                        this.preloaded[ns]=cls;
+                                        // console.log("preloaded",ns)
+                                    }
+                                }catch(e){console.warn("Unable to preload: ", ns)}
+                            }
+                        })
+                },{timeout: 1000})
+            }
+        }
+
+        async onHashChange (e){
+            var ns = this.window.location.hash.split("#")[1];
+            if(!ns){return}
+            var scrollTo = ns.split("?el=");
+            ns=scrollTo[0];
+            scrollTo = scrollTo[1];
+
+            if(!NSRegistry[ns]){
+                this.application.onLoadingActivity(ns);
+                await new system.http.ClassLoader().import(ns)
+            }
+            this.onActivityLoaded(ns,NSRegistry[ns],scrollTo);
+        }
+
+        async onActivityLoaded(ns,_class,scrollTo){
+            await wait(100);
+            var a = this.application.onFindActivitySlot().querySelector(`*[namespace='${ns}']`);
+            if(a){
+                this.application.onEnterActivity(a,scrollTo);
+                this.activities[ns]  =a;
+                this.current_activity=a;
+                return;
+            }
+            var c = this.activities[ns]||new _class;
+            this.current_activity && this.application.onExitCurrentActivity(this.current_activity)
+            this.application.onEnterActivity(c,scrollTo);
+            this.activities[ns] = c;
+            this.current_activity=c;
+            this.preload();
+        }
+
+        destroy(activityInstance){
+            this.activities = this.activities||{};
+            delete this.activities[activityInstance.namespace];
+        }
+    }
+);
+
+
+
+namespace `core.drivers.templating` (
+    class Manager {
+        constructor(){
+            this.engines = {}
+            this.defaultMimetype = Config.DEFAULT_TEMPLATE_ENGINE_MIMETYPE||"template/literals";
+        }
+
+        define(mimeType, engine){
+            if(!this.engines[mimeType]){
+                this.engines[mimeType] = engine;
+                engine.install();
+            }
+        }
+
+        getEngineByMimeType(mime){
+            return this.engines[mime];
+        }
+
+        get default (){
+            return this.engines[this.defaultMimetype];
+        }
+
+        set default (mimeType){
+            this.defaultMimetype = mimeType;
+        }
+    }
+);
+
+window.customTemplateEngines = new core.drivers.templating.Manager;
+
+
+(() => {
+    var TemplateLiterals = {
+        name : "TemplateLiterals",
+        ext : "",
+        parse : function(tempStr, data, self){
+            var parse = (tempStr, templateVars) => {
+                return new Function("return `"+tempStr +"`;").call(templateVars);
+            }
+            return parse(tempStr, data)
+        },
+        install : function(){}
+    };
+    
+
+    window.customTemplateEngines.define("template/literals", TemplateLiterals);
+})();
+
+
+namespace `system.drivers.watchers` (
+    class Watcher {
+        static watch(object,prop,cb,force=true,host){
+            // cb=cb||function(e){host.value[prop] = e.value};
+            var data = {object, prop, old:object[prop], val:object[prop]||null, value:object[prop]||null};
+            var _cb = () => {
+                data.val=data.value=object[prop];
+                data[prop] = data.value;
+                cb?cb(data):(host.value[object.id] = object[prop]);
+            }
+            if(object.addEventListener){
+                object.addEventListener("input", _cb,false);
+                object.addEventListener("change",_cb,false);
+            }
+            force && cb?cb(data):null;
+            return {
+                unwatch : function(){
+                    object.removeEventListener("input", _cb, false);
+                    object.removeEventListener("change",_cb, false);
+                }
+            }
+        }
+    }
+);
+
+
+
+namespace `core.ui` (
+    class WebComponent extends HTMLElement {
+        
+
+        constructor(el,options={}) {
+            super();
+            
+            this.options = options;
+            this.element = el;
+            // this.internals  = this.attachInternals();
+            // this.usesDSR    = true && this.internals.shadowRoot;
+            this.__proto    = this.constructor.prototype;
+            // this.__proto.skin = "";
+
+            
+            if(this.isExistingDomNode(this.element)){
+                this.root = this.element
+                this.connectedCallback();
+            }
+            else {
+                this.innerTemplate = this.innerHTML && /<\s*\btemplate\b/.test(this.innerHTML) ?  this.innerHTML:null;
+                this.root = this.shadowRoot||this.inShadow()?
+                    this.attachShadow({ mode: 'open' }) : (this.element||this)
+                /*if(!this.usesDSR){
+                    this.root = this.options.inShadow||this.inShadow() ? 
+                        this.attachShadow({ mode: 'open' }) : (this.element||this);
+                }
+                else {
+                    this.root = this.element||this.internals.shadowRoot
+                }*/
+            }
+        }
+
+        static get template(){
+            var ns = this.prototype.namespace;
+            return Config.SRC_PATH + ns.replace(/\./g,"/") + "/index.html"
+        }
+        
+        async loadTemplate() {
+            return new Promise(async (resolve, reject) => {
+                var tem  =  this.getTemplateToLoad();
+                var opts = Config.IMPORTS_CACHE_POLICY || {cache:"force-cache"}
+                if(/\/*\.html$/.test(tem)){
+                    var src=this.src||tem;//TODO: bug here?
+                    src = src.replace("/./", this.namespace.replace(/\./gim, "/") + "/");
+                    this._template = await window.imports(src);
+                    resolve(this._template)
+                }
+                else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
+                    this._template=tem;
+                    resolve(this._template);
+                }
+                else if(tem && tem.nodeType==1 && tem.tagName.toLowerCase()=="template"){
+                    this._template=tem.outerHTML;
+                    resolve(this._template);
+                }
+                else if(tem && tem.nodeType==1){
+                    this._template=`<template>${tem.outerHTML}</template>`;
+                    resolve(this._template);
+                }
+                else if(tem && /^\s*class/.test(tem.toString())){//ancestor class
+                    this._template = await imports(tem.template, opts);
+                    resolve(this._template);
+                }
+                else {//ancestor class
+                    this._template = tem
+                    resolve(this._template);
+                }
+                // resolve(this._template);
+            })
+        }
+
+        getTemplateToLoad(){
+            var skin = this.__skin__||this.getSkin();
+            var engine = this.getTemplateEngine();
+            return  this.querySelector("template")||    //node
+                    this.innerTemplate ||
+                    this.src||                          //uri
+                    this.template||                     //string(html or path)
+                    this.element||                      //node
+                    Config.SRC_PATH+`/./${skin.path}index` + (engine.ext||"") + ".html" //TODO: default but ignores <Config.TEMPLATE_NAMES_USE_ENGINE_EXTENSION>
+        }
+
+        get isConnected(){return this._is_dom_ready}
+
+        async connectedCallback() {
+            if( this._is_connected){!this.is_preloading && this.onAwake(); return;}
+            this._is_connected=true;
+            await this.onConnected();
+            !this.is_preloading && this.onAwake();
+            this._is_dom_ready=true;
+        }
+
+        async onConnected(data=this) { 
+            // !this.usesDSR && await this.loadTemplate();
+            await this.loadTemplate()
+            await this.onTemplateLoaded();
+            // !this.usesDSR && await this.render(data);
+            await this.render(data);
+            setTimeout(e=>this.onRendered(),0);
+        }
+        
+        async disconnectedCallback(){
+            await this.onDisconnected();
+            !this.is_preloading && this.onSleep();
+        }
+
+        async onDisconnected(){}
+
+        async render(data={}, t=this._template, outputEl) {
+            if(this.isExistingDomNode(this.element)){
+                this.onTemplateRendered(temNode);
+                this.dispatchEvent("connected",{target:this})
+                return
+            }
+            if (t && typeof t=="string") {
+                var html = await this.evalTemplate(t, data);
+                var temNode = html.toNode();
+                    if(!temNode?.content){
+                        console.error(`${this.namespace} - invalid <template>`, {template:this._template, owner:this.parentNode});
+                        return
+                    }
+                    temNode = temNode.content;
+                if (!this.inShadow() && this.isComposable()) {
+                    var defaultSlot = temNode.querySelector("slot");
+                    if(defaultSlot){
+                        let nodes = Array.from(this.children);
+                        for(let n of nodes){
+                            var slotName = n.getAttribute('slot');
+                            var ph = slotName==null?
+                                temNode.querySelector(`slot:not([name])`):
+                                temNode.querySelector(`slot[name="${slotName}"]`)||null;
+                            if( ph && !ph.emptied){
+                                (ph.innerHTML="");
+                                (ph.emptied=true);
+                            }
+                            ph?(ph).appendChild(n):slotName?n.remove():null;
+                        }
+                    }
+                }
+                if(outputEl){
+                    outputEl.innerHTML = "";
+                    outputEl.appendChild(temNode);
+                }
+                else {
+                    if(this.element){
+                        this.innerHTML = "";
+                        this.appendChild(temNode);
+                    }
+                    else{
+                        this.root.innerHTML = "";
+                        this.root.appendChild(temNode);
+                    }
+                }
+                this.onTemplateRendered(temNode);
+            }
+            else if(t && typeof t == "function" && outputEl){
+                outputEl.innerHTML = "";
+                data.forEach(t);
+            }
+            else if(t && typeof t == "function"){
+                await this.render(data,t.call(data))
+            }
+        }
+
+        onAwake(){
+            if(this.onUpdate||this.onDraw||this.onFixedUpdate){
+                application.component2d_instances = application.component2d_instances||[];
+                application.component2d_instances.push(this);
+            }
+        }
+
+		onSleep(){}
+        
+        isExistingDomNode(el){
+            return el && el.parentNode && el.parentNode.nodeType==1
+        }
+        
+        static define(proto,bool){
+            proto.ancestor = proto.__proto__.constructor
+            var ce = window.customElements;
+            var r = /([a-zA-Z])(?=[A-Z0-9])/g;
+            var tag = (proto.constructor.is ? 
+                proto.constructor.is : 
+                Config.USES_NAMESPACE_FOR_TAGNAMES ? 
+                    proto.namespace:
+                    proto.constructor.name).replace(r, (f,m)=> `${m}-`).replace(/\./g,"-").toLowerCase();
+                tag = /\-/.test(tag)? tag:proto["ns-trait-tagname"];
+                                
+            if(/\-/.test(tag)){
+                if(ce.get(tag)){return}
+                proto["ns-tagname"] = tag;
+                delete proto["ns-trait-tagname"]
+                this.defineAncestors();
+                this.defineAncestralClassList();
+                try{ce && ce.define(tag, this)}catch(e){}
+            }    
+        }
+
+        // static preview(){
+        //     var ns = this.prototype.namespace;
+        //     window.open("/src/system/ui/ComponentViewer/index.html?ns="+ns)
+        // }
+
+        static preload(options){
+            try{
+                var a = new this(null,options);
+                    a.is_preloading=true;
+                    a.style.width="1px";
+                    a.style.height="1px";
+                    a.style.position="absolute";
+                document.body.appendChild(a);
+                setTimeout(e=>a.remove(),1000);
+            }catch(e){}
+        }
+
+        setStylesheet () {
+            if(this.inShadow()){
+                var css = this.cssStyle();
+                css && this.onAppendStyle(
+                    `<style>\n${this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()
+                )
+            } else {
+                var css = this.cssStyle();
+                (!!css && this.__proto._style != css) ? 
+                    (this.onAppendStyle(
+                        `<style>\n${this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()),
+                        this.__proto._style = css
+                    ) : null;
+            }
+        }
+
+        get SKINPATH (){
+            var skin = this.__skin__||this.getSkin();
+            var path = Config.ROOTPATH + Config.SRC_PATH + this.namespace.replace(/\./g,"/") + (skin.path?"/":"") + skin.path;
+            path = path.replace(/\/{2}/gm, "/");
+            return path
+        }
+        
+        setAttribute(name, val){
+            return (this.element) ? 
+                this.root.setAttribute(name, val) : super.setAttribute(name, val)
+        }
+
+        querySelector(cssSel, e){
+            return (this.inShadow()||this.element) ? 
+                this.root.querySelector(cssSel) : super.querySelector(cssSel)
+        }
+
+        querySelectorAll(cssSel, deep){
+            return (this.inShadow()||this.element) ?
+                this.root.querySelectorAll(cssSel) : super.querySelectorAll(cssSel)
+        }
+
+        onAppendStyle(stylesheet) {
+            if(this.inShadow()){
+                try{
+                    var sheet = new CSSStyleSheet();
+                        sheet.replace(stylesheet.innerText);
+                    this.root.adoptedStyleSheets=this.root.adoptedStyleSheets.concat([sheet]);
+                } catch(e){
+                    try{
+                        setTimeout(e=> {
+                            var style = document.createElement("style");
+                                style.setAttribute("type", 'text/css');
+                                style.setAttribute("rel",  'stylesheet');
+                                style.textContent = stylesheet.innerText;
+                            this.root.appendChild(style)
+                        },20)
+                    } catch(be){
+                        console.error(be)
+                    }
+                    console.warn(`${this.namespace}#onAppendStyle(): adoptedStyleSheets not yet supported. See https://bugzilla.mozilla.org/show_bug.cgi?id=1520690.`);//TODO: use code
+                }
+            }
+            else { document.head.appendChild(stylesheet) }
+        }
+
+        onStyleComputed(stylesheet){}
+
+        replaces(orphan) {
+            orphan && orphan.parentNode.replaceChild(this, orphan);
+        }
+
+        dispatchEvent(type, data, details = { bubbles: true, cancelable: true, composed: true }, element = this) {
+            var evt = typeof type =="object" ? type : new CustomEvent(type, details);
+                if(data){evt.data = data};
+            if(this.element){return this.element.dispatchEvent(evt)}
+            else{return super.dispatchEvent(evt);}
+        }
+
+        on(evtName, handler, bool=false, el) {
+            this.addEventListener(evtName, handler, bool, el);
+        }
+
+        addEventListener(evtName, handler, bool=false, el) {
+            if (typeof el == "string") {
+                this.addEventListener(evtName, e => {
+					var t = (e.composedPath&&e.composedPath().find(node => node.matches&&node.matches(el)))||e.target;
+					    t && t.matches(el) && (e.matchedTarget = t) && handler(e);
+                }, bool);
+            } else {
+                if(this.isExistingDomNode(this.element)){
+                    this.element.addEventListener(evtName, handler, bool);
+                    if(evtName == "connected"){
+                        handler({target:this});
+                    }
+                }
+                else{
+                    return super.addEventListener(evtName, handler, bool);
+                    if(evtName == "connected" && this._is_connected){
+                        handler({target:this});
+                    }
+                }
+            }
+        }
+
+        onStylesheetLoaded(style) { }
+
+        // onTransformStyle(cssText, cls, ns=this.namespace){
+        //     ns=ns.replace(/\./g,"/");
+        //     var skin = this.__skin__||this.getSkin();
+        //     var attrbSkinSelector = skin&&skin.name ? `[skin="${skin.name}"]`:'';
+        //     if(!this.inShadow()){
+        //         cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`);
+        //         cssText = cssText.replace(/\:host/gm, (full, sel) => `:host${attrbSkinSelector||''}`);
+        //         cssText = cssText.replace(/\:+host/gm, `.${cls.name}`);
+        //         cssText = cssText.replace(/\.\//, Config.SRC_PATH+ns+"/");
+        //         return cssText;
+        //     }
+        //     if(this.inShadow() && attrbSkinSelector){
+        //         cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host(${attrbSkinSelector||''}${sel})`);
+        //         cssText = cssText.replace(/\:host\s+/gm, (full, sel) => `:host(${attrbSkinSelector||''}) `);
+        //     }
+        //     return cssText
+        // }
+        async onTransformStyle(cssText, cls, ns=this.namespace){
+            ns=ns.replace(/\./g,"/");
+            var skin = this.__skin__||this.getSkin();
+            var attrbSkinSelector = skin&&skin.name ? `[skin="${skin.name}"]`:'';
+            if(!this.inShadow()){
+                cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`);
+                cssText = cssText.replace(/\:host/gm, (full, sel) => `:host${attrbSkinSelector||''}`);
+                cssText = cssText.replace(/\:+host/gm, `.${cls.name}`);
+                // cssText = cssText.replace(/\$/, Config.ROOT_+ns+"/");
+                cssText = await this.evalTemplate(cssText,this)
+                return cssText;
+            }
+            if(this.inShadow() && attrbSkinSelector){
+                cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host(${attrbSkinSelector||''}${sel})`);
+                cssText = cssText.replace(/\:host\s+/gm, (full, sel) => `:host(${attrbSkinSelector||''}) `);
+                cssText = await this.evalTemplate(cssText,this)
+            }
+            return cssText
+        }
+
+        setCssTextAttribute(_cssText, stylenode) {
+            if (stylenode && stylenode.styleSheet) {
+                stylenode.styleSheet.cssText = _cssText;
+            }
+            else { stylenode.appendChild(document.createTextNode(_cssText)) }
+        }
+
+        onRendered(){}
+
+        isComposable(){ return true }
+
+        async append(el, container=this.root){
+            return new Promise(async (resolve,reject) => {
+                requestAnimationFrame( async e=>{container.appendChild(el);resolve(el)} );
+            })
+        }
+
+        appendChild(n){
+            return this.element && n!=this.element  ? this.root.appendChild(n):super.appendChild(n)
+        }
+
+        async evalTemplate(template, data) {
+            var eng = this.getTemplateEngine();
+            return await eng.parse(template, data, this);
+        }
+
+        getTemplateEngine() {
+            return window.customTemplateEngines.default;
+        }
+
+        async onTemplateLoaded() {
+            this.setClassList();
+            this.setSkinAttribute();
+            this.setPrototypeInstance();
+            await this.setStyleDocuments();
+        }
+
+        setSkinAttribute(){
+            var skin = this.__skin__||this.getSkin();
+                skin && skin.name && this.setAttribute("skin", skin.name)
+        }
+
+        onTemplateRendered(){
+            this.onBindIDs();
+            this.initializeChildComponents();
+            this.dispatchEvent("connected",{target:this});
+        }
+
+        onBindIDs(){
+            if(this.onAutoQuerySelectIds){
+                console.warn(`${this.namespace}#onAutoQuerySelectIds() is deprecated. Replace/implement onBindIDs() instead.`)
+            }
+            var els = Array.from(this.querySelectorAll("*[id]"));
+                els.forEach(el => !this[el.id] && (this[el.id]=el))
+        }
+        
+        static get observedAttributes() { return ['src'] }
+
+        get src() { return this.getAttribute('src') }
+
+        set src(val) {this.setAttribute('src', val)}
+
+        inShadow() { return this.hasAttribute('shadow')||this.shadowRoot }
+
+        attachShadow(options) {
+            this._usesShadow = true;
+            return super.attachShadow(options);
+        }
+
+        async attributeChangedCallback(name, oldValue, newValue) {
+            if (name == "src"){
+                if(!this._is_connected){return;}
+                else {
+                    var html = await this.loadTemplate();
+                    await this.onConnected()
+                }
+            }
+        }
+
+        cloneAttributes(target=this, source) {
+            return [...source.attributes].forEach( attr => { target.setAttribute(attr.nodeName ,attr.nodeValue) })
+        }
+
+        cssStyle(){ return "" }
+
+        onLoadInstanceStylesheet(){ 
+            console.warn(`${this.namespace}#onLoadInstanceStylesheet() has been renamed. Rename method to hasOwnSkin().`)
+            return this.hasOwnSkin() 
+        }
+
+        // hasOwnStyleSheet(){ return true }
+
+        static defineAncestors(){
+            this.ancestors=[];
+            var a=this;
+            while(a && this.ancestors.push(a)){a = a.prototype.ancestor}
+        }
+
+        static defineAncestralClassList(){
+            this.prototype.classes = [];
+            for(let ancestor of this.ancestors){ this.prototype.classes.unshift(ancestor.prototype.constructor.name) }
+        }
+
+        getNSStyleSheet(ns){
+            var skin = this.__skin__||this.getSkin();
+            return relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}index.css`,ns);
+        }
+
+        getSkin(){
+            if(this.__skin__){return this.__skin__}
+            var name = Config.SKIN||this.getAttribute("skin")||this.constructor.skin||"";
+            var path = name ? `skins/${name}/`:"";
+            this.__skin__ = {name, path};
+            return this.__skin__;
+        }
+
+        setClassList(el=this.element||this) {
+                var cls = this.__proto.classes.filter(c => c != "_mixin_")
+                el.className += " " + (cls.join(" ")).trim();
+                el.className = el.className.trim();
+        }
+ 
+        getStyleSheets() {
+            var styles = this.prototype["stylesheets"] = this.prototype["stylesheets"]||[];
+            return styles.reverse();
+        }
+
+        async setStyleDocuments() {
+            await this.loadcss();
+            this.setStylesheet();
+            this.onStyleComputed(this.stylesheets);
+        }
+
+
+        hasParentSkin(){
+            return true
+		}
+
+		hasOwnSkin(){
+            return true
+		}
+
+        async loadcss() {
+            var ignoredClasses=[WebComponent,Application,World,HTMLElement];
+            var ancestors = this.constructor.ancestors.reverse();
+            var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets|| {};
+            var skin = this.__skin__||this.getSkin();
+            return new Promise(async (resolve,reject) => {
+                for(let ancestor of ancestors){
+                    if(ancestor.name =="_mixin_"){continue}
+                    if(!ignoredClasses.includes(ancestor) && ancestor.prototype.hasOwnSkin() ){
+                        var paths = [];
+						if(ancestor != this.constructor && this.hasParentSkin()){
+							if(ancestor.skin == skin.name||(!ancestor.skin && !skin.name)){
+								paths = paths.concat([relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}index.css`,ancestor.prototype.namespace)]);
+                                paths = paths.concat((ancestor.prototype["@stylesheets"]||[]).reverse());
+							}
+						}
+						else if(ancestor == this.constructor){
+							if(this.hasOwnSkin()){
+								paths.push(this.getNSStyleSheet(this.namespace))
+							}
+							if(this.__proto.hasOwnProperty("@stylesheets")){
+								paths.push(...this.__proto["@stylesheets"].reverse()||[]);
+							}
+						}
+                        for(let path of paths){
+                            if(stylesheets[path] && !this.inShadow()){continue}
+                            path = this.onLoadStyle(path);
+                            if((path && !stylesheets[path]) || this.inShadow()){
+                                !this.inShadow() && (stylesheets[path]=true);
+                                var tagName = /^http/.test(path) ? "link" : "style";
+                                var tag = document.createElement(tagName);
+                                    tag.setAttribute("type", 'text/css');
+                                    tag.setAttribute("rel",  'stylesheet');
+                                    tag.setAttribute("href",  path);
+                                    tag.setAttribute("component", ancestor.prototype.namespace);
+                                    !this.inShadow() && await this.onAppendStyle(tag)
+                                if(tagName == "style"){
+                                    var _cssText;
+									try{_cssText = await window.imports(path);}catch(e){}
+                                    if( _cssText){
+                                        _cssText = await this.onTransformStyle(_cssText, ancestor);
+                                        _cssText && this.setCssTextAttribute(_cssText, tag);
+                                        this.inShadow() && await this.onAppendStyle(tag)
+                                        this.onStylesheetLoaded(tag);
+                                    }
+                                }
+                                else { document.head.append(tag) }
+                            }
+                        }
+                    }
+                }
+                resolve(true);
+            })
+        }
+
+        onLoadStyle(url){ return url }
+        
+        setPrototypeInstance() {
+            this.setAttribute("namespace", this.namespace);
+            // this.prototype = this;
+        }
+
+        hasChildComponents(){return false}
+
+        async initializeChildComponents (el=this.root){
+            var nodes = Array.from(el.querySelectorAll("*[namespace]"));
+                nodes && nodes.length && nodes.forEach(async n => {
+                    var ns = n.getAttribute("namespace");
+                    if(!classof(ns)){
+                        var cl = new system.http.ClassLoader;
+                        await cl.import(ns);
+                    }
+                });
+        }
+
+        isAnyPartOfElementInViewport(el=this.root) {
+            var rect = el.getBoundingClientRect();
+            var v = (rect.top  <= window.innerHeight) && ((rect.bottom) >= 0);
+            var h = (rect.left <= window.innerWidth)  && ((rect.right)  >= 0);
+            return (v && h);
+        }
+
+        watch(object,prop,cb=null,force,engine=system.drivers.watchers.Watcher){
+            object = typeof object == "string"?this.querySelector(object):object;
+            if(object){ return engine.watch(object,prop,cb,force,this)}
+        }
+
+        getBoundingClientRect(el){
+            var c = el?el.getBoundingClientRect():super.getBoundingClientRect();
+            c.center = {x : c.left + c.width/2, y : c.top  + c.height/2};
+            return c;
+        }
+    }
+);
+global.WebComponent = global.WebComponent||core.ui.WebComponent;
+global.Component = global.Component||core.ui.WebComponent;
+namespace `w3c.ui` (core.ui.WebComponent);
+
+
+namespace `core.ui` (
+    class Component2D extends WebComponent {
+        constructor(el,options={}) {
+            super(el,options={});
+
+           
+
+            this.behaviors = this.machine = new system.machines.Automata;
+        }
+
+        onAwake(){
+            if(this.onUpdate||this.onDraw||this.onFixedUpdate){
+                application.component2d_instances = application.component2d_instances||[];
+                application.component2d_instances.push(this);
+            }
+        }
+
+        onLoadInstanceStylesheet(){
+            if(this.namespace == "core.ui.Component2D"){return false}
+            return true
+        }
+    }
+);
+window.Component2D = window.Component2D||core.ui.Component2D;
+cascade(core.ui.Component2D,false);
+
+
+;
+
+namespace `core.ui` (
+	class Application extends core.ui.WebComponent {
+	    constructor(el) {
+	        super(el);
+	        window.application = this;
+	    }
+
+        onAwake(){}
+
+        //runs many times per frame (collision/physics/ai) at 8.333ms intervals within 1 "frame"
+        onFixedUpdate (time) {
+            if(this.isConnected) {
+                this.component2d_instances && this.component2d_instances.forEach(c => c.onFixedUpdate(time))
+            }
+        }
+
+
+        //runs once per frame (handle input/state updates), lasts for 16-24ms per frame
+        //implement getSimulationTimestep(){ return 1000/120 } to control FPS
+        onUpdate(timestamp, delta){
+            if(this.isConnected) {
+                this.component2d_instances && this.component2d_instances.forEach(c => c.onUpdate(timestamp, delta))
+            }
+        }
+
+
+        //runs once per frame after onUpdate; (handle interpolation for fps-drop or lag) - last 16-24ms per frame
+        onDraw(interpolation){
+            if(this.isConnected) {
+                this.component2d_instances && this.component2d_instances.forEach(c => c.onDraw(interpolation))
+            }
+        }
+
+        onUpdateEnd(fps, panic){
+            if (panic) {
+                var discardedTime = Math.round(MainLoop.resetFrameDelta());
+            }
+        }
+
+        getSimulationTimestep(){ return 1000/120 }
+
+        async onConnected(data){
+            await super.onConnected(data);
+            MainLoop.start();
+            if(this.onEnableRouting()){
+                var _router = this.getRouteHandler();
+                this.router = new _router(this,window);
+            }
+        }
+
+        getRouteHandler(){
+            return NSRegistry[Config.ROUTER];
+        }
+
+        onRequestPreloadable(){
+            let preloadables = this.querySelectorAll('a[preload]');
+            let result = Array.from(preloadables).map(a => {
+                a.removeAttribute("preload");
+                return a.getAttribute("href");
+            });
+            return [...new Set(result)];
+        }
+
+        onEnableRouting(){ 
+            this._view_slot=this.querySelector('slot[name="view-port"]')||this.querySelector('div[name="view-port"]');
+            return this._view_slot;
+        }
+
+        onExitActivitySaveScroll(){
+            if(this.currentActivity){
+                var p = this.onFindScrollableSlotArea();
+                this.currentActivity._scrollpos = p.scrollTop;
+            }
+        }
+
+        onEnterActivityRestoreScroll(scrollToElement=null){
+            if(this.currentActivity){
+                if(scrollToElement){
+                    wait(100).then(_=> {
+                        var el = this.currentActivity.querySelector("#"+scrollToElement);
+                        if (el) {
+                            el.scrollIntoView({
+                                behavior : "smooth",
+                                block : "start"
+                            });
+                        }
+
+                    })
+                } else {
+                    var p = this.onFindScrollableSlotArea();
+                    p.scrollTop = this.currentActivity._scrollpos||0;
+                }
+            }
+        }
+
+        onFindScrollableSlotArea(){
+            var p = this.onFindActivitySlot();
+            if(p instanceof HTMLSlotElement){p=p.parentNode}
+            return p;
+        }
+
+        onFindActivitySlot(){
+            var slot = this._activitySlot||this._view_slot;
+            if(!slot) {
+                slot=document.body;
+                console.warn(`${this.namespace}#onFindActivitySlot() - unable to find a <slot|div name='view-port'></slot|div> for loading views. Using <body> as fallback.`)
+            }
+            this._activitySlot = slot;
+            return slot||this
+        }
+
+        onEnterActivity(c,scrollToElement,router){
+            console.log("onEnterActivity", c);
+            var slot = this.onFindActivitySlot();
+            if(this.lastActivity){
+                this.lastActivity.onBeforeSleep&&this.lastActivity.onBeforeSleep();
+                this.lastActivity.remove();
+                this.dispatchEvent("sleep",this.lastActivity);
+            }
+            else {
+                slot.innerHTML="";
+            }
+            c.onBeforeAwake&&c.onBeforeAwake();
+            slot.appendChild(c);
+            setTimeout(e=>router&&router.replaceHashes&&router.replaceHashes(c),1000);
+            this.currentActivity = c;
+            this.onEnterActivityRestoreScroll(scrollToElement);
+            this.dispatchEvent("onactivityshown",c);
+            this.dispatchEvent("awake",c);
+        }
+
+        onExitCurrentActivity(c){
+            this.onExitActivitySaveScroll()
+            console.log("onExitCurrentActivity", c);
+            this.lastActivity=c;
+        }
+
+        onLoadingActivity(c){
+            console.log("onLoadingActivity", c);
+        }
+	}
+);
+window.Application = window.Application||core.ui.Application;
+namespace `w3c.ui` (core.ui.Application);
+
+
+;
+
+namespace `core.ui` (
+    class World extends core.ui.Application {
+        constructor(el) { super(el) }
+        onUpdate(accumilated, delta){}
+        onFixedUpdate(){}
+        onDraw(interpolation){}
+        onUpdateEnd(fps, panic){
+            if (panic) { var discardedTime = Math.round(MainLoop.resetFrameDelta()) }
+        }
+        getSimulationTimestep(){ return 1000/120 }
+    }
+);
+global.World = global.World||core.ui.World;
+
+
+!function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.exports&&(module.exports=a.MainLoop)}(this);
+function Ecmascript6ClassTranspiler() { }
+Ecmascript6ClassTranspiler.prototype.imports = window.imports;
+Ecmascript6ClassTranspiler.prototype.transpile = function (src, doc) {
+    var doTranspile = Config.ENABLE_TRANSPILER;
+    if (doTranspile) {
+        src = this.transpileToLevel(src);
+        return src;
+    } else {
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transpileToLevel = function (src) {
+    var nsReg = /namespace\s?`([^\s`]*)/;
+    var clsReg = /class\s+([^\s]*)[\s\n\t]*[\{|extends]/;
+
+    var nsMatch = src.match(nsReg);
+    var classMatch = src.match(clsReg);
+    if(!nsMatch && !classMatch){
+        return this.transipleImportsDestructuring(src);
+    }
+    else {
+        nsMatch = nsMatch ? nsMatch[1] : "";
+        classMatch = classMatch?classMatch[1]:"";
+        nsMatch = nsMatch + "." + classMatch;
+        src = this.transipleDecoratorFields(nsMatch, src);
+        src = this.transipleClassFields(nsMatch, src);
+        src = this.transipleRelativeFolderImports(nsMatch,src);
+        src = this.transipleImportsDestructuring(src);
+        return src;
+    }
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleRelativeFolderImports = function (nsMatch,src) {
+    if(/webpack/.test(src)||typeof module == "object"){return src}
+    var regex = /import\s+['"]+.{1}\/{1}([^;]*)['"]+;+/gm;//ex: import './test.js';
+        nsMatch = nsMatch.replace(/\./gm,"/");
+        src = src.replace(regex, function(full, src_path) {
+            return `import '${Config.SRC_PATH}${nsMatch}/${src_path}';`
+        })
+    return src;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleDecoratorFields = function (ns,src) {
+    var regex = /@([^\W]*)\({1}([^\;]*)\){1};{1}/gm; //Feb 7 2019 - to support @matchmedia queries having ('s)
+    var props = [];
+    if (ns) {
+        src = src.replace(regex, (full, method, args) => {
+            props.push(`${method}(${ns}, ${args});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, method, args) => {return ""});
+        fullsrc = src;
+    }
+    return fullsrc;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (src) {
+    if(/webpack/.test(src)||typeof module == "object"){return src}
+    var regex = /import(?:["'\s]*(?<dest>[\w*{}\n\r\t, ]+)from\s*)?(?<src>["'\s]?.*([@\w_-]+)["'\s]?.*);$/gm;
+        src = src.replace(regex, (full, dest, src, d) => {
+            if(dest){
+                dest = dest.replace(/\s+as\s+/gm, ":");
+                dest = dest.replace(/[\{\}]/gm, "");
+                if(dest.includes("*") && (dest.includes("global")||dest.replace(/\*\s/g,"")=="")){
+                    return `
+                        var _mod_ = fromNS(${src})?fromNS(${src}):await load(${src});
+                        // var _mod_ = ${src}?${src}:await load(${src}); //usage: import * as global from display.components;
+                        Object.keys(_mod_).forEach(_exp => {
+                            if(global[_exp]) {Object.assign(_mod_[_exp], global[_exp])}
+                            else {global[_exp] = _mod_[_exp]}
+                        });`
+                }
+                else if(dest.includes("*")){
+                    dest = dest.replace(/\*\:/gm, "");
+                    return `var ${dest} = await load(${src});`;
+                }
+                else{
+                    return `var {${dest}} = fromNS(${src})?fromNS(${src}):await load(${src});`;
+                }
+            }
+            return full;
+        })
+    return src;
+}
+
+Ecmascript6ClassTranspiler.prototype.transipleClassFields = function (ns, src) {
+    var regex = new RegExp(/(\@static|@public|\@private)[\s\t\n]+([^\s]*)\s+\=([^\;]*)\;/gm);
+    var props = [];
+    if (ns) {
+        src = src.replace(regex, (full, type, name, val) => {
+            type = type.replace("@", "");
+            props.push(`field(${ns}, "${type}", "${name}", ${val});`);
+            return "";
+        });
+        var fullsrc = src + "\n" + props.join("\n");
+    } else {
+        src = src.replace(regex, (full, type, name, val) => {return "" });
+        fullsrc = src;
+    }
+    return fullsrc;
+};
+
+namespace `system.http` ( 
+    class ClassLoader {
+        constructor (){
+            this.es6Transpiler = new Ecmascript6ClassTranspiler();
+            window.run = this.run.bind(this);//TODO:check dynamic transpilation
+            return this;
+        }
+
+        run(src, cb){
+            this.build(src, output => {
+                var head   = document.getElementsByTagName("head").item(0);
+                var script = document.createElement("script");
+                script.setAttribute("type", "text/javascript");
+                script.setAttribute("charset", (Config.CHARSET || "utf-8"));
+                script.text = output;
+                head.appendChild(script);
+                cb(script);
+            });
+        }
+
+        async load (ns, filepath, cb) {
+            var cfFailure = xhr => cb?cb(xhr):null;
+            var src = await window.imports(ns,filepath);
+                src ? this.run(src,cb) : cfFailure(src,"no xhr"); 
+        }
+
+        async import(ns,path=null){
+            return new Promise(async (resolve, reject) => {
+                if(!path){
+                    var filename_path = Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + Config.FILENAME;
+                    path = Config.USE_COMPRESSED_BUILD ? 
+                        filename_path.replace("*", Config.DEBUG ? "src.":"min."):
+                        filename_path.replace("*","");
+                }
+                let src;
+                try{src = await window.imports(path);}catch(e){ reject(e);return }
+                if(src){ this.run(src, source => resolve(source))} 
+                else {reject("Unable to import: " + path)}
+            })
+        }
+
+        async build(src, cb) {
+            src = this.es6Transpiler.transpile(src);
+            var reg = /^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;
+            //var reg = /^(?<!\/)import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m; /*checks for //import*/
+            while (reg.test(src)) {
+                var match = src.match(reg);
+                var ns = match[1];
+                src = src.replace(reg, this.es6Transpiler.transpile(
+                    (window.imported_classes[ns] ? ";" : await this.imports(match))||""
+                ))
+            } cb(`(async (global)=>{ ${src} })(this)`);
+        }
+
+        async imports(match){
+            var res=null;
+            var paths = this.pathsToTry(match);
+            for(let path of paths){
+                var res = await window.imports(path);
+                if(res){break}
+            }
+            return res;
+        }
+
+        pathsToTry(match){
+            var ns = match[1];
+            if(/\.m?js$/.test(ns)){
+                return [ns]
+            }
+            ns=ns.replace(/\./gm,"/");
+            var root = Config.SRC_PATH;
+            var paths   = [];
+            match[0].includes("!") ? 
+            paths.push(root+ns + ".js"):null;
+            ns.includes("@") ? 
+            paths.push(root+ns.replace("@","") + ".js"):null;
+            paths.push(root+ns + "/index.js")
+            paths.push(root+ns + "/index.min.js");
+            return paths;
+        }
+    }
+);
+
+
+async function importmap(){
+    window.importmap=window.importmap||{};
+    if(!Config.IMPORT_MAPS){return}
+    const data = await (await fetch(Config.ROOTPATH+".importmap")).text();
+    window.importmap = JSON.parse(data).imports;
+}
+
+document.addEventListener("DOMContentLoaded", async e => {
+  let assetsloaded = false;
+  try{await importmap();}catch(e){}
+  await wait(50);
+  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+
+  if(Config.SPLASH){
+    let s = new system.http.ClassLoader;
+    var cls = await s.import(Config.SPLASH, Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js")
+        .catch(e => console.error("Config.SPLASH", e))
+    var Splash = classof(Config.SPLASH)
+    if(Splash){
+        var splash = new Splash;
+            splash.on("loaded", e=> assetsloaded=true)
+            splash.setAttribute("duration", Config.SPLASH_FADE_DELAY)
+        document.body.appendChild(splash);
+        document.body.style.opacity=1;
+    }
+  } else {assetsloaded=true};
+
+  async function bootup() {
+    if (ns && Config.DYNAMICLOAD) {
+      if(Config.APP_WAITS_ON_SPLASH && !assetsloaded){
+        await sleep(100);
+        bootup();
+        return;
+      }
+      else {
+        var filename_path = Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + Config.FILENAME;
+        var path = Config.USE_COMPRESSED_BUILD ? 
+          filename_path.replace("*", Config.DEBUG ? "src.":"min."):
+          filename_path.replace("*","");
+
+        let c = new system.http.ClassLoader;
+            c.import(ns,path).then(async function init(){
+              if(!NSRegistry[ns] || !assetsloaded) {
+                await wait(1000/20);init();return;
+              }
+              let app = window.application = (
+                window.application||new NSRegistry[ns](document.body)
+              );
+              if((typeof World =="function" && app instanceof World) || app && app.isSimulation) {
+                window.world=app;
+                let af=1 && Config.ARROW_FUNCTIONS_FOR_WORLD_LOOP==true;
+                try{eval("class T {do=()=>{}}")}catch(e){af=0}
+                let loop = MainLoop;
+                app.onUpdate      && loop.setBegin(af?app.onUpdate:app.onUpdate.bind(app));
+                app.onFixedUpdate && loop.setUpdate(af?app.onFixedUpdate:app.onFixedUpdate.bind(app));
+                app.onDraw        && loop.setDraw(af?app.onDraw:app.onDraw.bind(app));
+                app.onUpdateEnd   && loop.setEnd(af?app.onUpdateEnd:app.onUpdateEnd.bind(app));
+                loop.setSimulationTimestep(app.getSimulationTimestep());
+              }
+            });
+      }
+    }
+    else {
+      let app = new NSRegistry['core.ui.Application'](document.body);
+      await app.initializeChildComponents();
+    }
+  };
+
+  ("cordova" in window) ? 
+    document.addEventListener('deviceready', ()=>{
+      AndroidFullScreen && AndroidFullScreen.immersiveMode(e=>{}, e=>{}); bootup()
+    }, false) : bootup()
+}, false);
+
+
+ })(this)
