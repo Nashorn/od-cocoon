@@ -1,5 +1,5 @@
 (async (global)=>{ global.arc = {
-    version : "5.2.1:09102022"
+    version : "5.2.2:10122022"
 };
 console.log("v"+global.arc.version);
 var Config = global.Config = global.Config||{
@@ -878,7 +878,7 @@ namespace `core.ui` (
                 if(/\/*\.html$/.test(tem)){
                     var src=this.src||tem;//TODO: bug here?
                     src = src.replace("/./", this.namespace.replace(/\./gim, "/") + "/");
-                    this._template = await window.imports(src);
+                    this._template = await window.imports(src, opts);
                     resolve(this._template)
                 }
                 else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
@@ -1049,17 +1049,17 @@ namespace `core.ui` (
             }catch(e){}
         }
 
-        setStylesheet () {
+        async setStylesheet () {
             if(this.inShadow()){
                 var css = this.cssStyle();
                 css && this.onAppendStyle(
-                    `<style>\n${this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()
+                    `<style>\n${await this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()
                 )
             } else {
                 var css = this.cssStyle();
                 (!!css && this.__proto._style != css) ? 
                     (this.onAppendStyle(
-                        `<style>\n${this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()),
+                        `<style>\n${await this.onTransformStyle(css, this.constructor)}\n</style>`.toNode()),
                         this.__proto._style = css
                     ) : null;
             }
@@ -1152,23 +1152,6 @@ namespace `core.ui` (
 
         onStylesheetLoaded(style) { }
 
-        // onTransformStyle(cssText, cls, ns=this.namespace){
-        //     ns=ns.replace(/\./g,"/");
-        //     var skin = this.__skin__||this.getSkin();
-        //     var attrbSkinSelector = skin&&skin.name ? `[skin="${skin.name}"]`:'';
-        //     if(!this.inShadow()){
-        //         cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`);
-        //         cssText = cssText.replace(/\:host/gm, (full, sel) => `:host${attrbSkinSelector||''}`);
-        //         cssText = cssText.replace(/\:+host/gm, `.${cls.name}`);
-        //         cssText = cssText.replace(/\.\//, Config.SRC_PATH+ns+"/");
-        //         return cssText;
-        //     }
-        //     if(this.inShadow() && attrbSkinSelector){
-        //         cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host(${attrbSkinSelector||''}${sel})`);
-        //         cssText = cssText.replace(/\:host\s+/gm, (full, sel) => `:host(${attrbSkinSelector||''}) `);
-        //     }
-        //     return cssText
-        // }
         async onTransformStyle(cssText, cls, ns=this.namespace){
             ns=ns.replace(/\./g,"/");
             var skin = this.__skin__||this.getSkin();
@@ -1177,14 +1160,13 @@ namespace `core.ui` (
                 cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`);
                 cssText = cssText.replace(/\:host/gm, (full, sel) => `:host${attrbSkinSelector||''}`);
                 cssText = cssText.replace(/\:+host/gm, `.${cls.name}`);
-                // cssText = cssText.replace(/\$/, Config.ROOT_+ns+"/");
-                cssText = await this.evalTemplate(cssText,this)
+                cssText = this.hasOwnSkin()?await this.evalTemplate(cssText,this):cssText;
                 return cssText;
             }
             if(this.inShadow() && attrbSkinSelector){
                 cssText = cssText.replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host(${attrbSkinSelector||''}${sel})`);
                 cssText = cssText.replace(/\:host\s+/gm, (full, sel) => `:host(${attrbSkinSelector||''}) `);
-                cssText = await this.evalTemplate(cssText,this)
+                cssText = this.hasOwnSkin()?await this.evalTemplate(cssText,this):cssText;
             }
             return cssText
         }
@@ -1275,9 +1257,17 @@ namespace `core.ui` (
         cssStyle(){ return "" }
 
         onLoadInstanceStylesheet(){ 
-            console.warn(`${this.namespace}#onLoadInstanceStylesheet() has been renamed. Rename method to hasOwnSkin().`)
+            console.warn(`${this.namespace}#onLoadInstanceStylesheet() is deprecated. Rename to hasOwnSkin().`)
             return this.hasOwnSkin() 
         }
+
+        hasParentSkin(){
+            return true
+		}
+
+		hasOwnSkin(){
+            return true
+		}
 
         // hasOwnStyleSheet(){ return true }
 
@@ -1322,15 +1312,6 @@ namespace `core.ui` (
             this.onStyleComputed(this.stylesheets);
         }
 
-
-        hasParentSkin(){
-            return true
-		}
-
-		hasOwnSkin(){
-            return true
-		}
-
         async loadcss() {
             var ignoredClasses=[WebComponent,Application,World,HTMLElement];
             var ancestors = this.constructor.ancestors.reverse();
@@ -1352,7 +1333,20 @@ namespace `core.ui` (
 								paths.push(this.getNSStyleSheet(this.namespace))
 							}
 							if(this.__proto.hasOwnProperty("@stylesheets")){
-								paths.push(...this.__proto["@stylesheets"].reverse()||[]);
+                                let file_paths = [...this.__proto["@stylesheets"].reverse()||[]];
+                                file_paths.forEach(_path => {
+                                    /\//.test(_path) ?
+                                        paths.push(_path):
+                                        paths.push(relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}${_path}`,this.namespace));
+
+                                    // if(/\//.test(_path)) {
+                                    //     paths.push(_path)
+                                    // }
+                                    // else {
+                                    //     paths.push(relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}${_path}`,this.namespace))
+                                    // }
+                                })
+								//paths.push(...this.__proto["@stylesheets"].reverse()||[]);
 							}
 						}
                         for(let path of paths){
