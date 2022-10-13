@@ -238,8 +238,7 @@ window.imports = async function (x, opts, isError) {
                 resolve(src);
             }
             else {
-                reject("404 import: " + toAbsoluteURL(path))
-                throw new Error;
+                console.error("404 import: " + toAbsoluteURL(path));
                 resolve("");
             }
         }
