@@ -1,5 +1,5 @@
 (async (global)=>{ global.arc = {
-    version : "5.2.2:10122022"
+    version : "5.3.0:02122023"
 };
 console.log("v"+global.arc.version);
 var Config = global.Config = global.Config||{
@@ -22,29 +22,13 @@ var Config = global.Config = global.Config||{
     AUTOLOAD_IMPORT_MAPS : true,
     IMPORT_MAPS:true,
     USES_NAMESPACE_FOR_TAGNAMES : true,
-    ARROW_FUNCTIONS_FOR_WORLD_LOOP : true
+    ARROW_FUNCTIONS_FOR_WORLD_LOOP : true,
+    INTERPOLATE_CSS : false
 };
 global.Config = Config;
 try{module.exports = Config;}catch(e){}
 //
-// Object.defineProperty(Object.prototype, 'toQueryString', {
-//   enumerable: false,
-//   configurable: false,
-//   value: function(obj,prefix) {
-//     console.warn("#toQueryString() is deprecated. Replace with use URLSearchParams")
-//     obj=obj||this;
-//     var str = [];
-//     for(var p in obj) {
-//       if (obj.hasOwnProperty(p)) {
-//         var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
-//         str.push(typeof v == "object" ?
-//           this.toQueryString(v, k) :
-//           k + "=" + v);
-//       }
-//     }
-//     return str.join("&");
-//   }
-// });
+//
 ;String.prototype.toNode = function(fragment=false){
   var n = document.createRange().createContextualFragment(this.toString())
   return fragment?fragment:n.firstElementChild;
@@ -82,112 +66,9 @@ Function.prototype.with = function(...mixin) {
 };
 
 
-/*Function.prototype.as = function(...mixin) {
-    let _mixin_ = class extends this {
-        constructor(el,options){
-            super(el,options);
-            this.initialize && this.initialize(el,options);
-        }
-    }
-
-    for(let m of mixin){
-        if(typeof m =="object") {
-            reflect(_mixin_.prototype, m);
-        } else{
-            reflect(_mixin_.prototype, m.prototype);
-        }
-    }
-    if(mixin.length==1){
-        _mixin_.prototype.constructor = mixin[0].prototype.constructor;
-        _mixin_.ancestors = _mixin_.prototype.ancestors = mixin[0].ancestors;
-    }
-    return _mixin_;
-};*/
 
 
-// var HistogramByteComponentsAndKeyArray = function(inArray, l, r, getKey)
-// {
-//     var numberOfDigits = 4;
-//     var numberOfBins = 256;
-//     var inKeys = new Array(inArray.length);
-
-//     var count = new Array(numberOfDigits);
-//     for (var d = 0; d < numberOfDigits; d++)
-//     {
-//         count[d] = new Array(numberOfBins);
-//         for (var b = 0; b < numberOfBins; b++)
-//         count[d][b] = 0;
-//     }
-    
-//     for (var current = l; current <= r; current++) 
-//     {
-//         var value = getKey(inArray[current]);
-//         inKeys[current] = value;
-//         count[0][ value        & 0xff]++;
-//         count[1][(value >>  8) & 0xff]++;
-//         count[2][(value >> 16) & 0xff]++;
-//         count[3][(value >> 24) & 0xff]++;
-//     }
-//     return {
-//         count: count,
-//         inKeys: inKeys
-//     };
-// };
-
-// var originalSort=Array.prototype.sort;
-// Array.prototype.sort = function(getKey,bool=true) {
-//     if(!bool) {
-//         return originalSort.call(this)
-//     }
-//      var inputArray = this;
-// 		var numberOfBitsPerDigit = 8;
-// 		var numberOfBins = 1 << numberOfBitsPerDigit;
-// 		var numberOfDigits = 4;
-// 		var outputArray   = new Array(inputArray.length);
-// 		var outSortedKeys = new Array(inputArray.length);
-// 		var outputArrayHasResult = false;
-// 		var bitMask = numberOfBins - 1;
-// 		var shiftRightAmount = 0;
-// 		var d = 0;
-	
-// 		var retValue = HistogramByteComponentsAndKeyArray(inputArray, 0, inputArray.length - 1, getKey);
-// 		var count  = retValue.count;
-// 		var inKeys = retValue.inKeys;
-	  
-// 		var startOfBin = new Array(numberOfDigits);
-// 		for (d = 0; d < numberOfDigits; d++)
-// 		{
-// 		  startOfBin[d] = new Array(numberOfBins);
-// 		  startOfBin[d][0] = 0;
-// 		  for (var b = 1; b < numberOfBins; b++ )
-// 			startOfBin[d][b] = startOfBin[d][b - 1] + count[d][b - 1];
-// 		}
-		
-// 		d = 0;
-// 		while( bitMask != 0 )    
-// 		{
-// 		  var startOfBinLoc = startOfBin[d];
-	
-// 		  for (var current = 0; current < inputArray.length; current++)
-// 		  {
-// 			var endOfBinIndex = (inKeys[current] & bitMask) >> shiftRightAmount;
-// 			var index = startOfBinLoc[endOfBinIndex];
-// 			outputArray[  index] = inputArray[current];
-// 			outSortedKeys[index] = inKeys[    current];
-// 			startOfBinLoc[endOfBinIndex]++;
-// 		  }
-			
-// 			bitMask <<= numberOfBitsPerDigit;
-// 			shiftRightAmount += numberOfBitsPerDigit;
-// 			outputArrayHasResult = !outputArrayHasResult;
-// 			d++;
-			
-// 			var tmp = inputArray, inputArray = outputArray, outputArray = tmp;
-// 			var tmpKeys = inKeys;  inKeys = outSortedKeys;  outSortedKeys = tmpKeys;
-// 		}
-	
-// 		return outputArrayHasResult ? outputArray : inputArray;
-// 	};
+//
 if (Config.LOGGING==false) {
     for (var k in console) {console[k] = function () { } }
 }
@@ -217,11 +98,10 @@ window.imports = async function (x, opts, isError) {
                 window.imported_classes[x] = src;
                 resolve(src);
             } else {
-                //then()-else{} when ran from server. catch() block never runs
                 var src = await response.text();
                 throw new Error;
                 console.error(error);
-                resolve("");//resolve() prevents app from breaking on 404
+                resolve("");
             }
         } catch (e) {
             try{
@@ -229,8 +109,8 @@ window.imports = async function (x, opts, isError) {
               request.open('GET', path, false);
               request.send(null);
             } catch(xe){
-              console.error("404 import: " + toAbsoluteURL(path), xe);
-                resolve("");//resolve() prevents app from breaking on 404
+                console.error("404 import: " + toAbsoluteURL(path), xe);
+                resolve("");
             }
             if (request.status == 0 || request.status == 200) {
                 src = request.responseText;
@@ -243,6 +123,56 @@ window.imports = async function (x, opts, isError) {
             }
         }
     });
+};
+
+
+async function initImportMap () {
+  window.importmap={};
+  async function importmap(){
+      if(!Config.IMPORT_MAPS){return}
+      var importMapScript = document.head.querySelector("script[type='importmap']");
+      if( importMapScript) {
+        window.importmap = JSON.parse(importMapScript.textContent).imports;
+      }
+      else {
+        let data = await (await fetch(Config.ROOTPATH+".importmap")).text();
+          data = data||"{}";
+        var s = document.createElement("script");
+            s.setAttribute("type", "importmap");
+            s.textContent = data;
+        document.head.append(s)
+        window.importmap = JSON.parse(data).imports;
+      }
+  }
+  try{await importmap();}catch(e){console.error("initImportMap()",e)}
+
+  var modulemap = window.modulemap = window.importmap;
+  async function importModule(url) {
+    //TODO: Use error code
+    var error = !/\//.test(url) && !/\.m?js/.test(url) ? `Unable to resolve import, '${url}'. Missing .importmap specifier`:null;
+    url = (modulemap[url]||url).replace(/^\/+/, Config.ROOTPATH);
+    var absURL = toAbsoluteURL(url);
+    var mod=modulemap[absURL];
+    if (mod) { return mod};
+    return new Promise(async (resolve, reject) => {
+      if (mod) { resolve(mod)};
+      var s1 = document.createElement("script");
+          s1.type = "module";
+          s1.onerror = () => {console.error(error||`404: ${absURL}`); resolve();}
+          s1.onload  = () => {
+            resolve(modulemap[absURL]); URL.revokeObjectURL(s1.src); s1.remove();
+          };
+      const loader = `import * as m from "${absURL}"; modulemap['${absURL}'] = m;`;
+      const blob = new Blob([loader], { type: "text/javascript" });
+      s1.src = URL.createObjectURL(blob);
+      document.head.appendChild(s1);
+    });
+  };
+
+  window.load = importModule;
+  if(typeof require == "undefined"){
+    window.require = importModule;
+  }
 };
 //
 function relativeToAbsoluteFilePath(path, ns, appendRoot){
@@ -291,6 +221,7 @@ window.tag = function tag(target, name){
 }
 
 window.field = function field(target, type, key, val){
+    console.warn(`@${type} decorator on class '${target.prototype.namespace}' is deprecated.`);
     target = (type=="static") ? target : target.prototype;
     target[key] = val;
 };
@@ -351,33 +282,6 @@ window.field = function field(target, type, key, val){
         return func
     };
 })(this);
-(()=> {
-  var modulemap = window.modulemap ={};
-  async function importModule(url) {
-    url = (window.importmap[url]||url).replace(/^\/+/, Config.ROOTPATH);
-    var absURL = toAbsoluteURL(url);
-    var mod=modulemap[absURL];
-    if (mod) { return mod};
-    return new Promise(async (resolve, reject) => {
-      if (mod) { resolve(mod)};
-      var s1 = document.createElement("script");
-          s1.type = "module";
-          s1.onerror = () => reject(new Error(`404: ${absURL}`));
-          s1.onload  = () => {
-            resolve(modulemap[absURL]); URL.revokeObjectURL(s1.src); s1.remove();
-          };
-      const loader = `import * as m from "${absURL}"; modulemap['${absURL}'] = m;`;
-      const blob = new Blob([loader], { type: "text/javascript" });
-      s1.src = URL.createObjectURL(blob);
-      document.head.appendChild(s1);
-    });
-  };
-
-  window.load = importModule;
-  if(typeof require == "undefined"){
-    window.require = importModule;
-  }
-})();
 class Observer {
     addEventListener(name, cb, capture){
         this.subscribers=this.subscribers||{};
@@ -441,7 +345,8 @@ namespace `domain` (
 namespace `domain.collections` (
     class Repository extends IEventTarget {
         static get storage(){
-            var p = this.prototype;
+            //TODO: replace check for "seeds" | Deprecate @public seeds decorator
+            var p = "seeds" in this.prototype?this.prototype:this;
             var Storage = p.device_driver||p.driver;
                 Storage = typeof Storage=="string"?NSRegistry[Storage]:Storage;
             this.interface = this.interface||new Storage(this);
@@ -511,7 +416,9 @@ namespace `domain.collections` (
             return this.transform(data);
         }
 
-        static async seed (uri=this.prototype.seeds, params, force){
+        static async seed (uri, params, force){
+            //TODO: replace this.prototype.seeds with this.seeds | Deprecate @public seeds decorator
+            uri = "seeds" in this.prototype?this.prototype.seeds:this.seeds;
             return new Promise(async (resolve,reject) =>{
                 if(!this.isSeedable()) {
                     this.prototype.dispatchEvent("loaded", {controller: this}, this);
@@ -793,6 +700,15 @@ window.customTemplateEngines = new core.drivers.templating.Manager;
         ext : "",
         parse : function(tempStr, data, self){
             var parse = (tempStr, templateVars) => {
+                if(!/\<\s*template\s*\>/.test(tempStr)){
+                    if(Config.INTERPOLATE_CSS) {
+                        tempStr = tempStr.replace(/\\/gm, "\\\\");//escape backslashes before octal chars
+                        tempStr = tempStr.replace(/\`/gm, "\\`");//escape backticks `
+                    }
+                    else {
+                        return tempStr
+                    }
+                }
                 return new Function("return `"+tempStr +"`;").call(templateVars);
             }
             return parse(tempStr, data)
@@ -834,34 +750,26 @@ namespace `system.drivers.watchers` (
 
 namespace `core.ui` (
     class WebComponent extends HTMLElement {
-        
-
         constructor(el,options={}) {
             super();
-            
             this.options = options;
             this.element = el;
-            // this.internals  = this.attachInternals();
-            // this.usesDSR    = true && this.internals.shadowRoot;
+            this.internals  = this.attachInternals && this.attachInternals();
+            this.usesDSR    = true && this.internals?.shadowRoot;
             this.__proto    = this.constructor.prototype;
-            // this.__proto.skin = "";
 
-            
-            if(this.isExistingDomNode(this.element)){
+            if(this.isExistingDomNode(this.element) && !this?.internals?.shadowRoot){
                 this.root = this.element
                 this.connectedCallback();
             }
             else {
-                this.innerTemplate = this.innerHTML && /<\s*\btemplate\b/.test(this.innerHTML) ?  this.innerHTML:null;
-                this.root = this.shadowRoot||this.inShadow()?
-                    this.attachShadow({ mode: 'open' }) : (this.element||this)
-                /*if(!this.usesDSR){
+                if(!this.usesDSR){
                     this.root = this.options.inShadow||this.inShadow() ? 
                         this.attachShadow({ mode: 'open' }) : (this.element||this);
                 }
                 else {
                     this.root = this.element||this.internals.shadowRoot
-                }*/
+                }
             }
         }
 
@@ -900,7 +808,6 @@ namespace `core.ui` (
                     this._template = tem
                     resolve(this._template);
                 }
-                // resolve(this._template);
             })
         }
 
@@ -925,12 +832,20 @@ namespace `core.ui` (
             this._is_dom_ready=true;
         }
 
+        // async onConnected(data=this) { 
+        //     // !this.usesDSR && await this.loadTemplate();
+        //     await this.loadTemplate()
+        //     await this.onTemplateLoaded();
+        //     // !this.usesDSR && await this.render(data);
+        //     await this.render(data);
+        //     setTimeout(e=>this.onRendered(),0);
+        // }
         async onConnected(data=this) { 
-            // !this.usesDSR && await this.loadTemplate();
-            await this.loadTemplate()
+            !this.usesDSR && await this.loadTemplate();
+            // await this.loadTemplate()
             await this.onTemplateLoaded();
-            // !this.usesDSR && await this.render(data);
-            await this.render(data);
+            !this.usesDSR && await this.render(data);
+            // await this.render(data);
             setTimeout(e=>this.onRendered(),0);
         }
         
@@ -999,8 +914,8 @@ namespace `core.ui` (
 
         onAwake(){
             if(this.onUpdate||this.onDraw||this.onFixedUpdate){
-                application.component2d_instances = application.component2d_instances||[];
-                application.component2d_instances.push(this);
+                document.component2d_instances = document.component2d_instances||[];
+                document.component2d_instances.push(this);
             }
         }
 
@@ -1030,11 +945,6 @@ namespace `core.ui` (
                 try{ce && ce.define(tag, this)}catch(e){}
             }    
         }
-
-        // static preview(){
-        //     var ns = this.prototype.namespace;
-        //     window.open("/src/system/ui/ComponentViewer/index.html?ns="+ns)
-        // }
 
         static preload(options){
             try{
@@ -1076,14 +986,35 @@ namespace `core.ui` (
                 this.root.setAttribute(name, val) : super.setAttribute(name, val)
         }
 
-        querySelector(cssSel, e){
-            return (this.inShadow()||this.element) ? 
-                this.root.querySelector(cssSel) : super.querySelector(cssSel)
+        querySelector(cssSel){
+            return /\>{3}/.test (cssSel) ? this.$(cssSel) : (this.inShadow()||this.element) ? 
+                this.root.querySelector(cssSel) : super.querySelector(cssSel);
         }
 
-        querySelectorAll(cssSel, deep){
-            return (this.inShadow()||this.element) ?
-                this.root.querySelectorAll(cssSel) : super.querySelectorAll(cssSel)
+        querySelectorAll(cssSel){
+            return /\>{3}/.test (cssSel) ? this.$_(cssSel) : (this.inShadow()||this.element) ? 
+                this.root.querySelectorAll(cssSel) : super.querySelectorAll(cssSel);
+        }
+
+        $(css) {
+            var res = this.$_(css);
+            return res?.length ? res[0]:null
+        }
+
+        $_(css) {
+            var queries = css.split(/\s?\,\s?/);
+            var results = [];
+            for(let css of queries) {
+                let doc_scope = /^\s?BODY/i.test(css) ? 'document':'this';
+                css = `return ${doc_scope}.querySelector("` + css.replace(/\s?>{3}\s?/gm, "\").shadowRoot.querySelector(\"") + `")`;
+                css = css.replace(/\bquerySelector\b(?!.*?\bquerySelector\b)/, "querySelectorAll")
+                let el = null;
+                try { 
+                    el = new Function(css).call(this);
+                    results.push(Array.from(el))
+                } catch(e) {console.error(e)}
+            }
+            return results.flat(10);
         }
 
         onAppendStyle(stylesheet) {
@@ -1116,10 +1047,14 @@ namespace `core.ui` (
             orphan && orphan.parentNode.replaceChild(this, orphan);
         }
 
-        dispatchEvent(type, data, details = { bubbles: true, cancelable: true, composed: true }, element = this) {
+        dispatchEvent(type, data={}, element) {
+            let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||null };
+            delete data.detail;
+            Object.assign(details, data);
             var evt = typeof type =="object" ? type : new CustomEvent(type, details);
-                if(data){evt.data = data};
-            if(this.element){return this.element.dispatchEvent(evt)}
+                if(data){evt.data = details.detail||data;};
+            var el = element||this.element
+            if(el){return el.dispatchEvent(evt)}
             else{return super.dispatchEvent(evt);}
         }
 
@@ -1214,7 +1149,7 @@ namespace `core.ui` (
 
         onTemplateRendered(){
             this.onBindIDs();
-            this.initializeChildComponents();
+            // this.initializeChildComponents();
             this.dispatchEvent("connected",{target:this});
         }
 
@@ -1255,20 +1190,18 @@ namespace `core.ui` (
 
         cssStyle(){ return "" }
 
-        onLoadInstanceStylesheet(){ 
-            console.warn(`${this.namespace}#onLoadInstanceStylesheet() is deprecated. Rename to hasOwnSkin().`)
-            return this.hasOwnSkin() 
-        }
-
         hasParentSkin(){
             return true
 		}
 
+        //TODO: Remove deprecation warning in 6.0.0
 		hasOwnSkin(){
+            if("onLoadInstanceStylesheet" in this) {
+                console.warn(`${this.namespace}#onLoadInstanceStylesheet() method name is deprecated. Rename to hasOwnSkin().`)
+                return this.onLoadInstanceStylesheet()
+            }
             return true
 		}
-
-        // hasOwnStyleSheet(){ return true }
 
         static defineAncestors(){
             this.ancestors=[];
@@ -1337,15 +1270,7 @@ namespace `core.ui` (
                                     /\//.test(_path) ?
                                         paths.push(_path):
                                         paths.push(relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}${_path}`,this.namespace));
-
-                                    // if(/\//.test(_path)) {
-                                    //     paths.push(_path)
-                                    // }
-                                    // else {
-                                    //     paths.push(relativeToAbsoluteFilePath(Config.SRC_PATH+`/./${skin.path}${_path}`,this.namespace))
-                                    // }
                                 })
-								//paths.push(...this.__proto["@stylesheets"].reverse()||[]);
 							}
 						}
                         for(let path of paths){
@@ -1389,14 +1314,28 @@ namespace `core.ui` (
         hasChildComponents(){return false}
 
         async initializeChildComponents (el=this.root){
-            var nodes = Array.from(el.querySelectorAll("*[namespace]"));
-                nodes && nodes.length && nodes.forEach(async n => {
-                    var ns = n.getAttribute("namespace");
-                    if(!classof(ns)){
-                        var cl = new system.http.ClassLoader;
-                        await cl.import(ns);
-                    }
-                });
+            return new Promise((resolve, reject) => {
+                var nodes = Array.from(el.querySelectorAll("*[namespace], *[import]"));
+                    nodes && nodes.length && nodes.forEach(async n => {
+                        if(n instanceof WebComponent){return}
+                        var ns = n.getAttribute("namespace")||n.tagName.toLowerCase();
+                            ns = /\-/.test(ns) ? window.importmap[ns]:ns;
+                        if(!ns) {return}
+                        n.removeAttribute("namespace");
+                        n.removeAttribute("import");
+                        var klass = classof(ns)||NSRegistry[ns];
+                        if(!klass){
+                            let cl = new system.http.ClassLoader;
+                            await cl.import(ns);
+                            klass = classof(ns)||NSRegistry[ns];
+                        }
+                        if(!/\-/.test(n.tagName)) {
+                            var el = new klass;
+                                el.replaces(n)
+                        }
+                    });
+                resolve()
+            })
         }
 
         isAnyPartOfElementInViewport(el=this.root) {
@@ -1427,20 +1366,17 @@ namespace `core.ui` (
     class Component2D extends WebComponent {
         constructor(el,options={}) {
             super(el,options={});
-
-           
-
             this.behaviors = this.machine = new system.machines.Automata;
         }
 
         onAwake(){
             if(this.onUpdate||this.onDraw||this.onFixedUpdate){
-                application.component2d_instances = application.component2d_instances||[];
-                application.component2d_instances.push(this);
+                document.component2d_instances = document.component2d_instances||[];
+                document.component2d_instances.push(this);
             }
         }
 
-        onLoadInstanceStylesheet(){
+        hasOwnSkin(){
             if(this.namespace == "core.ui.Component2D"){return false}
             return true
         }
@@ -1461,27 +1397,21 @@ namespace `core.ui` (
 
         onAwake(){}
 
-        //runs many times per frame (collision/physics/ai) at 8.333ms intervals within 1 "frame"
         onFixedUpdate (time) {
             if(this.isConnected) {
-                this.component2d_instances && this.component2d_instances.forEach(c => c.onFixedUpdate(time))
+                document.component2d_instances && document.component2d_instances.forEach(c => c.onFixedUpdate(time))
             }
         }
 
-
-        //runs once per frame (handle input/state updates), lasts for 16-24ms per frame
-        //implement getSimulationTimestep(){ return 1000/120 } to control FPS
         onUpdate(timestamp, delta){
             if(this.isConnected) {
-                this.component2d_instances && this.component2d_instances.forEach(c => c.onUpdate(timestamp, delta))
+                document.component2d_instances && document.component2d_instances.forEach(c => c.onUpdate(timestamp, delta))
             }
         }
 
-
-        //runs once per frame after onUpdate; (handle interpolation for fps-drop or lag) - last 16-24ms per frame
         onDraw(interpolation){
             if(this.isConnected) {
-                this.component2d_instances && this.component2d_instances.forEach(c => c.onDraw(interpolation))
+                document.component2d_instances && document.component2d_instances.forEach(c => c.onDraw(interpolation))
             }
         }
 
@@ -1616,10 +1546,10 @@ global.World = global.World||core.ui.World;
 
 
 !function(a){function b(a){if(x=q(b),!(a<e+l)){for(d+=a-e,e=a,t(a,d),a>i+h&&(f=g*j*1e3/(a-i)+(1-g)*f,i=a,j=0),j++,k=0;d>=c;)if(u(c),d-=c,++k>=240){o=!0;break}v(d/c),w(f,o),o=!1}}var c=1e3/60,d=0,e=0,f=60,g=.9,h=1e3,i=0,j=0,k=0,l=0,m=!1,n=!1,o=!1,p="object"==typeof window?window:a,q=p.requestAnimationFrame||function(){var a=Date.now(),b,d;return function(e){return b=Date.now(),d=Math.max(0,c-(b-a)),a=b+d,setTimeout(function(){e(b+d)},d)}}(),r=p.cancelAnimationFrame||clearTimeout,s=function(){},t=s,u=s,v=s,w=s,x;a.MainLoop={getSimulationTimestep:function(){return c},setSimulationTimestep:function(a){return c=a,this},getFPS:function(){return f},getMaxAllowedFPS:function(){return 1e3/l},setMaxAllowedFPS:function(a){return"undefined"==typeof a&&(a=1/0),0===a?this.stop():l=1e3/a,this},resetFrameDelta:function(){var a=d;return d=0,a},setBegin:function(a){return t=a||t,this},setUpdate:function(a){return u=a||u,this},setDraw:function(a){return v=a||v,this},setEnd:function(a){return w=a||w,this},start:function(){return n||(n=!0,x=q(function(a){v(1),m=!0,e=a,i=a,j=0,x=q(b)})),this},stop:function(){return m=!1,n=!1,r(x),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(a.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.exports&&(module.exports=a.MainLoop)}(this);
-function Ecmascript6ClassTranspiler() { }
+function Ecmascript6ClassTranspiler() {}
 Ecmascript6ClassTranspiler.prototype.imports = window.imports;
 Ecmascript6ClassTranspiler.prototype.transpile = function (src, doc) {
-    var doTranspile = Config.ENABLE_TRANSPILER;
+    var doTranspile = Config.ENABLE_TRANSPILER||location.protocol == "file:";
     if (doTranspile) {
         src = this.transpileToLevel(src);
         return src;
@@ -1681,22 +1611,25 @@ Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (s
         src = src.replace(regex, (full, dest, src, d) => {
             if(dest){
                 dest = dest.replace(/\s+as\s+/gm, ":");
-                dest = dest.replace(/[\{\}]/gm, "");
-                if(dest.includes("*") && (dest.includes("global")||dest.replace(/\*\s/g,"")=="")){
-                    return `
-                        var _mod_ = fromNS(${src})?fromNS(${src}):await load(${src});
-                        // var _mod_ = ${src}?${src}:await load(${src}); //usage: import * as global from display.components;
-                        Object.keys(_mod_).forEach(_exp => {
-                            if(global[_exp]) {Object.assign(_mod_[_exp], global[_exp])}
-                            else {global[_exp] = _mod_[_exp]}
-                        });`
+                // if(dest.includes("*") && (dest.includes("global")||dest.replace(/\*\s/g,"")=="")){
+                //     alert("asd")
+                //     return `
+                //         var _mod_ = fromNS(${src})?fromNS(${src}):await load(${src});
+                //         Object.keys(_mod_).forEach(_exp => {
+                //             if(global[_exp]) {Object.assign(_mod_[_exp], global[_exp])}
+                //             else {global[_exp] = _mod_[_exp]}
+                //         });`
+                // }
+                if(dest.includes("*")){
+                    dest = dest.replace(/\*\:/gm, "");
+                    return `var ${dest} = await load(${src});`;
                 }
-                else if(dest.includes("*")){
+                else if(/[\{\}]/gm.test(dest)){
                     dest = dest.replace(/\*\:/gm, "");
                     return `var ${dest} = await load(${src});`;
                 }
                 else{
-                    return `var {${dest}} = fromNS(${src})?fromNS(${src}):await load(${src});`;
+                    return `let ${dest} = await load(${src}); ${dest} = ${dest.trim()}.default;`;
                 }
             }
             return full;
@@ -1724,7 +1657,6 @@ Ecmascript6ClassTranspiler.prototype.transipleClassFields = function (ns, src) {
 namespace `system.http` ( 
     class ClassLoader {
         constructor (){
-            this.es6Transpiler = new Ecmascript6ClassTranspiler();
             window.run = this.run.bind(this);//TODO:check dynamic transpilation
             return this;
         }
@@ -1755,17 +1687,28 @@ namespace `system.http` (
                         filename_path.replace("*", Config.DEBUG ? "src.":"min."):
                         filename_path.replace("*","");
                 }
-                let src;
-                try{src = await window.imports(path);}catch(e){ reject(e);return }
-                if(src){ this.run(src, source => resolve(source))} 
-                else {reject("Unable to import: " + path)}
+                if(Config.ENABLE_TRANSPILER||location.protocol == "file:") {
+                        let src;
+                        try{src = await window.imports(path);}catch(e){ reject(e);return }
+                        if(src){ this.run(src, source => resolve(source))} 
+                        else {reject("Unable to import: " + path)}
+                }
+                else {
+                    try{await import(path);}catch(e){console.error(e)}finally{
+                        resolve()
+                    }
+                }
             })
         }
 
         async build(src, cb) {
+            if((Config.ENABLE_TRANSPILER||location.protocol == "file:") && !globalThis.Ecmascript6ClassTranspiler) {
+                // var {Ecmascript6ClassTranspiler} = await load("/src/libs/test/safari.js");
+                globalThis.Ecmascript6ClassTranspiler = Ecmascript6ClassTranspiler;
+                this.constructor.prototype.es6Transpiler = this.constructor.prototype.es6Transpiler||new globalThis.Ecmascript6ClassTranspiler();
+            }
             src = this.es6Transpiler.transpile(src);
             var reg = /^import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m;
-            //var reg = /^(?<!\/)import\!?\s+[\'\"]{1}([^\'\"]*)[\'\"]{1}\;?/m; /*checks for //import*/
             while (reg.test(src)) {
                 var match = src.match(reg);
                 var ns = match[1];
@@ -1805,32 +1748,36 @@ namespace `system.http` (
 );
 
 
-async function importmap(){
-    window.importmap=window.importmap||{};
-    if(!Config.IMPORT_MAPS){return}
-    const data = await (await fetch(Config.ROOTPATH+".importmap")).text();
-    window.importmap = JSON.parse(data).imports;
-}
+
 
 document.addEventListener("DOMContentLoaded", async e => {
   let assetsloaded = false;
-  try{await importmap();}catch(e){}
-  await wait(50);
-  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+
+  try{await initImportMap();}catch(e){}
+  await wait(10);
+
 
   if(Config.SPLASH){
-    let s = new system.http.ClassLoader;
-    var cls = await s.import(Config.SPLASH, Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js")
-        .catch(e => console.error("Config.SPLASH", e))
+    let path = Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js";
+    if(location.protocol == "file:") {
+        let s = new system.http.ClassLoader;
+        await s.import(Config.SPLASH, path).catch(e => {console.error(e); assetsloaded=true});
+        await sleep(30);
+    }
+    else {
+        try{await import(path)}catch(e){console.error(e); assetsloaded=true}
+    }
     var Splash = classof(Config.SPLASH)
     if(Splash){
-        var splash = new Splash;
-            splash.on("loaded", e=> assetsloaded=true)
+        var splash = document.body.querySelector(`#splash, [namespace='${Config.SPLASH}']`)||new Splash;
+            splash.addEventListener("loaded", e=> assetsloaded=true, true)
             splash.setAttribute("duration", Config.SPLASH_FADE_DELAY)
         document.body.appendChild(splash);
         document.body.style.opacity=1;
-    }
-  } else {assetsloaded=true};
+    }else {assetsloaded=true}
+  } else {assetsloaded=true; document.body.style.opacity=1;};
+
+  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
 
   async function bootup() {
     if (ns && Config.DYNAMICLOAD) {
@@ -1847,7 +1794,7 @@ document.addEventListener("DOMContentLoaded", async e => {
 
         let c = new system.http.ClassLoader;
             c.import(ns,path).then(async function init(){
-              if(!NSRegistry[ns] || !assetsloaded) {
+              if(!NSRegistry[ns]) {
                 await wait(1000/20);init();return;
               }
               let app = window.application = (
