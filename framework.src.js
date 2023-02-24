@@ -1,5 +1,5 @@
 (async (global)=>{ global.arc = {
-    version : "5.3.0:02122023"
+    version : "5.4.0:02242023"
 };
 console.log("v"+global.arc.version);
 var Config = global.Config = global.Config||{
@@ -33,10 +33,6 @@ try{module.exports = Config;}catch(e){}
   var n = document.createRange().createContextualFragment(this.toString())
   return fragment?fragment:n.firstElementChild;
 }
-String.prototype.toDomElement = function(){
-  console.warn(".toDomElement() is deprecated. Use .toNode()")
-  return this.toNode();
-}
 //
 ;var wait = sleep = ms => new Promise((r, j)=>setTimeout(r, ms));
 global.wait=wait;
@@ -69,9 +65,6 @@ Function.prototype.with = function(...mixin) {
 
 
 //
-if (Config.LOGGING==false) {
-    for (var k in console) {console[k] = function () { } }
-}
 
 window.toAbsoluteURL = function(url) {
     const a = document.createElement("a");
@@ -532,49 +525,34 @@ namespace `system.machines` (
             this.element = element;
             this.machine = machine||element.machine||element.behaviors;
 		}
-
 		//------------------------------MACHINE CALLED----------------------------
-
-        //Called when machine awakes this component. Usualy we hide/show onAwake.
-        //and do anything else like play music, sfx, animation etc
         onAwake(){
             console.log(this.namespace + " Awake");
-            // alert(this.sprite.x)
         }
 
-        //Machine puts it to sleep.Usually hide itself, pause music, animate out.
         onSleep(){
             console.log(this.namespace + " Sleeping");
         }
 
-        //Machine calls it once if never started, hence the isStarted flag. Usually,
-        //you append this component to DOM, which fires onConnected() above.
+        //Called once if never started
         onStart(dir) {
 			this.isStarted=true;
             console.log(this.namespace + " Started");
 		}
 
-
-        //Machine calls if isFinished is ever true. Destroy self and cleanup. 
+        //Called if isFinished; 
         onExit(){
             console.log(this.namespace + " Exit")
         }
 
-        //onUpdate, runs 1x per frame. Good place to handle user input
-       	onUpdate(timestamp, delta){
-            // Key.isUp(Key.ESC) && this.dispatchEvent("startmenu")
-        }
+        //runs 1x per frame. Handle user input
+       	onUpdate(timestamp, delta){}
 
+        //runs many times per frame. For physics/collision/ai
+        onFixedUpdate(time) {}
 
-        //runs many times per frame. Good place for physics/collision/ai
-        onFixedUpdate(time) {
-
-        }
-
-        //runs 1x per frame. Good place to paint
-        onDraw(interpolation){
-            // console.log(!this.sprite.iscolliding)
-		}
+        //runs 1x per frame. Paint here
+        onDraw(interpolation){}
     }
 );
 global.MonoBehavior = global.MonoBehavior||system.machines.State;
@@ -595,31 +573,6 @@ namespace `system.http` (
             this.window.addEventListener("hashchange", (e)=> hashchangeCb(e), false)
             if(this.window.location.hash.length > 0){
                 hashchangeCb()
-            }
-        }
-
-        preload(){
-            var c = new system.http.ClassLoader;
-            if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(e =>{
-                    var preloadables = this.application.onRequestPreloadable();
-                        preloadables.forEach(async ns=>{
-                            ns = ns.split("#")[1];
-                            ns = ns.split("/")[0];
-                            if(NSRegistry[ns]){return}
-                            if(!this.preloaded[ns]) {
-                                try{
-                                    var script = await c.import(ns);
-                                    if(script){
-                                        var cls = NSRegistry[ns];
-                                        cls&&cls.preload();
-                                        this.preloaded[ns]=cls;
-                                        // console.log("preloaded",ns)
-                                    }
-                                }catch(e){console.warn("Unable to preload: ", ns)}
-                            }
-                        })
-                },{timeout: 1000})
             }
         }
 
@@ -651,7 +604,6 @@ namespace `system.http` (
             this.application.onEnterActivity(c,scrollTo);
             this.activities[ns] = c;
             this.current_activity=c;
-            this.preload();
         }
 
         destroy(activityInstance){
@@ -752,39 +704,50 @@ namespace `core.ui` (
     class WebComponent extends HTMLElement {
         constructor(el,options={}) {
             super();
+            var template = this.firstElementChild;
+            this._template = template && template instanceof HTMLTemplateElement ? template:null;
             this.options = options;
             this.element = el;
             this.internals  = this.attachInternals && this.attachInternals();
-            this.usesDSR    = true && this.internals?.shadowRoot;
+            this.usesDSR    = this.internals?.shadowRoot||this._template;
             this.__proto    = this.constructor.prototype;
 
-            if(this.isExistingDomNode(this.element) && !this?.internals?.shadowRoot){
+            if(this.isExistingDomNode(this.element) && !this.usesDSR){
                 this.root = this.element
                 this.connectedCallback();
             }
             else {
                 if(!this.usesDSR){
-                    this.root = this.options.inShadow||this.inShadow() ? 
-                        this.attachShadow({ mode: 'open' }) : (this.element||this);
+                    this.root = this.inShadow() ? 
+                        this.attachShadow({mode:'open'}) : 
+                        (this.element||this);
+                }
+                else if(this.usesDSR && this.internals?.shadowRoot) {
+                    this.root = this.internals.shadowRoot
+                }
+                else if(this.usesDSR && this._template) {
+                    if(this.inShadow()) {
+                        this.root = this.attachShadow({ mode: 'open' });
+                        this.root.append(this._template.content);
+                        template && template.remove();
+                    }
+                    else {
+                        this.root=this;
+                    }
                 }
                 else {
-                    this.root = this.element||this.internals.shadowRoot
+                    this.root=this;
                 }
             }
         }
 
-        static get template(){
-            var ns = this.prototype.namespace;
-            return Config.SRC_PATH + ns.replace(/\./g,"/") + "/index.html"
-        }
-        
-        async loadTemplate() {
+        async loadTemplate() {   
             return new Promise(async (resolve, reject) => {
                 var tem  =  this.getTemplateToLoad();
                 var opts = Config.IMPORTS_CACHE_POLICY || {cache:"force-cache"}
                 if(/\/*\.html$/.test(tem)){
-                    var src=this.src||tem;//TODO: bug here?
-                    src = src.replace("/./", this.namespace.replace(/\./gim, "/") + "/");
+                    var src=tem;
+                        src = src.replace("/./", this.namespace.replace(/\./gim, "/") + "/");
                     this._template = await window.imports(src, opts);
                     resolve(this._template)
                 }
@@ -800,11 +763,7 @@ namespace `core.ui` (
                     this._template=`<template>${tem.outerHTML}</template>`;
                     resolve(this._template);
                 }
-                else if(tem && /^\s*class/.test(tem.toString())){//ancestor class
-                    this._template = await imports(tem.template, opts);
-                    resolve(this._template);
-                }
-                else {//ancestor class
+                else {
                     this._template = tem
                     resolve(this._template);
                 }
@@ -815,11 +774,9 @@ namespace `core.ui` (
             var skin = this.__skin__||this.getSkin();
             var engine = this.getTemplateEngine();
             return  this.querySelector("template")||    //node
-                    this.innerTemplate ||
-                    this.src||                          //uri
                     this.template||                     //string(html or path)
                     this.element||                      //node
-                    Config.SRC_PATH+`/./${skin.path}index` + (engine.ext||"") + ".html" //TODO: default but ignores <Config.TEMPLATE_NAMES_USE_ENGINE_EXTENSION>
+                    Config.SRC_PATH+`/./${skin.path}index` + (engine.ext||"") + ".html"
         }
 
         get isConnected(){return this._is_dom_ready}
@@ -832,20 +789,14 @@ namespace `core.ui` (
             this._is_dom_ready=true;
         }
 
-        // async onConnected(data=this) { 
-        //     // !this.usesDSR && await this.loadTemplate();
-        //     await this.loadTemplate()
-        //     await this.onTemplateLoaded();
-        //     // !this.usesDSR && await this.render(data);
-        //     await this.render(data);
-        //     setTimeout(e=>this.onRendered(),0);
-        // }
         async onConnected(data=this) { 
             !this.usesDSR && await this.loadTemplate();
-            // await this.loadTemplate()
             await this.onTemplateLoaded();
             !this.usesDSR && await this.render(data);
-            // await this.render(data);
+
+            if(this.usesDSR && !this.inShadow()) {
+                this.assignSlots(this._template.content)
+            }
             setTimeout(e=>this.onRendered(),0);
         }
         
@@ -856,61 +807,51 @@ namespace `core.ui` (
 
         async onDisconnected(){}
 
-        async render(data={}, t=this._template, outputEl) {
-            if(this.isExistingDomNode(this.element)){
-                this.onTemplateRendered(temNode);
-                this.dispatchEvent("connected",{target:this})
-                return
-            }
-            if (t && typeof t=="string") {
-                var html = await this.evalTemplate(t, data);
-                var temNode = html.toNode();
-                    if(!temNode?.content){
-                        console.error(`${this.namespace} - invalid <template>`, {template:this._template, owner:this.parentNode});
-                        return
-                    }
-                    temNode = temNode.content;
-                if (!this.inShadow() && this.isComposable()) {
-                    var defaultSlot = temNode.querySelector("slot");
-                    if(defaultSlot){
-                        let nodes = Array.from(this.children);
-                        for(let n of nodes){
-                            var slotName = n.getAttribute('slot');
-                            var ph = slotName==null?
-                                temNode.querySelector(`slot:not([name])`):
-                                temNode.querySelector(`slot[name="${slotName}"]`)||null;
-                            if( ph && !ph.emptied){
-                                (ph.innerHTML="");
-                                (ph.emptied=true);
-                            }
-                            ph?(ph).appendChild(n):slotName?n.remove():null;
+        assignSlots(temNode) {
+            if(!temNode) { return}
+            if (!this.inShadow() && this.isComposable()) {
+                var defaultSlot = temNode.querySelector("slot");
+                if(defaultSlot){
+                    let nodes = Array.from(this.children);
+                    for(let n of nodes){
+                        if(n instanceof HTMLTemplateElement) { continue}
+                        var slotName = n.getAttribute('slot');
+                        var ph = slotName==null?
+                            temNode.querySelector(`slot:not([name])`):
+                            temNode.querySelector(`slot[name="${slotName}"]`)||null;
+                        if( ph && !ph.emptied){
+                            (ph.innerHTML="");
+                            (ph.emptied=true);
                         }
+                        ph?(ph).appendChild(n):slotName?n.remove():null;
                     }
                 }
-                if(outputEl){
-                    outputEl.innerHTML = "";
-                    outputEl.appendChild(temNode);
-                }
-                else {
-                    if(this.element){
-                        this.innerHTML = "";
-                        this.appendChild(temNode);
-                    }
-                    else{
-                        this.root.innerHTML = "";
-                        this.root.appendChild(temNode);
-                    }
-                }
-                this.onTemplateRendered(temNode);
+                
             }
-            else if(t && typeof t == "function" && outputEl){
-                outputEl.innerHTML = "";
-                data.forEach(t);
-            }
-            else if(t && typeof t == "function"){
-                await this.render(data,t.call(data))
-            }
+            this.root.innerHTML = "";
+			this.root.appendChild(temNode);
         }
+        async render(data={}, t=this._template, outputEl) {
+			if(this.isExistingDomNode(this.element)){
+				this.onTemplateRendered(temNode);
+				this.dispatchEvent("connected",{target:this})
+				return
+			}
+			else if (t && typeof t=="string") {
+				var html = await this.evalTemplate(t, data);
+				var temNode = html.toNode();
+					if(!temNode?.content){
+						console.error(`${this.namespace} - invalid <template>`, {template:this._template, owner:this.parentNode});
+						return
+					}
+					temNode = temNode.content;
+                    this.assignSlots(temNode)
+				this.onTemplateRendered(temNode);
+			}
+			else if(t && typeof t == "function"){
+				await this.render(data,t.call(data))
+			}
+		}
 
         onAwake(){
             if(this.onUpdate||this.onDraw||this.onFixedUpdate){
@@ -946,18 +887,6 @@ namespace `core.ui` (
             }    
         }
 
-        static preload(options){
-            try{
-                var a = new this(null,options);
-                    a.is_preloading=true;
-                    a.style.width="1px";
-                    a.style.height="1px";
-                    a.style.position="absolute";
-                document.body.appendChild(a);
-                setTimeout(e=>a.remove(),1000);
-            }catch(e){}
-        }
-
         async setStylesheet () {
             if(this.inShadow()){
                 var css = this.cssStyle();
@@ -987,13 +916,35 @@ namespace `core.ui` (
         }
 
         querySelector(cssSel){
-            return /\>{3}/.test (cssSel) ? this.$(cssSel) : (this.inShadow()||this.element) ? 
-                this.root.querySelector(cssSel) : super.querySelector(cssSel);
+			if(/\>{3}/.test(cssSel)) {
+				return this.$(cssSel)
+			}
+			else {
+				var res;
+				if(this.inShadow()||this.element){
+					res = this.root.querySelector(cssSel);
+				}
+				if(!res) {
+					res = super.querySelector(cssSel)
+				}
+				return res;
+			}
         }
 
         querySelectorAll(cssSel){
-            return /\>{3}/.test (cssSel) ? this.$_(cssSel) : (this.inShadow()||this.element) ? 
-                this.root.querySelectorAll(cssSel) : super.querySelectorAll(cssSel);
+			if(/\>{3}/.test(cssSel)) {
+				return this.$_(cssSel)
+			}
+			else {
+				var res;
+				if(this.inShadow()||this.element){
+					res = this.root.querySelectorAll(cssSel);
+				}
+				if(!res||!res?.length) {
+					res = super.querySelectorAll(cssSel)
+				}
+				return res;
+			}
         }
 
         $(css) {
@@ -1042,10 +993,6 @@ namespace `core.ui` (
         }
 
         onStyleComputed(stylesheet){}
-
-        replaces(orphan) {
-            orphan && orphan.parentNode.replaceChild(this, orphan);
-        }
 
         dispatchEvent(type, data={}, element) {
             let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||null };
@@ -1148,40 +1095,16 @@ namespace `core.ui` (
         }
 
         onTemplateRendered(){
-            this.onBindIDs();
-            // this.initializeChildComponents();
             this.dispatchEvent("connected",{target:this});
         }
 
-        onBindIDs(){
-            if(this.onAutoQuerySelectIds){
-                console.warn(`${this.namespace}#onAutoQuerySelectIds() is deprecated. Replace/implement onBindIDs() instead.`)
-            }
-            var els = Array.from(this.querySelectorAll("*[id]"));
-                els.forEach(el => !this[el.id] && (this[el.id]=el))
+        inShadow() { 
+            return this.internals?.shadowRoot||this.shadowRoot
         }
-        
-        static get observedAttributes() { return ['src'] }
-
-        get src() { return this.getAttribute('src') }
-
-        set src(val) {this.setAttribute('src', val)}
-
-        inShadow() { return this.hasAttribute('shadow')||this.shadowRoot }
 
         attachShadow(options) {
             this._usesShadow = true;
             return super.attachShadow(options);
-        }
-
-        async attributeChangedCallback(name, oldValue, newValue) {
-            if (name == "src"){
-                if(!this._is_connected){return;}
-                else {
-                    var html = await this.loadTemplate();
-                    await this.onConnected()
-                }
-            }
         }
 
         cloneAttributes(target=this, source) {
@@ -1308,42 +1231,9 @@ namespace `core.ui` (
         
         setPrototypeInstance() {
             this.setAttribute("namespace", this.namespace);
-            // this.prototype = this;
         }
 
         hasChildComponents(){return false}
-
-        async initializeChildComponents (el=this.root){
-            return new Promise((resolve, reject) => {
-                var nodes = Array.from(el.querySelectorAll("*[namespace], *[import]"));
-                    nodes && nodes.length && nodes.forEach(async n => {
-                        if(n instanceof WebComponent){return}
-                        var ns = n.getAttribute("namespace")||n.tagName.toLowerCase();
-                            ns = /\-/.test(ns) ? window.importmap[ns]:ns;
-                        if(!ns) {return}
-                        n.removeAttribute("namespace");
-                        n.removeAttribute("import");
-                        var klass = classof(ns)||NSRegistry[ns];
-                        if(!klass){
-                            let cl = new system.http.ClassLoader;
-                            await cl.import(ns);
-                            klass = classof(ns)||NSRegistry[ns];
-                        }
-                        if(!/\-/.test(n.tagName)) {
-                            var el = new klass;
-                                el.replaces(n)
-                        }
-                    });
-                resolve()
-            })
-        }
-
-        isAnyPartOfElementInViewport(el=this.root) {
-            var rect = el.getBoundingClientRect();
-            var v = (rect.top  <= window.innerHeight) && ((rect.bottom) >= 0);
-            var h = (rect.left <= window.innerWidth)  && ((rect.right)  >= 0);
-            return (v && h);
-        }
 
         watch(object,prop,cb=null,force,engine=system.drivers.watchers.Watcher){
             object = typeof object == "string"?this.querySelector(object):object;
@@ -1425,7 +1315,6 @@ namespace `core.ui` (
 
         async onConnected(data){
             await super.onConnected(data);
-            MainLoop.start();
             if(this.onEnableRouting()){
                 var _router = this.getRouteHandler();
                 this.router = new _router(this,window);
@@ -1434,15 +1323,6 @@ namespace `core.ui` (
 
         getRouteHandler(){
             return NSRegistry[Config.ROUTER];
-        }
-
-        onRequestPreloadable(){
-            let preloadables = this.querySelectorAll('a[preload]');
-            let result = Array.from(preloadables).map(a => {
-                a.removeAttribute("preload");
-                return a.getAttribute("href");
-            });
-            return [...new Set(result)];
         }
 
         onEnableRouting(){ 
@@ -1532,7 +1412,10 @@ namespace `w3c.ui` (core.ui.Application);
 
 namespace `core.ui` (
     class World extends core.ui.Application {
-        constructor(el) { super(el) }
+        async onConnected(data){
+            await super.onConnected(data);
+            MainLoop.start();
+        }
         onUpdate(accumilated, delta){}
         onFixedUpdate(){}
         onDraw(interpolation){}
@@ -1611,15 +1494,6 @@ Ecmascript6ClassTranspiler.prototype.transipleImportsDestructuring = function (s
         src = src.replace(regex, (full, dest, src, d) => {
             if(dest){
                 dest = dest.replace(/\s+as\s+/gm, ":");
-                // if(dest.includes("*") && (dest.includes("global")||dest.replace(/\*\s/g,"")=="")){
-                //     alert("asd")
-                //     return `
-                //         var _mod_ = fromNS(${src})?fromNS(${src}):await load(${src});
-                //         Object.keys(_mod_).forEach(_exp => {
-                //             if(global[_exp]) {Object.assign(_mod_[_exp], global[_exp])}
-                //             else {global[_exp] = _mod_[_exp]}
-                //         });`
-                // }
                 if(dest.includes("*")){
                     dest = dest.replace(/\*\:/gm, "");
                     return `var ${dest} = await load(${src});`;
@@ -1816,7 +1690,7 @@ document.addEventListener("DOMContentLoaded", async e => {
     }
     else {
       let app = new NSRegistry['core.ui.Application'](document.body);
-      await app.initializeChildComponents();
+      // await app.initializeChildComponents();
     }
   };
 
