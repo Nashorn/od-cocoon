@@ -1,8 +1,8 @@
 (async (global)=>{ global.arc = {
-    version : "5.4.0:02242023"
+    version : "6.0.0:06142023"
 };
 console.log("v"+global.arc.version);
-var Config = global.Config = global.Config||{
+var Config = global?.Config ?? top?.Config ?? {
     NAMESPACE : null,
     USE_COMPRESSED_BUILD : false,
     FILENAME : "index.*js",
@@ -34,6 +34,9 @@ try{module.exports = Config;}catch(e){}
   return fragment?fragment:n.firstElementChild;
 }
 //
+document.on = (evtName, handler, bool=false, el) => {
+    document.addEventListener(evtName, handler, bool, el);
+}
 ;var wait = sleep = ms => new Promise((r, j)=>setTimeout(r, ms));
 global.wait=wait;
 
@@ -184,7 +187,7 @@ global.relativeToAbsoluteFilePath = relativeToAbsoluteFilePath;
 
 window.stylesheets = function stylesheets (target, paths){
     target.prototype['@stylesheets'] = [];
-    console.warn(`@stylesheets decorator used on ${target.prototype.namespace} is deprecated. Use css @import rule in default .css file instead.`)
+    console.warn(`@stylesheets decorator on '${target.prototype.namespace}' is deprecated. Use:\nthis?.stylesheets?.unshift("my.css") in constructor() instead`)
     paths && paths.forEach(p => {
         var filepath = relativeToAbsoluteFilePath(p,target.prototype.namespace,false);
         target.prototype['@stylesheets'].unshift(filepath)
@@ -587,7 +590,13 @@ namespace `system.http` (
                 this.application.onLoadingActivity(ns);
                 await new system.http.ClassLoader().import(ns)
             }
-            this.onActivityLoaded(ns,NSRegistry[ns],scrollTo);
+            // this.onActivityLoaded(ns,NSRegistry[ns],scrollTo);
+            var i = setInterval(e=> {
+                if(NSRegistry[ns]) {
+                    clearInterval(i)
+                    this.onActivityLoaded(ns,NSRegistry[ns],scrollTo);
+                }
+            },100)
         }
 
         async onActivityLoaded(ns,_class,scrollTo){
@@ -704,43 +713,90 @@ namespace `core.ui` (
     class WebComponent extends HTMLElement {
         constructor(el,options={}) {
             super();
-            var template = this.firstElementChild;
-            this._template = template && template instanceof HTMLTemplateElement ? template:null;
             this.options = options;
             this.element = el;
+            var template = this.firstElementChild;
+            this._template = template && template instanceof HTMLTemplateElement ? template:null;
             this.internals  = this.attachInternals && this.attachInternals();
-            this.usesDSR    = this.internals?.shadowRoot||this._template;
+            this.hasDeclarativeShadow    = this.internals?.shadowRoot||this._template;
             this.__proto    = this.constructor.prototype;
+            // globalThis._eventData = globalThis._eventData||{};
+            // globalThis._eventFired= globalThis._eventFired||{}
+            // globalThis._eventObjects= globalThis._eventObjects||{}
 
-            if(this.isExistingDomNode(this.element) && !this.usesDSR){
+            this._eventData = {};
+            this._eventFired = {};
+            this._eventObjects = {};
+
+            if(this.element && this.isExistingDomNode(this.element)){
                 this.root = this.element
                 this.connectedCallback();
             }
             else {
-                if(!this.usesDSR){
-                    this.root = this.inShadow() ? 
-                        this.attachShadow({mode:'open'}) : 
-                        (this.element||this);
-                }
-                else if(this.usesDSR && this.internals?.shadowRoot) {
-                    this.root = this.internals.shadowRoot
-                }
-                else if(this.usesDSR && this._template) {
-                    if(this.inShadow()) {
-                        this.root = this.attachShadow({ mode: 'open' });
-                        this.root.append(this._template.content);
-                        template && template.remove();
+                // this.root = !this.inShadow() ? 
+                //     this : 
+                //     this.internals?.shadowRoot||this.attachShadow({mode:'open'});
+                if(this.hasDeclarativeShadow) {
+                    if(this.hasOwnTemplate()){
+                        this.hasDeclarativeShadow=false;
+                        this._template && this._template.remove();
+                        this._template=null;
+                        this.root = this.attachShadow({mode:'open'});
                     }
                     else {
-                        this.root=this;
+                        // this.root = this.internals.shadowRoot
+                        this.root = !this.inShadow() ? 
+                            this : 
+                            this.internals?.shadowRoot||this.attachShadow({mode:'open'});
                     }
                 }
                 else {
-                    this.root=this;
+                    // this.root = this.attachShadow({mode:'open'});
+                    this.root = !this.inShadow() ? 
+                        this : 
+                        this.internals?.shadowRoot||this.attachShadow({mode:'open'});
                 }
             }
+            
+            // else {
+            //     if(this.hasDeclarativeShadow && this.hasOwnTemplate()) {
+            //         this.hasDeclarativeShadow=false;
+            //         this._template && this._template.remove();
+            //         this.root = this.inShadow() ? 
+            //             this.attachShadow({mode:'open'}) : 
+            //             (this.element||this);
+            //     }
+            //     else {
+            //         if(!this.hasDeclarativeShadow){
+            //             this.root = this.inShadow() ? 
+            //                 this.attachShadow({mode:'open'}) : 
+            //                 (this.element||this);
+            //         }
+            //         else if(this.hasDeclarativeShadow && this.internals?.shadowRoot) {
+            //             this.root = this.internals.shadowRoot
+            //         }
+            //         else if(this.hasDeclarativeShadow && this._template) {
+            //             if(this.inShadow()) {
+            //                 this.root = this.attachShadow({ mode: 'open' });
+            //                 this.root.append(this._template.content);
+            //                 template && template.remove();
+            //             }
+            //             else {
+            //                 this.root=this;
+            //             }
+            //         }
+            //         else {
+            //             this.root=this;
+            //         }
+            //     }
+            // }
         }
 
+        //only checked when page has components with inline shadowDOM <template> (when this.hasDeclarativeShadow==true)
+        hasOwnTemplate() {
+            return false
+        }
+        
         async loadTemplate() {   
             return new Promise(async (resolve, reject) => {
                 var tem  =  this.getTemplateToLoad();
@@ -779,34 +835,79 @@ namespace `core.ui` (
                     Config.SRC_PATH+`/./${skin.path}index` + (engine.ext||"") + ".html"
         }
 
+        get application() {
+            return false
+        }
+
+        async ensureApplication(timeout) {
+            var start = Date.now();
+            var waitFor = async (resolve, reject) => {
+                if (Config.APP_WAITS_ON_SPLASH || window.application) {
+                    resolve(true);
+                }
+                else if (timeout && (Date.now() - start) >= timeout) {
+                    resolve(true);
+                }
+                else {
+                    await sleep(20);
+                    waitFor(resolve, reject);
+                }
+            }
+            return new Promise(waitFor);
+        }
+
         get isConnected(){return this._is_dom_ready}
 
         async connectedCallback() {
-            if( this._is_connected){!this.is_preloading && this.onAwake(); return;}
-            this._is_connected=true;
+            this.application && await this.ensureApplication(3000);
             await this.onConnected();
-            !this.is_preloading && this.onAwake();
-            this._is_dom_ready=true;
+            this.onAwake();
         }
 
         async onConnected(data=this) { 
-            !this.usesDSR && await this.loadTemplate();
+            !this.hasDeclarativeShadow && await this.loadTemplate();
             await this.onTemplateLoaded();
-            !this.usesDSR && await this.render(data);
+            !this.hasDeclarativeShadow && await this.render(data);
 
-            if(this.usesDSR && !this.inShadow()) {
+            if(!this.inShadow()) {
                 this.assignSlots(this._template.content)
             }
+            this._is_dom_ready=true;
             setTimeout(e=>this.onRendered(),0);
+            this.fire("connected")
         }
         
         async disconnectedCallback(){
             await this.onDisconnected();
-            !this.is_preloading && this.onSleep();
+            this.onSleep();
         }
 
         async onDisconnected(){}
 
+        // assignSlots(temNode) {
+        //     if(!temNode) { return}
+        //     if (!this.inShadow() && this.isComposable()) {
+        //         var defaultSlot = temNode.querySelector("slot");
+        //         if(defaultSlot){
+        //             let nodes = Array.from(this.children);
+        //             for(let n of nodes){
+        //                 if(n instanceof HTMLTemplateElement) { continue}
+        //                 var slotName = n.getAttribute('slot');
+        //                 var ph = slotName==null?
+        //                     temNode.querySelector(`slot:not([name])`):
+        //                     temNode.querySelector(`slot[name="${slotName}"]`)||null;
+        //                 if( ph && !ph.emptied){
+        //                     (ph.innerHTML="");
+        //                     (ph.emptied=true);
+        //                 }
+        //                 ph?(ph).appendChild(n):slotName?n.remove():null;
+        //             }
+        //         }
+                
+        //     }
+        //     this.root.innerHTML = "";
+		// 	this.root.appendChild(temNode);
+        // }
         assignSlots(temNode) {
             if(!temNode) { return}
             if (!this.inShadow() && this.isComposable()) {
@@ -816,25 +917,55 @@ namespace `core.ui` (
                     for(let n of nodes){
                         if(n instanceof HTMLTemplateElement) { continue}
                         var slotName = n.getAttribute('slot');
-                        var ph = slotName==null?
-                            temNode.querySelector(`slot:not([name])`):
-                            temNode.querySelector(`slot[name="${slotName}"]`)||null;
+                        var ph = !slotName?
+                            temNode.querySelector("slot:not([name])") : 
+                            temNode.querySelector(`slot[name="${slotName}"]`)||defaultSlot;
                         if( ph && !ph.emptied){
                             (ph.innerHTML="");
                             (ph.emptied=true);
                         }
-                        ph?(ph).appendChild(n):slotName?n.remove():null;
+                        // ph ? (ph).appendChild(n) : slotName?n.remove():null;
+                        ph&&ph.appendChild(n);
                     }
                 }
                 
             }
             this.root.innerHTML = "";
 			this.root.appendChild(temNode);
+            
+            // if(this.inShadow()){
+            //     // this.root.innerHTML = "";
+            //     this.root.appendChild(temNode);
+            // }
+            // else {
+            //     // this.root.innerHTML = "";
+			//     super.appendChild(temNode);
+            // }
         }
+        
+        appendChild(n, slot){
+            var defaultSlot = (slot) ? this.querySelector(`slot[name='${slot}']`):null;
+            if(!this.inShadow()) {
+                defaultSlot = defaultSlot||this.querySelector("slot:not([name])");
+                if(defaultSlot) {defaultSlot.appendChild(n)}
+                else {
+                    return super.appendChild(n)
+                }
+            }
+            else {
+                if(defaultSlot) { return defaultSlot.appendChild(n) }
+                return (this.element) ? this.element.appendChild(n):super.appendChild(n);
+            }
+        }
+
+        // appendChild(n){
+        //     return this.element && n!=this.element  ? this.root.appendChild(n):super.appendChild(n)
+        // }
+        
         async render(data={}, t=this._template, outputEl) {
 			if(this.isExistingDomNode(this.element)){
 				this.onTemplateRendered(temNode);
-				this.dispatchEvent("connected",{target:this})
+				// this.dispatchEvent("connected",{target:this})
 				return
 			}
 			else if (t && typeof t=="string") {
@@ -994,21 +1125,65 @@ namespace `core.ui` (
 
         onStyleComputed(stylesheet){}
 
+        // dispatchEvent(type, data={}, element) {
+        //     let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||null };
+        //     delete data.detail;
+        //     Object.assign(details, data);
+        //     var evt = typeof type =="object" ? type : new CustomEvent(type, details);
+        //         if(data){evt.data = details.detail||data;};
+        //     var el = element||this.element
+        //     if(el){return el.dispatchEvent(evt)}
+        //     else{return super.dispatchEvent(evt);}
+        // }
         dispatchEvent(type, data={}, element) {
-            let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||null };
+            let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||data||{} };
             delete data.detail;
+            delete details.detail.bubbles;
+            delete details.detail.cancelable;
+            delete details.detail.composed;
+            delete details.detail.detail;
             Object.assign(details, data);
             var evt = typeof type =="object" ? type : new CustomEvent(type, details);
-                if(data){evt.data = details.detail||data;};
+            if(data && !evt.data){
+                evt.data = details.detail||data;
+            };
             var el = element||this.element
-            if(el){return el.dispatchEvent(evt)}
-            else{return super.dispatchEvent(evt);}
+            if(el){
+                // return el.dispatchEvent(evt)
+                el.dispatchEvent(evt);
+                return evt
+            }
+            else{
+                super.dispatchEvent(evt);
+                return evt
+            }
         }
 
         on(evtName, handler, bool=false, el) {
             this.addEventListener(evtName, handler, bool, el);
         }
 
+        // addEventListener(evtName, handler, bool=false, el) {
+        //     if (typeof el == "string") {
+        //         this.addEventListener(evtName, e => {
+		// 			var t = (e.composedPath&&e.composedPath().find(node => node.matches&&node.matches(el)))||e.target;
+		// 			    t && t.matches(el) && (e.matchedTarget = t) && handler(e);
+        //         }, bool);
+        //     } else {
+        //         if(this.isExistingDomNode(this.element)){
+        //             this.element.addEventListener(evtName, handler, bool);
+        //             if(evtName == "connected"){
+        //                 handler({target:this});
+        //             }
+        //         }
+        //         else{
+        //             return super.addEventListener(evtName, handler, bool);
+        //             if(evtName == "connected" && this._is_connected){
+        //                 handler({target:this});
+        //             }
+        //         }
+        //     }
+        // }
         addEventListener(evtName, handler, bool=false, el) {
             if (typeof el == "string") {
                 this.addEventListener(evtName, e => {
@@ -1016,19 +1191,71 @@ namespace `core.ui` (
 					    t && t.matches(el) && (e.matchedTarget = t) && handler(e);
                 }, bool);
             } else {
-                if(this.isExistingDomNode(this.element)){
+                if(this.element && this.isExistingDomNode(this.element)){
                     this.element.addEventListener(evtName, handler, bool);
-                    if(evtName == "connected"){
-                        handler({target:this});
-                    }
+                    // if(evtName == "connected"){
+                    //     if(this._is_connected) {handler({target:this});}
+                    // }
                 }
                 else{
-                    return super.addEventListener(evtName, handler, bool);
-                    if(evtName == "connected" && this._is_connected){
-                        handler({target:this});
-                    }
+                    super.addEventListener(evtName, handler, bool);
+                    // super.addEventListener(evtName, handler, bool);
+                    // if(evtName == "connected" && this._is_connected){
+                    //     handler({target:this});
+                    // }
+                    
+                    // if(evtName == "connected"){
+                    //     if(this._is_connected) { handler({target:this}); }
+                    //     else {
+                    //         super.addEventListener(evtName, handler, bool);
+                    //     }
+                    // }
+                    
+                    // else {
+                    //     super.addEventListener(evtName, handler, bool);
+                    // }
                 }
             }
+        }
+
+        subscribe(eventType, listener, capture) {
+            // const previousData = globalThis._eventData[eventType];
+            // if (previousData && this.isConnected) {
+            //     let details = { bubbles: true, cancelable: true, composed: true, detail: previousData };
+            //     const event = new CustomEvent(eventType, details);
+            //     event.data = details.detail;
+            //     listener(event);
+            // }
+            const previousEvent = this._eventObjects[eventType];
+            if (previousEvent && this.isConnected) {
+                // let details = { bubbles: true, cancelable: true, composed: true, detail: previousData };
+                // const event = new CustomEvent(eventType, details);
+                // event.data = details.detail;
+                listener(previousEvent);
+            }
+            return this.addEventListener(eventType, listener, capture);
+        }
+
+        // fire(type, data={}, element) {
+        //     const eventType = type;//event.type;
+        //     globalThis._eventData[eventType] = data;
+        //     globalThis._eventFired[eventType] = true;
+        //     return this.dispatchEvent(type, data, element||this);
+        // }
+        fire(type, data={}, element) {
+            const eventType = type;//event.type;
+            this._eventData[eventType] = data;
+            this._eventFired[eventType] = true;
+            
+            var evt = this.dispatchEvent(type, data, element||this);
+            this._eventObjects[eventType] = evt;
+            return evt;
+        }
+
+        get stylesheets() {
+            var proto = this.constructor.prototype;
+                proto["@stylesheets"]=proto["@stylesheets"]||[];
+            return proto["@stylesheets"]
         }
 
         onStylesheetLoaded(style) { }
@@ -1069,9 +1296,9 @@ namespace `core.ui` (
             })
         }
 
-        appendChild(n){
-            return this.element && n!=this.element  ? this.root.appendChild(n):super.appendChild(n)
-        }
+        // appendChild(n){
+        //     return this.element && n!=this.element  ? this.root.appendChild(n):super.appendChild(n)
+        // }
 
         async evalTemplate(template, data) {
             var eng = this.getTemplateEngine();
@@ -1095,17 +1322,17 @@ namespace `core.ui` (
         }
 
         onTemplateRendered(){
-            this.dispatchEvent("connected",{target:this});
+            // this.dispatchEvent("connected",{target:this});
         }
 
         inShadow() { 
             return this.internals?.shadowRoot||this.shadowRoot
         }
 
-        attachShadow(options) {
-            this._usesShadow = true;
-            return super.attachShadow(options);
-        }
+        // attachShadow(options) {
+        //     this._usesShadow = true;
+        //     return super.attachShadow(options);
+        // }
 
         cloneAttributes(target=this, source) {
             return [...source.attributes].forEach( attr => { target.setAttribute(attr.nodeName ,attr.nodeValue) })
@@ -1156,11 +1383,6 @@ namespace `core.ui` (
                 el.className = el.className.trim();
         }
  
-        getStyleSheets() {
-            var styles = this.prototype["stylesheets"] = this.prototype["stylesheets"]||[];
-            return styles.reverse();
-        }
-
         async setStyleDocuments() {
             await this.loadcss();
             this.setStylesheet();
@@ -1169,7 +1391,7 @@ namespace `core.ui` (
 
         async loadcss() {
             var ignoredClasses=[WebComponent,Application,World,HTMLElement];
-            var ancestors = this.constructor.ancestors.reverse();
+            var ancestors = this.constructor.ancestors.toReversed();
             var stylesheets = window.loaded_stylesheets = window.loaded_stylesheets|| {};
             var skin = this.__skin__||this.getSkin();
             return new Promise(async (resolve,reject) => {
