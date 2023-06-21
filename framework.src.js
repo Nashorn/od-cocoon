@@ -1,5 +1,5 @@
 (async (global)=>{ global.arc = {
-    version : "6.0.0:06142023"
+    version : "6.0.0:06202023"
 };
 console.log("v"+global.arc.version);
 var Config = global?.Config ?? top?.Config ?? {
@@ -23,7 +23,8 @@ var Config = global?.Config ?? top?.Config ?? {
     IMPORT_MAPS:true,
     USES_NAMESPACE_FOR_TAGNAMES : true,
     ARROW_FUNCTIONS_FOR_WORLD_LOOP : true,
-    INTERPOLATE_CSS : false
+    INTERPOLATE_CSS : false,
+    APPCONFIG_LOADS_ONCE : true
 };
 global.Config = Config;
 try{module.exports = Config;}catch(e){}
@@ -722,7 +723,7 @@ namespace `core.ui` (
             this.__proto    = this.constructor.prototype;
             // globalThis._eventData = globalThis._eventData||{};
             // globalThis._eventFired= globalThis._eventFired||{}
-            // globalThis._eventObjects= globalThis._eventObjects||{}
+            globalThis._eventObjects= globalThis._eventObjects||[];
 
             this._eventData = {};
             this._eventFired = {};
@@ -1125,17 +1126,8 @@ namespace `core.ui` (
 
         onStyleComputed(stylesheet){}
 
-        // dispatchEvent(type, data={}, element) {
-        //     let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||null };
-        //     delete data.detail;
-        //     Object.assign(details, data);
-        //     var evt = typeof type =="object" ? type : new CustomEvent(type, details);
-        //         if(data){evt.data = details.detail||data;};
-        //     var el = element||this.element
-        //     if(el){return el.dispatchEvent(evt)}
-        //     else{return super.dispatchEvent(evt);}
-        // }
         dispatchEvent(type, data={}, element) {
+            data.target = data.target||this;
             let details = { bubbles: true, cancelable: true, composed: true, detail:data?.detail||data||{} };
             delete data.detail;
             delete details.detail.bubbles;
@@ -1149,7 +1141,6 @@ namespace `core.ui` (
             };
             var el = element||this.element
             if(el){
-                // return el.dispatchEvent(evt)
                 el.dispatchEvent(evt);
                 return evt
             }
@@ -1163,27 +1154,6 @@ namespace `core.ui` (
             this.addEventListener(evtName, handler, bool, el);
         }
 
-        // addEventListener(evtName, handler, bool=false, el) {
-        //     if (typeof el == "string") {
-        //         this.addEventListener(evtName, e => {
-		// 			var t = (e.composedPath&&e.composedPath().find(node => node.matches&&node.matches(el)))||e.target;
-		// 			    t && t.matches(el) && (e.matchedTarget = t) && handler(e);
-        //         }, bool);
-        //     } else {
-        //         if(this.isExistingDomNode(this.element)){
-        //             this.element.addEventListener(evtName, handler, bool);
-        //             if(evtName == "connected"){
-        //                 handler({target:this});
-        //             }
-        //         }
-        //         else{
-        //             return super.addEventListener(evtName, handler, bool);
-        //             if(evtName == "connected" && this._is_connected){
-        //                 handler({target:this});
-        //             }
-        //         }
-        //     }
-        // }
         addEventListener(evtName, handler, bool=false, el) {
             if (typeof el == "string") {
                 this.addEventListener(evtName, e => {
@@ -1193,55 +1163,31 @@ namespace `core.ui` (
             } else {
                 if(this.element && this.isExistingDomNode(this.element)){
                     this.element.addEventListener(evtName, handler, bool);
-                    // if(evtName == "connected"){
-                    //     if(this._is_connected) {handler({target:this});}
-                    // }
                 }
                 else{
                     super.addEventListener(evtName, handler, bool);
-                    // super.addEventListener(evtName, handler, bool);
-                    // if(evtName == "connected" && this._is_connected){
-                    //     handler({target:this});
-                    // }
-                    
-                    // if(evtName == "connected"){
-                    //     if(this._is_connected) { handler({target:this}); }
-                    //     else {
-                    //         super.addEventListener(evtName, handler, bool);
-                    //     }
-                    // }
-                    
-                    // else {
-                    //     super.addEventListener(evtName, handler, bool);
-                    // }
                 }
             }
         }
 
         subscribe(eventType, listener, capture) {
-            // const previousData = globalThis._eventData[eventType];
-            // if (previousData && this.isConnected) {
-            //     let details = { bubbles: true, cancelable: true, composed: true, detail: previousData };
-            //     const event = new CustomEvent(eventType, details);
-            //     event.data = details.detail;
-            //     listener(event);
-            // }
             const previousEvent = this._eventObjects[eventType];
             if (previousEvent && this.isConnected) {
-                // let details = { bubbles: true, cancelable: true, composed: true, detail: previousData };
-                // const event = new CustomEvent(eventType, details);
-                // event.data = details.detail;
                 listener(previousEvent);
             }
             return this.addEventListener(eventType, listener, capture);
         }
 
-        // fire(type, data={}, element) {
-        //     const eventType = type;//event.type;
-        //     globalThis._eventData[eventType] = data;
-        //     globalThis._eventFired[eventType] = true;
-        //     return this.dispatchEvent(type, data, element||this);
+        // register(eventType, listener, capture) {
+        //     const previousEvents = globalThis._eventObjects[eventType];
+        //     if (previousEvents?.length) {
+        //         for(let e of previousEvents) {
+        //             listener(e);
+        //         }
+        //     }
+        //     return this.addEventListener(eventType, listener, capture);
         // }
+
         fire(type, data={}, element) {
             const eventType = type;//event.type;
             this._eventData[eventType] = data;
@@ -1249,6 +1195,8 @@ namespace `core.ui` (
             
             var evt = this.dispatchEvent(type, data, element||this);
             this._eventObjects[eventType] = evt;
+            globalThis._eventObjects[eventType] = globalThis._eventObjects[eventType]||[];
+            globalThis._eventObjects[eventType].push(evt);
             return evt;
         }
 
@@ -1624,6 +1572,16 @@ namespace `core.ui` (
         onLoadingActivity(c){
             console.log("onLoadingActivity", c);
         }
+
+        subscribe(eventType, listener, capture) {
+            const previousEvents = [...globalThis._eventObjects[eventType]||[]].reverse();
+            if (previousEvents?.length) {
+                for(let e of previousEvents) {
+                    listener(e);
+                }
+            }
+            return this.addEventListener(eventType, listener, capture);
+        } 
 	}
 );
 window.Application = window.Application||core.ui.Application;
