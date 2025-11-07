@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "7.5.0.09052025"
+    version : "7.6.0.10202025"
 };
 console.log("v"+global.arc.version);
 class ConfigurationManager {
@@ -69,10 +69,21 @@ globalThis.Config = globalThis.Config || new ConfigurationManager({
 }
 
 
-// ;String.prototype.decode = function() {
-//   const entities = { lt: '<', gt: '>', amp: '&', quot: '"', apos: "'", nbsp: ' ', copy: '©', reg: '®' };
-//   return this.replace(/&([^;]+);/g, (_, entity) => entities[entity] || `&${entity};`);
-// }
+// ;String.prototype.decode = function(type="html") {
+//   const ta = document.createElement('textarea');
+//   ta.innerHTML = this.toString();
+//   return ta.value;
+// };
+
+;String.prototype.decode = (function() {
+  const decoder = document.createElement('textarea');
+  return function(type="html") {
+    decoder.innerHTML = this.toString();
+    const result = decoder.value;
+    decoder.innerHTML = ''; // Reset for next use
+    return result;
+  };
+})();
 
 
 ;String.prototype.deprecated = function(type) {
@@ -443,6 +454,7 @@ namespace `system.drivers.templating` (
 
         parse(tempStr, data, self){
             let regex = /<template\b[^>]*>(?<content>[\s\S]*?)<\/template>\s*$/;
+            tempStr = tempStr.trim().decode();
             tempStr = tempStr.replace(regex, (match, p1, offset, string, groups) => groups.content);
             var temNode = document.createElement("template");
                 tempStr = this.render(tempStr, data, self);
@@ -450,7 +462,17 @@ namespace `system.drivers.templating` (
                 else {
                     temNode.innerHTML = tempStr;
                 }
-                return temNode.content;
+                var content = temNode.content;
+                return {
+                    content: content,
+                    fragment: this.getFragment(content)
+                }
+        }
+
+        getFragment(content) {
+            var fragment = !(content instanceof DocumentFragment) ? 
+                    content.toNode()?.content : content;
+            return fragment;
         }
 
         static install(){}
@@ -1070,27 +1092,62 @@ namespace `core.ui` (
             return this.template||this.html||path;
         }
 
+        shouldParse(html) {
+            return /\<+%+=?/.test(html?.decode?.() || this.innerHTML.decode()) || /\<+%+=?/.test(this.root.innerHTML.decode());
+        }
+
         async render(data=this.data) {
+             var engine   = await this.getTemplateEngine();
             if(this.constructor.inline) {
                 this.onRendered();
                 return;
             }
+            if (this.hasDeclarativeTemplate && this.shouldParse()) {
+                if(this.shouldParse(this.root.innerHTML)) {
+                    var {fragment} = await engine.parse(this.root.innerHTML, data, this);
+                    this.root.innerHTML = "";
+                    this.root.appendChild(fragment);
+                }
+                if(this.shouldParse(this.innerHTML)) {
+                    var {fragment} = await engine.parse(this.innerHTML, data, this);
+                    this.innerHTML="";
+                    this.appendChild(fragment);
+                }
+            }
             else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
-                var engine   = await this.getTemplateEngine();
                 await scheduler?.yield?.();
                 var template = await this.loadTemplate(true);
                 await scheduler?.yield?.();
-                // var fragment = await engine.parse(template.decode(), data, this);
-                var fragment = await engine.parse(template, data, this);
+                var {fragment} = await engine.parse(template, data, this);
 				await scheduler?.yield?.();
-                fragment = !(fragment instanceof DocumentFragment) ? 
-                fragment.toNode()?.content : fragment;
                 this.root.innerHTML = ""; 
                 this.root.appendChild(fragment);
                 await scheduler?.yield?.();
             }
             this.onRendered();
 		}
+
+        // async render(data=this.data) {
+        //     if(this.constructor.inline) {
+        //         this.onRendered();
+        //         return;
+        //     }
+        //     else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
+        //         var engine   = await this.getTemplateEngine();
+        //         await scheduler?.yield?.();
+        //         var template = await this.loadTemplate(true);
+        //         await scheduler?.yield?.();
+        //         // var fragment = await engine.parse(template.decode(), data, this);
+        //         var fragment = await engine.parse(template, data, this);
+		// 		await scheduler?.yield?.();
+        //         fragment = !(fragment instanceof DocumentFragment) ? 
+        //         fragment.toNode()?.content : fragment;
+        //         this.root.innerHTML = ""; 
+        //         this.root.appendChild(fragment);
+        //         await scheduler?.yield?.();
+        //     }
+        //     this.onRendered();
+		// }
 
         onRendered() {}
 
