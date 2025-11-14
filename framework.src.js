@@ -1659,7 +1659,11 @@ class ResourceLoader {
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    window.dispatchEvent(new CustomEvent("page:rendered"));
+                    top?.window.dispatchEvent(new CustomEvent("page:rendered"), {
+                        detail: location.href,
+                        bubbles: true,
+                        cancelable: true
+                    });
                 }, Config?.SPLASH_TIMEOUT || 500); 
                 this.observer.disconnect();
             });
