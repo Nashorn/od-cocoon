@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "7.6.0.10202025"
+    version : "7.7.0.01142026"
 };
 console.log("v"+global.arc.version);
 class ConfigurationManager {
@@ -1450,9 +1450,21 @@ global.Application = global.Application||core.ui.Application;
 
 document.addEventListener("DOMContentLoaded", async e => {
   setTimeout(()=>{
-    const loader = new ResourceLoader();
-    try{loader.init()}catch (e) {console.error(e)}
-  }, 300)
+    // Only run ResourceLoader in the main content page, not in framesets
+    if (window !== window?.top) {
+        if(Config.ENABLE_SPLASH){
+            const loader = new ResourceLoader();
+            try{loader.init()}catch (e) {console.error(e)} 
+        }
+        else {
+            top?.window.dispatchEvent(new CustomEvent("page:rendered"), {
+                detail: location.href,
+                bubbles: true,
+                cancelable: true
+            });
+        }
+    }
+  }, 10)
   
   
   //TODO: Fix this
@@ -1574,7 +1586,8 @@ class ResourceLoader {
                 size: entry.transferSize
             }));
 
-        if (!resources.length) return window.location.protocol === "file:" ? 'fast' : 'medium';
+        // if (!resources.length) return window.location.protocol === "file:" ? 'fast' : 'medium';
+        if(!resources.length || resources.length <= 5) return "fast";
 
         const totalWeight = resources.reduce((sum, item) => sum + item.size, 0);
         const weightedSpeed = resources.reduce((sum, item) =>
@@ -1587,7 +1600,7 @@ class ResourceLoader {
     getDebounceTime() {
         const speed = this.calculateNetworkSpeed();
         const times = {
-            fast: this.criticalResourcesLoaded ? 400 : 800,
+            fast: this.criticalResourcesLoaded ? 100 : 100,
             medium: this.criticalResourcesLoaded ? 800 : 1500,
             slow: this.criticalResourcesLoaded ? 1500 : 2000
         };
@@ -1664,6 +1677,20 @@ class ResourceLoader {
                         bubbles: true,
                         cancelable: true
                     });
+                    if(reason ==='timeout' && this.requiredCriticalResources.size !== this.criticalResources.size){
+                        console.group("🚨 ResourceLoader: Finalized due to timeout");
+                        // Create comparison table
+                        const resourceComparison = {};
+                        this.requiredCriticalResources.forEach(resource => {
+                            resourceComparison[resource] = {
+                                Required: "✓",
+                                Loaded: this.criticalResources.has(resource) ? "✓" : "❌"
+                            };
+                        });
+                        console.table(resourceComparison);
+                        console.error(`Missing ${this.requiredCriticalResources.size - this.criticalResources.size} critical resources`);
+                        console.groupEnd();
+                    }
                 }, Config?.SPLASH_TIMEOUT || 500); 
                 this.observer.disconnect();
             });
