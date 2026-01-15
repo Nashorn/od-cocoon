@@ -1450,21 +1450,22 @@ global.Application = global.Application||core.ui.Application;
 
 document.addEventListener("DOMContentLoaded", async e => {
   setTimeout(()=>{
-    // Only run ResourceLoader in the main content page, not in framesets
-    if (window !== window?.top) {
-        if(Config.ENABLE_SPLASH){
+    // Only run ResourceLoader in content pages, not in frameset shells
+    const isFramesetShell = document.querySelector('iframe#mainFrame');
+    if (!isFramesetShell) {
+        if(Config?.ENABLE_SPLASH == undefined || Config?.ENABLE_SPLASH){
             const loader = new ResourceLoader();
             try{loader.init()}catch (e) {console.error(e)} 
         }
         else {
-            top?.window.dispatchEvent(new CustomEvent("page:rendered"), {
+            window.dispatchEvent(new CustomEvent("page:rendered"), {
                 detail: location.href,
                 bubbles: true,
                 cancelable: true
             });
         }
     }
-  }, 10)
+  }, 300)
   
   
   //TODO: Fix this
@@ -1545,6 +1546,8 @@ class ResourceLoader {
         this.totalLoadTime = 0;
         this.criticalResourcesLoaded = false;
         this.lastProgress = 0;
+        this.preloadedDispatched = false;
+        this.criticalLoadedDispatched = false;
         this.criticalResources = new Set(); // Tracks loaded critical resources
         this.requiredCriticalResources = new Set();
     }
@@ -1625,6 +1628,12 @@ class ResourceLoader {
                 const currentProgress = this.calculateProgress();
                 if (currentProgress !== this.lastProgress) {
                     this.lastProgress = currentProgress;
+                    
+                    // Dispatch preloaded event once at 75% progress
+                    if (!this.preloadedDispatched && currentProgress >= 75) {
+                        this.preloadedDispatched = true;
+                        this.dispatch("page:initial:loaded");
+                    }
                 }
 
                 this.debouncedUpdate();
@@ -1643,6 +1652,13 @@ class ResourceLoader {
         }
         if (this.isAllCriticalResourcesLoaded()) {
             this.criticalResourcesLoaded = true;
+            
+            // Dispatch critical resources loaded event once
+            if (!this.criticalLoadedDispatched) {
+                this.criticalLoadedDispatched = true;
+                this.dispatch("page:critical:loaded");
+            }
+            
             this.debouncedUpdate();
         }
     }
@@ -1668,15 +1684,25 @@ class ResourceLoader {
         }
     }
 
-    finalize() {
+    dispatch(evtName){
+        window.dispatchEvent(new CustomEvent(evtName), {
+            detail: location.href,
+            bubbles: true,
+            cancelable: true
+        });
+    }
+
+    finalize(reason) {
+        this.dispatch("page:pre:rendered");
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    top?.window.dispatchEvent(new CustomEvent("page:rendered"), {
-                        detail: location.href,
-                        bubbles: true,
-                        cancelable: true
-                    });
+                    // window.dispatchEvent(new CustomEvent("page:rendered"), {
+                    //     detail: location.href,
+                    //     bubbles: true,
+                    //     cancelable: true
+                    // });
+                    this.dispatch("page:rendered");
                     if(reason ==='timeout' && this.requiredCriticalResources.size !== this.criticalResources.size){
                         console.group("🚨 ResourceLoader: Finalized due to timeout");
                         // Create comparison table
