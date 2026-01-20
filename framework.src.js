@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "7.7.0.01142026"
+    version : "7.8.0.01202026"
 };
 console.log("v"+global.arc.version);
 class ConfigurationManager {
@@ -429,19 +429,56 @@ namespace `core.drivers.templating` (
 
 window.customTemplateEngines = new core.drivers.templating.Manager;
 
+// ORIGINAL:
+// 
+//namespace `system.drivers.templating` (
+//     class LiteralParser {
+//         render(tempStr, data={}, self) {
+//             data.api = self;
+//             // tempStr = tempStr.decode();
+//             tempStr = tempStr;
+//             tempStr = tempStr.replace(/\<+\%+\=+/gm, "${(async e => {return ");
+//             tempStr = tempStr.replace(/\<+\%+/gm, "${(async e => {");
+//             tempStr = tempStr.replace(/\%+\>+/gm, "})()}");
+//             return new Function("return `"+tempStr +"`;").call(data);
+//         }
+//     }
+// );
+
+
 namespace `system.drivers.templating` (
     class LiteralParser {
-        render(tempStr, data={}, self) {
+        async render(tempStr, data={}, self) {
             data.api = self;
+            
+            // Simple: make data inherit from self for natural this.method() access
+            if (self) {
+                Object.setPrototypeOf(data, self);
+            }
+            
             // tempStr = tempStr.decode();
             tempStr = tempStr;
-            tempStr = tempStr.replace(/\<+\%+\=+/gm, "${(e => {return ");
-            tempStr = tempStr.replace(/\<+\%+/gm, "${(e => {");
-            tempStr = tempStr.replace(/\%+\>+/gm, "})()}");
-            return new Function("return `"+tempStr +"`;").call(data);
+            
+            // Check if template contains await - use async version only when needed
+            if (tempStr.includes('await ')) {
+                // Async version for templates with await
+                tempStr = tempStr.replace(/\<+\%+\=+/gm, "${(await (async (e) => {return ");
+                tempStr = tempStr.replace(/\<+\%+/gm, "${(await (async (e) => {");
+                tempStr = tempStr.replace(/\%+\>+/gm, "})())}");
+                const AsyncFunction = (async function(){}).constructor;
+                const asyncFunction = new AsyncFunction('return `' + tempStr + '`;');
+                return await asyncFunction.call(data);
+            } else {
+                // Sync version for better performance when no async needed
+                tempStr = tempStr.replace(/\<+\%+\=+/gm, "${(e => {return ");
+                tempStr = tempStr.replace(/\<+\%+/gm, "${(e => {");
+                tempStr = tempStr.replace(/\%+\>+/gm, "})()}");
+                return new Function("return `"+tempStr +"`;").call(data);
+            }
         }
     }
 );
+
 
 
 namespace `system.drivers.templating` ( 
@@ -452,12 +489,12 @@ namespace `system.drivers.templating` (
             this.ext = "";
         }
 
-        parse(tempStr, data, self){
+        async parse(tempStr, data, self){
             let regex = /<template\b[^>]*>(?<content>[\s\S]*?)<\/template>\s*$/;
             tempStr = tempStr.trim().decode();
             tempStr = tempStr.replace(regex, (match, p1, offset, string, groups) => groups.content);
             var temNode = document.createElement("template");
-                tempStr = this.render(tempStr, data, self);
+                tempStr = await this.render(tempStr, data, self);
                 if(temNode.setHTMLUnsafe) {temNode.setHTMLUnsafe(tempStr);}
                 else {
                     temNode.innerHTML = tempStr;
@@ -789,7 +826,7 @@ namespace `core.ui` (
                     resolve(this._template)
                 }
                 else if(typeof tem == "function"){//from inner template()
-                    this._template=tem();
+                    this._template=tem.call(this);
                     resolve(this._template);
                 }
                 else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
@@ -1048,8 +1085,8 @@ namespace `core.ui` (
             }
         }
         
-        async onConnected(data) { 
-            this.data = data||this.options||this;
+        async onConnected(data={}) { 
+            this.data = data;
             await this.defineAncestralStylesheets();
             await scheduler?.yield?.();
             await this.loadStylesheets();
@@ -1108,11 +1145,7 @@ namespace `core.ui` (
                     this.root.innerHTML = "";
                     this.root.appendChild(fragment);
                 }
-                if(this.shouldParse(this.innerHTML)) {
-                    var {fragment} = await engine.parse(this.innerHTML, data, this);
-                    this.innerHTML="";
-                    this.appendChild(fragment);
-                }
+                await this.parseInnerHTML(engine, data);
             }
             else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
                 await scheduler?.yield?.();
@@ -1123,6 +1156,7 @@ namespace `core.ui` (
                 this.root.innerHTML = ""; 
                 this.root.appendChild(fragment);
                 await scheduler?.yield?.();
+                await this.parseInnerHTML(engine, data);
             }
             this.onRendered();
 		}
@@ -1148,6 +1182,14 @@ namespace `core.ui` (
         //     }
         //     this.onRendered();
 		// }
+
+        async parseInnerHTML(engine, data) {
+            if(this.shouldParse(this.innerHTML)) {
+                var {fragment} = await engine.parse(this.innerHTML, data, this);
+                this.innerHTML="";
+                this.appendChild(fragment);
+            }
+        }
 
         onRendered() {}
 
