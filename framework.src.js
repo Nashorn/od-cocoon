@@ -815,7 +815,7 @@ namespace `core.ui` (
             return c;
         }
 
-        async loadTemplate(useXhr=true) {   
+        async loadTemplate(data={}) {   
             return new Promise(async (resolve, reject) => {
                 if(this._template) { resolve(this._template); return  }
                 var tem  =  this.getTemplateToLoad();
@@ -826,7 +826,8 @@ namespace `core.ui` (
                     resolve(this._template)
                 }
                 else if(typeof tem == "function"){//from inner template()
-                    this._template=tem.call(this);
+                    Object.setPrototypeOf(data, this);
+                    this._template=tem.call(data);
                     resolve(this._template);
                 }
                 else if(/<\s*\btemplate\b/.test(tem)){//from inner template()
@@ -1149,7 +1150,7 @@ namespace `core.ui` (
             }
             else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
                 await scheduler?.yield?.();
-                var template = await this.loadTemplate(true);
+                var template = await this.loadTemplate(data);
                 await scheduler?.yield?.();
                 var {fragment} = await engine.parse(template, data, this);
 				await scheduler?.yield?.();
@@ -1594,14 +1595,14 @@ class ResourceLoader {
         this.requiredCriticalResources = new Set();
     }
 
-    init() {
-        this.debouncedUpdate = this.updateProgress.debounce(this.getDebounceTime());
+    async init() {
+        this.debouncedUpdate = this.updateProgress.debounce(await this.getDebounceTime());
         this.observer = new PerformanceObserver(this.handleEntries.bind(this));
         this.observer.observe({ type: 'resource', buffered: true });
 
         this.parseCriticalResources();
         // --- Fallback Timeout: ---
-        var timeOut = this.getTimeoutDuration()
+        var timeOut = await this.getTimeoutDuration();
         this._timeoutId = setTimeout(() => this.finalize('timeout'), timeOut);
 
         return this;
@@ -1613,8 +1614,8 @@ class ResourceLoader {
         this.requiredCriticalResources = new Set(criticalPatterns);
     }
 
-    getTimeoutDuration() {
-        const speed = this.calculateNetworkSpeed();
+    async getTimeoutDuration() {
+        const speed = await this.calculateNetworkSpeed();
         const timeouts = {
             fast: window.location.protocol === "file:" ? 500 : 15000,    // 15 seconds for fast connections
             medium: 30000,  // 30 seconds for medium connections
@@ -1623,30 +1624,15 @@ class ResourceLoader {
         return timeouts[speed] || 30000; // Default to 30 seconds
     }
 
-    calculateNetworkSpeed() {
-        const resources = performance.getEntriesByType('resource')
-            .filter(entry => entry.transferSize && entry.duration)
-            .map(entry => ({
-                speed: (entry.transferSize * 8) / (entry.duration / 1000) / 1000000,
-                size: entry.transferSize
-            }));
-
-        // if (!resources.length) return window.location.protocol === "file:" ? 'fast' : 'medium';
-        if(!resources.length || resources.length <= 5) return "fast";
-
-        const totalWeight = resources.reduce((sum, item) => sum + item.size, 0);
-        const weightedSpeed = resources.reduce((sum, item) =>
-            sum + (item.speed * (item.size / totalWeight)), 0);
-
-        console.log(`Network Speed: ${weightedSpeed.toFixed(2)} Mbps`);
-        return weightedSpeed > 8 ? 'fast' : weightedSpeed > 2 ? 'medium' : 'slow';
+    async calculateNetworkSpeed() {
+        return await top?.window.detectNetworkSpeed?.()||"fast"
     }
 
-    getDebounceTime() {
-        const speed = this.calculateNetworkSpeed();
+    async getDebounceTime() {
+        const speed = await this.calculateNetworkSpeed();
         const times = {
             fast: this.criticalResourcesLoaded ? 100 : 100,
-            medium: this.criticalResourcesLoaded ? 800 : 1500,
+            medium: this.criticalResourcesLoaded ? 800 : 800,
             slow: this.criticalResourcesLoaded ? 1500 : 2000
         };
         return times[speed] || 1000;
