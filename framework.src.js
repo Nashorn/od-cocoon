@@ -1,7 +1,8 @@
+//# allFunctionsCalledOnLoad
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "7.8.0.01202026"
+    version : "8.0.0.03122026"
 };
 console.log("v"+global.arc.version);
 class ConfigurationManager {
@@ -340,11 +341,12 @@ namespace `domain.collections` (
 
 
         static async find(query={},cb){
-            return new Promise((resolve,reject) =>{
-                this.storage.find((result, error)=>{
-                    cb?cb(result, error):resolve(result, error);
-                },query)
-            })
+            // return new Promise((resolve,reject) =>{
+            //     this.storage.find((result, error)=>{
+            //         cb?cb(result, error):resolve(result, error);
+            //     },query)
+            // })
+            return await this.storage.find(cb, query);
         }
 
         static onDataReceived (data, xhr){
@@ -449,15 +451,15 @@ window.customTemplateEngines = new core.drivers.templating.Manager;
 namespace `system.drivers.templating` (
     class LiteralParser {
         async render(tempStr, data={}, self) {
-            data.api = self;
+            // data.api = self;
             
             // Simple: make data inherit from self for natural this.method() access
-            if (self) {
+            if (self && !(data instanceof HTMLElement)) {
                 Object.setPrototypeOf(data, self);
             }
             
             // tempStr = tempStr.decode();
-            tempStr = tempStr;
+            // tempStr = tempStr;
             
             // Check if template contains await - use async version only when needed
             if (tempStr.includes('await ')) {
@@ -548,7 +550,6 @@ namespace `core.ui` (
         static csstext = true;
         lazy = this.hasAttribute("lazy") || false;
 
-
         constructor(el,options) {
             super();
             this.initialize(el,options);
@@ -557,9 +558,7 @@ namespace `core.ui` (
         async initialize(el, options) {
             this.options = options || this;
             this.element = el;
-            // this.defineSubscribers();
             this.hasDeclarativeTemplate = this.shadowRoot || this.element?.shadowRoot;
-        
             if (this.element || this.constructor.extends || this.constructor.inline) {
                 this.root = this.element || this;
                 if (this.inShadow() && !(this.element instanceof HTMLBodyElement)) {
@@ -609,6 +608,57 @@ namespace `core.ui` (
             }    
         }
 
+        // async defineAncestralStylesheets() {
+        //     var ignore = ["WebComponent", "HtmlComponent", "Application", "HTMLElement", "IHtmlComponent", "_mixin_"];
+
+        //     for (let ancestor of this.constructor.ancestors) {
+        //         if (ancestor == this.constructor && !this.hasOwnSkin()) {
+        //             continue
+        //         }
+        //         if (ignore.includes(ancestor.name)) {
+        //             continue
+        //         }
+        //         if (!ancestor.prototype.hasOwnSkin()) {
+        //             break
+        //         }
+
+        //         var ns = ancestor.prototype.namespace;
+        //         var skin = ancestor.getSkin();
+        //         var pathname = window.location.pathname;
+        //             pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
+        //         var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
+        //             cssPath = cssPath.replace(/\/\//g, "/");
+        //         var sheet;
+
+        //         try {
+        //             var _module = await this.importCSS(cssPath, ancestor,{with: { type: "css" } });
+        //             sheet = _module.default;
+        //         } catch (e) {console.warn(e);}
+
+        //         if(sheet && !this.inShadow()){
+        //             var shownError=false;
+        //             var rules = sheet.cssRules;
+        //             for(let rule of rules){
+        //                 if(rule?.selectorText?.includes(":host")){
+        //                     if(this instanceof Application) {
+        //                         !shownError && `Replace ':host' CSS declarations with ':root', in application, '${this.namespace}'`.deprecated("final")//console.error(`Replace ':host' declarations with ':root in application'`, this, sheet);
+        //                         shownError = true;
+        //                     }
+        //                     rule.selectorText = 
+        //                         rule.selectorText
+        //                             .replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`)
+        //                             .replace(/\:+host/gm, `.${ancestor.name}`);
+        //                 }
+        //             }
+        //         }
+
+        //         if(sheet){
+        //             sheet.constructor = ancestor;
+        //             sheet && this.stylesheets.add(sheet);
+        //         }
+        //     }
+        // }
+
         async defineAncestralStylesheets() {
             var ignore = ["WebComponent", "HtmlComponent", "Application", "HTMLElement", "IHtmlComponent", "_mixin_"];
 
@@ -625,7 +675,6 @@ namespace `core.ui` (
 
                 var ns = ancestor.prototype.namespace;
                 var skin = ancestor.getSkin();
-                // var cssPath = `../../${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
                 var pathname = window.location.pathname;
                     pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
                 var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
@@ -637,7 +686,6 @@ namespace `core.ui` (
                     sheet = _module.default;
                 } catch (e) {console.warn(e);}
 
-                // if(sheet && !(this instanceof Application) && !this.inShadow()){//TODO: Use this check in future
                 if(sheet && !this.inShadow()){
                     var shownError=false;
                     var rules = sheet.cssRules;
@@ -654,6 +702,24 @@ namespace `core.ui` (
                         }
                     }
                 }
+
+                // Unshift inline css() BEFORE unshifting the file sheet so that
+                // after both unshifts the per-ancestor order is: [file.css, inline.css()]
+                if (this.constructor.csstext) {
+                    const proto = ancestor.prototype;
+                    let inlineCss = null;
+                    if (proto.hasOwnProperty("css")) {
+                        inlineCss = proto.css.call(this);
+                    } else if (proto.hasOwnProperty("cssStyle")) {
+                        inlineCss = proto.cssStyle.call(this);
+                    }
+                    if (inlineCss) {
+                        let transformedCss = await this.onTransformStyle(inlineCss, ancestor);
+                        let inlineSheet = this.createCSSStyleSheet(transformedCss, ancestor);
+                        this.stylesheets.add(inlineSheet);
+                    }
+                }
+                
 
                 if(sheet){
                     sheet.constructor = ancestor;
@@ -754,25 +820,6 @@ namespace `core.ui` (
             }
         }
 
-        // subscribe(eventType, listener, capture) {
-        //     const globalEvents = globalThis._eventObjects?.[eventType];
-        //     if (Array.isArray(globalEvents) && globalEvents.length) {
-        //         for (const evt of globalEvents) {
-        //             listener(evt);
-        //         }
-        //     }
-        //     document.addEventListener(eventType, listener, capture);
-        // }
-
-        // fire(type, data={}) {
-        //     const eventType = type;
-        //     var evt = this.dispatchEvent(type, data, document);
-        //     globalThis._eventObjects[eventType] = globalThis._eventObjects[eventType] || [];
-        //     globalThis._eventObjects[eventType].push(evt);
-        //     return evt;
-        // }
-
-        // In subscribe:
         subscribe(eventType, listener, capture) {
             const globalEvents = globalThis._eventObjects.get(eventType);
             if (globalEvents instanceof Set && globalEvents.size) {
@@ -783,7 +830,6 @@ namespace `core.ui` (
             document.addEventListener(eventType, listener, capture);
         }
 
-        // In fire:
         fire(type, data = {}) {
             const eventType = type;
             var evt = this.dispatchEvent(type, data, document);
@@ -849,7 +895,7 @@ namespace `core.ui` (
             })
         }
 
-        async find(cssSel, interval=300, timeout=3000) {
+        async find(cssSel, scan_interval=300, scan_duration=3000) {
             return new Promise(async (resolve, reject) => {
                 var el = this.querySelector(cssSel);
                 if(el) { resolve(el); return }
@@ -857,12 +903,12 @@ namespace `core.ui` (
                     console.log("timer")
                     el = this.querySelector(cssSel);
                     el && (clearInterval(timerid),resolve(el))
-                }, interval);
-                setTimeout(_ =>(clearInterval(timerid), resolve(null)), timeout);
+                }, scan_interval);
+                setTimeout(_ =>(clearInterval(timerid), resolve(null)), scan_duration);
             });
         }
 
-        async findAll(cssSel, {expect : count, interval = 300, duration = 3000} = {}) {
+        async findAll(cssSel, {expect : count, scan_interval = 300, scan_duration = 3000} = {}) {
             return new Promise((resolve, reject) => {
                 let nodes = Array.from(this.querySelectorAll(cssSel));
                 var interval_id;
@@ -883,104 +929,15 @@ namespace `core.ui` (
                                 resolve(nodes);
                                 return
                             }
-                        }, interval
+                        }, scan_interval
                     );
 
                     timer_id = setTimeout(
-                        () => {cleanup(); resolve(nodes); return}, duration
+                        () => {cleanup(); resolve(nodes); return}, scan_duration
                     );
                 })
             });
         }
-
-        // async findAll(cssSel, interval = 300, timeout = 3000) {
-        //     return new Promise((resolve, reject) => {
-        //         let nodes = Array.from(this.querySelectorAll(cssSel));
-        //         if (nodes.length) {
-        //             resolve(Array.from(nodes));
-        //             return;
-        //         }
-        //         const timerid = setInterval(() => {
-        //             nodes = Array.from(this.querySelectorAll(cssSel));
-        //             if (nodes.length) {
-        //                 clearInterval(timerid);
-        //                 resolve(Array.from(nodes));
-        //             }
-        //         }, interval);
-        //         setTimeout(() => {
-        //             clearInterval(timerid);
-        //             resolve([]); // resolve with empty array if not found in time
-        //         }, timeout);
-        //     });
-        // }
-
-
-        // querySelector(cssSel) {
-        //     return /\>{3}/.test(cssSel)
-        //         ? this.$(cssSel)
-        //         : (this.inShadow()||this.element) ? 
-        //             this.root?.querySelector(cssSel) : super.querySelector(cssSel) || null;
-        // }
-        
-        // querySelectorAll(cssSel) {
-        //     return /\>{3}/.test(cssSel)
-        //         ? this.$_(cssSel)
-        //         : (this.inShadow()||this.element) ? 
-        //             this.root?.querySelectorAll(cssSel) : super.querySelectorAll(cssSel) || [];
-        // }
-        // querySelector(cssSel){
-        //     if(/\>{3}/.test(cssSel)) {
-        //         return this.$(cssSel)
-        //     }
-        //     else {
-        //         var res;
-        //         if(this.inShadow()||this.element){
-        //             res = this.root.querySelector(cssSel);
-        //         }
-        //         if(!res) {
-        //             res = super.querySelector(cssSel)
-        //         }
-        //         return res
-        //     }
-        // }
-
-        // querySelectorAll(cssSel){
-        //     if(/\>{3}/.test(cssSel)) {
-        //         return this.$_(cssSel)
-        //     }
-        //     else {
-        //         var res;
-        //         if(this.inShadow()||this.element){
-        //             res = this.root.querySelectorAll(cssSel);
-        //         }
-        //         if(!res||!res?.length) {
-        //             res = super.querySelectorAll(cssSel)
-        //         }
-        //         return res
-        //     }
-        // }
-
-        // $(css) {
-        //     var res = this.$_(css);
-        //     return res?.length ? res[0]:null
-        // }
-
-        // $_(css) {
-        //     var queries = css.split(/\s?\,\s?/);
-        //     var results = [];
-        //     for(let css of queries) {
-        //         let doc_scope = /^\s?BODY/i.test(css) ? 'document':'this.root';
-        //         css = css.replace(/\"/g, "\\\"");
-        //         css = `return ${doc_scope}.querySelector("` + css.replace(/\s?>{3}\s?/gm, "\")?.shadowRoot?.querySelector?.(\"") + `")`;
-        //         css = css.replace(/\bquerySelector\b(?!.*?\bquerySelector\b)/, "querySelectorAll")
-        //         let el = null;
-        //         try { 
-        //             el = new Function(css).call(this);
-        //             el && results.push(Array.from(el))
-        //         } catch(e) {console.error(e)}
-        //     }
-        //     return results.flat(10);
-        // }
 
         querySelectorAll(cssSel) {
             if (/\>{3}/.test(cssSel)) {
@@ -997,7 +954,6 @@ namespace `core.ui` (
             }
         }
 
-        // Return only the first match for querySelector
         querySelector(cssSel) {
             if (/\>{3}/.test(cssSel)) {
                 const res = this.$_(cssSel);
@@ -1031,9 +987,6 @@ namespace `core.ui` (
                     if (i === length - 1) {
                         nextRoots.push(...nodes);
                     } else {
-                        // nodes.forEach(node => {
-                        //     if (node.shadowRoot) nextRoots.push(node.shadowRoot);
-                        // });
                         var jlength = nodes.length;
                         for (let j = 0; j < jlength; j++) {
                             if (nodes[j].shadowRoot) nextRoots.push(nodes[j].shadowRoot);
@@ -1050,23 +1003,6 @@ namespace `core.ui` (
             this.onSleep();
         }
 
-        // async connectedCallback(data) {
-        //     if(this.lazy || this.constructor.lazy){
-        //         this.intersectionObserver = new IntersectionObserver(entries => {
-        //             entries.forEach(async entry => {
-        //                 if (entry.isIntersecting) {
-        //                     await this.onConnected(data);
-        //                     this.intersectionObserver.unobserve(this);
-        //                 }
-        //                 await scheduler?.yield?.();
-        //             });
-        //         });
-        //         this.intersectionObserver.observe(this);
-        //     }
-        //     else {
-        //         await this.onConnected(data);
-        //     }  
-        // }
         async connectedCallback(data) {
             if (this.lazy || this.constructor.lazy) {
                 this.intersectionObserver = new IntersectionObserver(async entries => {
@@ -1162,28 +1098,6 @@ namespace `core.ui` (
             this.onRendered();
 		}
 
-        // async render(data=this.data) {
-        //     if(this.constructor.inline) {
-        //         this.onRendered();
-        //         return;
-        //     }
-        //     else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
-        //         var engine   = await this.getTemplateEngine();
-        //         await scheduler?.yield?.();
-        //         var template = await this.loadTemplate(true);
-        //         await scheduler?.yield?.();
-        //         // var fragment = await engine.parse(template.decode(), data, this);
-        //         var fragment = await engine.parse(template, data, this);
-		// 		await scheduler?.yield?.();
-        //         fragment = !(fragment instanceof DocumentFragment) ? 
-        //         fragment.toNode()?.content : fragment;
-        //         this.root.innerHTML = ""; 
-        //         this.root.appendChild(fragment);
-        //         await scheduler?.yield?.();
-        //     }
-        //     this.onRendered();
-		// }
-
         async parseInnerHTML(engine, data) {
             if(this.shouldParse(this.innerHTML)) {
                 var {fragment} = await engine.parse(this.innerHTML, data, this);
@@ -1194,10 +1108,6 @@ namespace `core.ui` (
 
         onRendered() {}
 
-        isExistingDomNode(el){
-            return el && el.parentNode && el.parentNode.nodeType==1
-        }
-        
         setAttribute(name, val){
             return (this.element) ? 
                 this.root.setAttribute(name, val) : super.setAttribute(name, val)
@@ -1210,38 +1120,50 @@ namespace `core.ui` (
                     this.stylesheets.add(css)
                 }
             }
-            await this.setInlineStylesheet()
+            // Inline css() is now handled per-ancestor inside defineAncestralStylesheets()
+            // to preserve correct interleaving: A.css → A.css() → B.css → B.css()
             await this.onAdoptStylesheets();
         }
 
-        getCascadedCSS() {
-            let css = "";
-            const ancestors = this.constructor.ancestors || [];
-            for (let i = ancestors.length - 1; i >= 0; i--) {
-                const proto = ancestors[i].prototype;
-                if (proto) {
-                    if (proto.hasOwnProperty("css")) {
-                        css += proto.css.call(this) + "\n";
-                    } else if (proto.hasOwnProperty("cssStyle")) {
-                        // TODO - Optional: warn about deprecation
-                        `${ancestors[i].name || ancestors[i].constructor.name}: cssStyle() is deprecated. Please use css() instead.`.deprecated();
-                        css += proto.cssStyle.call(this) + "\n";
-                    }
-                }
-            }
-            return css;
-        }
+        // async loadStylesheets() {
+        //     if(this.styles) {
+        //         var styles = this.styles;
+        //         for(let css of styles) {
+        //             this.stylesheets.add(css)
+        //         }
+        //     }
+        //     await this.setInlineStylesheet()
+        //     await this.onAdoptStylesheets();
+        // }
 
-        async setInlineStylesheet () {
-            if(this.constructor.csstext) {
-                var css = this.getCascadedCSS();
-                if(!css) { return }
-                var cctor = this.constructor;
-                css = await this.onTransformStyle(css, cctor);
-                css = this.createCSSStyleSheet(css, cctor);
-                this.stylesheets.push(css);
-            }
-        }
+        // getCascadedCSS() {
+        //     let css = "";
+        //     const ancestors = this.constructor.ancestors || [];
+        //     for (let i = ancestors.length - 1; i >= 0; i--) {
+        //         const proto = ancestors[i].prototype;
+        //         if (proto) {
+        //             if (proto.hasOwnProperty("css")) {
+        //                 css += proto.css.call(this) + "\n";
+        //             } else if (proto.hasOwnProperty("cssStyle")) {
+        //                 // TODO - Optional: warn about deprecation
+        //                 `${ancestors[i].name || ancestors[i].constructor.name}: cssStyle() is deprecated. Please use css() instead.`.deprecated();
+        //                 css += proto.cssStyle.call(this) + "\n";
+        //             }
+        //         }
+        //     }
+        //     return css;
+        // }
+
+        // async setInlineStylesheet () {
+        //     if(this.constructor.csstext) {
+        //         var css = this.getCascadedCSS();
+        //         if(!css) { return }
+        //         var cctor = this.constructor;
+        //         css = await this.onTransformStyle(css, cctor);
+        //         css = this.createCSSStyleSheet(css, cctor);
+        //         this.stylesheets.push(css);
+        //     }
+        // }
 
         async onAppendStyle(stylesheet) {
             var root=this.shadowRoot||this.root;
@@ -1282,7 +1204,6 @@ namespace `core.ui` (
                     this.onAppendStyle(sheet);
                 }
                 else {
-                    // var cssPath = `../../${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
                     var pathname = window.location.pathname;
                     pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
                     var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
@@ -1340,7 +1261,7 @@ namespace `core.ui` (
                     console.warn(e);
                 }
             }
-            // cssPath = "../" + cssPath
+            alert(`Failed to dynamically import CSS: ${cssPath}`);
             const response = await fetch(cssPath);
             const cssText = await response.text();
             const sheet = this.createCSSStyleSheet(cssText, this.constructor);
@@ -1490,6 +1411,49 @@ namespace `core.ui` (
 global.Application = global.Application||core.ui.Application;
 // import 'src/core/ui/World.js';
 // import 'src/system/mainloop.min.js';
+
+;async function adoptDocumentStylesheet(url) {
+    var proto = IHtmlComponent.prototype;
+
+    // 1. Optional global CSS file (Config.CSSFILENAME)
+    if (url) {
+        try {
+            // debugger
+            // let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+            // ns = ns ? ns.replace(/\./g, "/") + "/" : "";
+            // var url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${ns}`, location.origin).href.replace(/\/$/, "/") + Config.CSSFILENAME;
+            const {default: sheet} = await proto.importCSS.call(proto, url);
+            sheet.url = url;
+            document.adoptedStyleSheets.push(sheet);
+        } catch (e) {
+            console.error(e);
+        }
+    }
+}
+
+setTimeout(() => {
+    // debugger
+    var script = document.head.querySelector("script[data-namespace], script[src *=framework\\.src\\.js]");
+    var adoptedSheetName = Config.CSSFILENAME||script.attributes["data-stylesheet"]?.value||script.dataset.stylesheet;
+    var rootPath = script.attributes["data-rootpath"]?.value || Config.ROOTPATH || "";
+    var srcPath = script.attributes["data-srcpath"]?.value || Config.SRC_PATH || "src/";
+    let ns = Config.NAMESPACE||(document.body?.attributes?.namespace?.value||script?.attributes["data-namespace"]?.value);
+
+    if (adoptedSheetName) {
+            ns = ns ? ns.replace(/\./g, "/") + "/" : "";
+            var url = new URL(`${rootPath}${srcPath}${ns}`.replace(/\/\//, "/"), location.origin).href + adoptedSheetName;
+
+        var preload = document.createElement('link');
+        preload.rel = 'preload';
+        preload.as = 'style';
+        preload.href = url;
+        document.head.appendChild(preload);
+    }
+    setTimeout(() => {
+        adoptDocumentStylesheet(url);
+    }, 10);
+}, 50);
+
 
 document.addEventListener("DOMContentLoaded", async e => {
   setTimeout(()=>{
