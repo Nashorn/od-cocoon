@@ -1,10 +1,11 @@
-//# allFunctionsCalledOnLoad
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.0.0.03122026"
+    version : "8.1.0.03192026"
 };
 console.log("v"+global.arc.version);
+const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
+
 class ConfigurationManager {
     constructor(data) {
         if(!globalThis.Config) {
@@ -16,7 +17,45 @@ class ConfigurationManager {
     }
 
     createProxy() {
+        const _userSet = new Set();
+        const _aliases = {
+            CSSFILENAME: "ADOPTED_STYLESHEET",
+            FILENAME:    "CONTROLLER",
+        };
+        const _deprecated = new Set(Object.keys(_aliases));
+        const _attrMap = {
+            ADOPTED_STYLESHEET:   "data-adopted-stylesheet",
+            ROOTPATH:             "data-rootpath",
+            SRC_PATH:             "data-src-path",
+            NAMESPACE:            "data-namespace",
+            ENABLE_SPLASH:        "data-enable-splash",
+            DYNAMICLOAD:          "data-dynamicload",
+            CONTROLLER:           "data-controller",
+            USE_COMPRESSED_BUILD: "data-use-compressed-build",
+            DEBUG:                "data-debug",
+            SPLASH_TIMEOUT:       "data-splash-timeout",
+            CRITICAL_RESOURCES:   "data-critical-resources",
+            IMPORT_MAPS:          "data-import-maps"
+        };
         return new Proxy(this, {
+            get: (obj, prop) => {
+                if (prop in _aliases) prop = _aliases[prop];
+                // const kernel_script = document.head?.querySelector("script[data-kernel]");
+                
+                // Pass through: symbols, internal props, unmapped keys, or explicitly set values
+                if (typeof prop !== "string" || prop.startsWith("_") || !(prop in _attrMap) || _userSet.has(prop)) {
+                    return obj[prop];
+                }
+                // NAMESPACE: body attribute takes priority over script attribute
+                if (prop === "NAMESPACE") {
+                    var nsVal = kernel_script?.attributes[_attrMap[prop]]?.value || document.body?.attributes?.namespace?.value || obj[prop];
+                    return nsVal;
+                }
+                // Script attribute fallback, then declared default
+                
+                const attrVal = kernel_script?.attributes[_attrMap[prop]]?.value;
+                return attrVal !== undefined ? attrVal : obj[prop];
+            },
             set: (obj, prop, value) => {
                 if(this._frozen) {
                     console.warn(`Config.${prop} is frozen and cannot be changed`);
@@ -26,6 +65,9 @@ class ConfigurationManager {
                     console.warn(`Config.${prop} has been locked against changes`)
                     return true
                 }
+                if (_deprecated.has(prop)) `Config.${prop} is deprecated. Use Config.${_aliases[prop]} instead.`.deprecated();
+                if (prop in _aliases) prop = _aliases[prop];
+                if (typeof prop === "string" && !prop.startsWith("_")) _userSet.add(prop);
                 obj[prop] = value;
                 return true;
             }
@@ -49,17 +91,16 @@ globalThis.ConfigurationManager = ConfigurationManager;
 globalThis.Config = globalThis.Config || new ConfigurationManager({
     DYNAMICLOAD : true,
     CHARSET : "utf-8",
-    FILENAME : "index.*js",
+    CONTROLLER : "index.*js",
     ROOTPATH : "../../../",
     SRC_PATH : "/src/",
     ENVIRONMENT : "prod",
-    DEFAULT_TEMPLATE_ENGINE_MIMETYPE : "template/literals",
-    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false,//ex: "index.kruntch.html"
-    IMPORTS_CACHE_POLICY : { cache: "force-cache", priority: 'high'}, //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
-    DEBUG:true,
-    ROUTER : 'system.http.Router',
     IMPORT_MAPS:true,
-    USES_NAMESPACE_FOR_TAGNAMES : true
+    DEBUG : true,
+    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false, //ex: "index.kruntch.html"
+    IMPORTS_CACHE_POLICY : { cache: "force-cache", priority: 'high'}, //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
+    NAMESPACE : null,
+    ADOPTED_STYLESHEET : null
 });
 
 //
@@ -341,11 +382,6 @@ namespace `domain.collections` (
 
 
         static async find(query={},cb){
-            // return new Promise((resolve,reject) =>{
-            //     this.storage.find((result, error)=>{
-            //         cb?cb(result, error):resolve(result, error);
-            //     },query)
-            // })
             return await this.storage.find(cb, query);
         }
 
@@ -353,6 +389,7 @@ namespace `domain.collections` (
             var self=this;
             data = this.transform(data);
             this.setData(data.table||data.name, data);
+            return data;
         }
 
         static transform (data, xhr){
@@ -371,14 +408,14 @@ namespace `domain.collections` (
             return this.transform(data);
         }
 
-        static async seed (uri, params, force){
+        static async seed (uri, params, force=true){
             uri = "seeds" in this.prototype?this.prototype.seeds:this.seeds;
             return new Promise(async (resolve,reject) =>{
                 if(!this.isSeedable()) {
                     resolve();
                     return;
                 };
-                force = (typeof force == "boolean") ? force:false;
+                force = (typeof force == "boolean") ? force: true;
                 if(force||!this.storage.isSeeded()){
                     var response = await fetch(uri[Config.ENVIRONMENT]);
                     var json = await response.json();
@@ -594,11 +631,10 @@ namespace `core.ui` (
             var cctor = proto.constructor;
             var ce = window.customElements;
             var r = /([a-zA-Z])(?=[A-Z0-9])/g;
-            var tag = (cctor.hasOwnProperty("tag")||cctor.hasOwnProperty("is")) ? cctor.tag||cctor.is : null;
-                tag = (tag ? tag : 
-                Config.USES_NAMESPACE_FOR_TAGNAMES ? 
-                    proto.namespace||cctor.name:
-                    cctor.name).replace(r, (f,m)=> `${m}-`).replace(/\./g,"-").toLowerCase();
+            var tag = (cctor.hasOwnProperty("tag") || cctor.hasOwnProperty("is"))
+                ? (cctor.tag || cctor.is)
+                : (proto.namespace || cctor.name);
+                tag = tag.replace(r, (f,m) => `${m}-`).replace(/\./g, "-").toLowerCase();
                 
             if(/\-/.test(tag)){
                 if(ce.get(tag)){return}
@@ -900,7 +936,6 @@ namespace `core.ui` (
                 var el = this.querySelector(cssSel);
                 if(el) { resolve(el); return }
                 var timerid = setInterval(_ => {
-                    console.log("timer")
                     el = this.querySelector(cssSel);
                     el && (clearInterval(timerid),resolve(el))
                 }, scan_interval);
@@ -1261,7 +1296,7 @@ namespace `core.ui` (
                     console.warn(e);
                 }
             }
-            alert(`Failed to dynamically import CSS: ${cssPath}`);
+
             const response = await fetch(cssPath);
             const cssText = await response.text();
             const sheet = this.createCSSStyleSheet(cssText, this.constructor);
@@ -1414,14 +1449,8 @@ global.Application = global.Application||core.ui.Application;
 
 ;async function adoptDocumentStylesheet(url) {
     var proto = IHtmlComponent.prototype;
-
-    // 1. Optional global CSS file (Config.CSSFILENAME)
     if (url) {
         try {
-            // debugger
-            // let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
-            // ns = ns ? ns.replace(/\./g, "/") + "/" : "";
-            // var url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${ns}`, location.origin).href.replace(/\/$/, "/") + Config.CSSFILENAME;
             const {default: sheet} = await proto.importCSS.call(proto, url);
             sheet.url = url;
             document.adoptedStyleSheets.push(sheet);
@@ -1431,111 +1460,75 @@ global.Application = global.Application||core.ui.Application;
     }
 }
 
-setTimeout(() => {
-    // debugger
-    var script = document.head.querySelector("script[data-namespace], script[src *=framework\\.src\\.js]");
-    var adoptedSheetName = Config.CSSFILENAME||script.attributes["data-stylesheet"]?.value||script.dataset.stylesheet;
-    var rootPath = script.attributes["data-rootpath"]?.value || Config.ROOTPATH || "";
-    var srcPath = script.attributes["data-srcpath"]?.value || Config.SRC_PATH || "src/";
-    let ns = Config.NAMESPACE||(document.body?.attributes?.namespace?.value||script?.attributes["data-namespace"]?.value);
 
-    if (adoptedSheetName) {
-            ns = ns ? ns.replace(/\./g, "/") + "/" : "";
-            var url = new URL(`${rootPath}${srcPath}${ns}`.replace(/\/\//, "/"), location.origin).href + adoptedSheetName;
+setTimeout(() => {
+    var url;
+    if (Config.ADOPTED_STYLESHEET) {
+        var nsPath = Config.NAMESPACE ? Config.NAMESPACE.replace(/\./g, "/") + "/" : "";
+        url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${nsPath}`.replace(/\/\//, "/"), location.origin).href + Config.ADOPTED_STYLESHEET;
 
         var preload = document.createElement('link');
-        preload.rel = 'preload';
-        preload.as = 'style';
-        preload.href = url;
-        document.head.appendChild(preload);
+            preload.rel = 'preload';
+            preload.as = 'style';
+            preload.href = url;
+            document.head.appendChild(preload);
     }
     setTimeout(() => {
         adoptDocumentStylesheet(url);
     }, 10);
-}, 50);
+}, kernel_script?.attributes["data-kernel"] ? 0 : 50); // Immediate adoption if kernel script is present, otherwise delay to allow for potential late configuration
 
 
 document.addEventListener("DOMContentLoaded", async e => {
-  setTimeout(()=>{
-    // Only run ResourceLoader in content pages, not in frameset shells
+  setTimeout(() => {
     const isFramesetShell = document.querySelector('iframe#mainFrame');
     if (!isFramesetShell) {
-        if(Config?.ENABLE_SPLASH == undefined || Config?.ENABLE_SPLASH){
-            const loader = new ResourceLoader();
-            try{loader.init()}catch (e) {console.error(e)} 
-        }
-        else {
-            window.dispatchEvent(new CustomEvent("page:rendered"), {
-                detail: location.href,
-                bubbles: true,
-                cancelable: true
-            });
-        }
+      if (Config.ENABLE_SPLASH) {
+        const loader = new ResourceLoader();
+        try { loader.init() } catch(e) { console.error(e) }
+      } else {
+        window.dispatchEvent(new CustomEvent("page:rendered", {
+          detail: location.href,
+          bubbles: true,
+          cancelable: true
+        }));
+      }
     }
-  }, 300)
-  
-  
-  //TODO: Fix this
-  globalThis.Session = (top.Session || globalThis.Session);
-  let assetsloaded = false;
-
-  try{await initImportMap();}catch(e){}
-  await wait(10);
+  }, 300);
 
 
-  if(Config.SPLASH){
-    let path = Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js";
-    try{await import(path)}catch(e){console.error(e); assetsloaded=true}
-    var Splash = classof(Config.SPLASH)
-    if(Splash){
-        var splash = document.body.querySelector(`#splash, [namespace='${Config.SPLASH}']`)||new Splash;
-            splash.addEventListener("loaded", e=> assetsloaded=true, true)
-            splash.setAttribute("duration", Config.SPLASH_FADE_DELAY)
-        document.body.appendChild(splash);
-        document.body.style.opacity=1;
-    }else {assetsloaded=true}
-  } else {
-    assetsloaded=true; 
-    setTimeout(()=>document.body.style.opacity=1, 300)
-  };
-
-  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+  try { await initImportMap(); } catch(e) {}
+  setTimeout(() => document.body.style.opacity = 1, 300);
 
   async function bootup() {
-    if (ns && Config.DYNAMICLOAD) {
-      if(Config.APP_WAITS_ON_SPLASH && !assetsloaded){
-        await sleep(100);
-        bootup();
-        return;
-      }
-      else {
-        var filename = Config.FILENAME||(location.pathname.split("/").pop()||"index.html").replace(/\.html?$/i, ".*js");
-        var filename_path = "../../" + Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + filename;
-        var path = Config.USE_COMPRESSED_BUILD ? 
-          filename_path.replace("*", Config.DEBUG ? "src.":"min."):
-          filename_path.replace("*","");
-          path = path.replace(/\/\//g, "/"); 
+    const ns = Config.NAMESPACE;
+    var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
 
-        await import(path).then(async function init(){
-          if(!NSRegistry[ns]) {
-            await wait(50);init();return;
-          }
-          let app = window.application = (
-            window.application||new NSRegistry[ns](document)
-          );
-          if(typeof World =="function" && app instanceof World) {
-            window.world=app;
-            let loop = MainLoop;
-            app.onUpdate      && loop.setBegin(app.onUpdate);
-            app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
-            app.onDraw        && loop.setDraw(app.onDraw);
-            app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
-            loop.setSimulationTimestep(app.getSimulationTimestep());
-          }
-        });
-      }
-    }
-    else {
+    var url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${NSPATH}`.replace(/\/\//, "/"), location.origin).href + Config.CONTROLLER;
+    console.log("Bootloader: Loading controller from", url);
+    if (ns && Config.DYNAMICLOAD) {
+      var filename_path = "../../" + Config.SRC_PATH + (ns.replace(/\./g, "/")) + "/" + Config.CONTROLLER;
+      var path = Config.USE_COMPRESSED_BUILD ?
+        filename_path.replace("*", Config.DEBUG ? "src." : "min.") :
+        filename_path.replace("*", "");
+        path = path.replace(/\/\//g, "/");
+
+      await import(path).then(async function init() {
+        if (!NSRegistry[ns]) {
+          await wait(50); init(); return;
+        }
+        let app = window.application = (window.application || new NSRegistry[ns](document));
+        if (typeof World == "function" && app instanceof World) {
+          window.world = app;
+          let loop = MainLoop;
+          app.onUpdate      && loop.setBegin(app.onUpdate);
+          app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
+          app.onDraw        && loop.setDraw(app.onDraw);
+          app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
+          loop.setSimulationTimestep(app.getSimulationTimestep());
+        }
+      });
+    } else {
       let app = new NSRegistry['core.ui.Application'](document);
     }
   };
@@ -1709,7 +1702,7 @@ class ResourceLoader {
                         console.error(`Missing ${this.requiredCriticalResources.size - this.criticalResources.size} critical resources`);
                         console.groupEnd();
                     }
-                }, Config?.SPLASH_TIMEOUT || 500); 
+                }, Config.SPLASH_TIMEOUT); 
                 this.observer.disconnect();
             });
         });
