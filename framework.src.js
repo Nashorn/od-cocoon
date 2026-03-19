@@ -1293,6 +1293,7 @@ namespace `core.ui` (
         cssStyle(){ return "" }
 
         async importCSS(cssPath, ancestor, options) {
+            cssPath = new URL(cssPath.replace(/\/src\/src\//, "/src/")).href;
             if ('supports' in CSS && CSS.supports('color', 'var(--test)')) {
                 try {
                     const dynamicImport = new Function('cssPath', 
@@ -1476,7 +1477,7 @@ setTimeout(() => {
             url = new URL(Config.ADOPTED_STYLESHEET, location.href).href;
         } else {
             // No prefix — load from namespace's src path
-            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.ADOPTED_STYLESHEET, new URL("../", location.href).href).href;
+            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.ADOPTED_STYLESHEET, new URL(Config.ROOTPATH, location.href).href).href;
         }
         var preload = document.createElement('link');
             preload.rel = 'preload';
@@ -1509,14 +1510,16 @@ document.addEventListener("DOMContentLoaded", async e => {
 
 
   try { await initImportMap(); } catch(e) {}
-  await sleep (100);
+  await sleep (50);
   setTimeout(() => document.body.style.opacity = 1, 300);
 
   async function bootup() {
     const ns = Config.NAMESPACE;
     var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
 
-    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.CONTROLLER, new URL("../", location.href).href);
+    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.CONTROLLER, new URL(Config.ROOTPATH, location.href).href);
+        url = new URL(url.href.replace(/\/src\/src\//, "/src/"));
+
     console.log("Bootloader: Loading controller from", url);
     if (ns && Config.DYNAMICLOAD) {
       var filename_path = url.href;//"../../" + Config.SRC_PATH + (ns.replace(/\./g, "/")) + "/" + Config.CONTROLLER;
