@@ -1479,6 +1479,7 @@ setTimeout(() => {
             // No prefix — load from namespace's src path
             url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.ADOPTED_STYLESHEET, new URL(Config.ROOTPATH, location.href).href).href;
         }
+        url = url.replace(/\/src\/src\//, "/src/");
         var preload = document.createElement('link');
             preload.rel = 'preload';
             preload.as = 'style';
