@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.1.0.03192026"
+    version : "8.0.0.03122026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -717,8 +717,11 @@ namespace `core.ui` (
                     cssPath = cssPath.replace(/\/\//g, "/");
                 var sheet;
 
+                var NSPATH = ns.replace(/\./g, "/") + "/";
+                var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
+
                 try {
-                    var _module = await this.importCSS(cssPath, ancestor,{with: { type: "css" } });
+                    var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
                     sheet = _module.default;
                 } catch (e) {console.warn(e);}
 
@@ -1243,8 +1246,11 @@ namespace `core.ui` (
                     pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
                     var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
                         cssPath = cssPath.replace(/\/\//g, "/");
+                    var NSPATH = this.namespace.replace(/\./g, "/") + "/";
+                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, location.href).href);
+
                     try {
-                        var _module = await this.importCSS(cssPath, this.constructor, {with: { type: "css" } });
+                        var _module = await this.importCSS(url.href, this.constructor, {with: { type: "css" } });
                         sheet = _module.default;
                         sheet.constructor = this.constructor;
                         this.onAppendStyle(sheet);
@@ -1465,8 +1471,13 @@ setTimeout(() => {
     var url;
     if (Config.ADOPTED_STYLESHEET) {
         var nsPath = Config.NAMESPACE ? Config.NAMESPACE.replace(/\./g, "/") + "/" : "";
-        url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${nsPath}`.replace(/\/\//, "/"), location.origin).href + Config.ADOPTED_STYLESHEET;
-
+        if (/^[.\/]/.test(Config.ADOPTED_STYLESHEET)) {
+            // Explicit prefix (/, ./, ../) — resolve relative to current page
+            url = new URL(Config.ADOPTED_STYLESHEET, location.href).href;
+        } else {
+            // No prefix — load from namespace's src path
+            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.ADOPTED_STYLESHEET, new URL("../", location.href).href).href;
+        }
         var preload = document.createElement('link');
             preload.rel = 'preload';
             preload.as = 'style';
@@ -1498,22 +1509,23 @@ document.addEventListener("DOMContentLoaded", async e => {
 
 
   try { await initImportMap(); } catch(e) {}
+  await sleep (100);
   setTimeout(() => document.body.style.opacity = 1, 300);
 
   async function bootup() {
     const ns = Config.NAMESPACE;
     var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
 
-    var url = new URL(`${Config.ROOTPATH}${Config.SRC_PATH}${NSPATH}`.replace(/\/\//, "/"), location.origin).href + Config.CONTROLLER;
+    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.CONTROLLER, new URL("../", location.href).href);
     console.log("Bootloader: Loading controller from", url);
     if (ns && Config.DYNAMICLOAD) {
-      var filename_path = "../../" + Config.SRC_PATH + (ns.replace(/\./g, "/")) + "/" + Config.CONTROLLER;
+      var filename_path = url.href;//"../../" + Config.SRC_PATH + (ns.replace(/\./g, "/")) + "/" + Config.CONTROLLER;
       var path = Config.USE_COMPRESSED_BUILD ?
         filename_path.replace("*", Config.DEBUG ? "src." : "min.") :
         filename_path.replace("*", "");
-        path = path.replace(/\/\//g, "/");
-
-      await import(path).then(async function init() {
+        // path = path.replace(/\/\//g, "/");
+        path = new URL(path);
+      await import(path.href).then(async function init() {
         if (!NSRegistry[ns]) {
           await wait(50); init(); return;
         }
