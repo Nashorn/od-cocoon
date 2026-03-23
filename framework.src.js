@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.0.0.03122026"
+    version : "8.1.0.03232026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -705,39 +705,41 @@ namespace `core.ui` (
                 if (ignore.includes(ancestor.name)) {
                     continue
                 }
-                if (!ancestor.prototype.hasOwnSkin()) {
-                    break
-                }
-
-                var ns = ancestor.prototype.namespace;
-                var skin = ancestor.getSkin();
-                var pathname = window.location.pathname;
-                    pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-                var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
-                    cssPath = cssPath.replace(/\/\//g, "/");
+                // if (!ancestor.prototype.hasOwnSkin()) {
+                //     break
+                // }
                 var sheet;
+                if(ancestor.prototype.hasOwnSkin()) {
+                    var ns = ancestor.prototype.namespace;
+                    var skin = ancestor.getSkin();
+                    var pathname = window.location.pathname;
+                        pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
+                    var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
+                        cssPath = cssPath.replace(/\/\//g, "/");
+                    
 
-                var NSPATH = ns.replace(/\./g, "/") + "/";
-                var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
+                    var NSPATH = ns.replace(/\./g, "/") + "/";
+                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
 
-                try {
-                    var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
-                    sheet = _module.default;
-                } catch (e) {console.warn(e);}
+                    try {
+                        var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
+                        sheet = _module.default;
+                    } catch (e) {console.warn(e);}
 
-                if(sheet && !this.inShadow()){
-                    var shownError=false;
-                    var rules = sheet.cssRules;
-                    for(let rule of rules){
-                        if(rule?.selectorText?.includes(":host")){
-                            if(this instanceof Application) {
-                                !shownError && `Replace ':host' CSS declarations with ':root', in application, '${this.namespace}'`.deprecated("final")//console.error(`Replace ':host' declarations with ':root in application'`, this, sheet);
-                                shownError = true;
+                    if(sheet && !this.inShadow()){
+                        var shownError=false;
+                        var rules = sheet.cssRules;
+                        for(let rule of rules){
+                            if(rule?.selectorText?.includes(":host")){
+                                if(this instanceof Application) {
+                                    !shownError && `Replace ':host' CSS declarations with ':root', in application, '${this.namespace}'`.deprecated("final")//console.error(`Replace ':host' declarations with ':root in application'`, this, sheet);
+                                    shownError = true;
+                                }
+                                rule.selectorText = 
+                                    rule.selectorText
+                                        .replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`)
+                                        .replace(/\:+host/gm, `.${ancestor.name}`);
                             }
-                            rule.selectorText = 
-                                rule.selectorText
-                                    .replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`)
-                                    .replace(/\:+host/gm, `.${ancestor.name}`);
                         }
                     }
                 }
