@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.1.0.03232026"
+    version : "8.2.0.04162026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -91,16 +91,17 @@ globalThis.ConfigurationManager = ConfigurationManager;
 globalThis.Config = globalThis.Config || new ConfigurationManager({
     DYNAMICLOAD : true,
     CHARSET : "utf-8",
-    CONTROLLER : "index.*js",
+    FILENAME : "index.*js",
     ROOTPATH : "../../../",
     SRC_PATH : "/src/",
     ENVIRONMENT : "prod",
-    IMPORT_MAPS:true,
-    DEBUG : true,
-    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false, //ex: "index.kruntch.html"
+    DEFAULT_TEMPLATE_ENGINE_MIMETYPE : "template/literals",
+    TEMPLATE_NAMES_USE_ENGINE_EXTENSION : false,//ex: "index.kruntch.html"
     IMPORTS_CACHE_POLICY : { cache: "force-cache", priority: 'high'}, //"default", "no-store", "reload", "no-cache", "force-cache", or "only-if-cached"  (https://fetch.spec.whatwg.org/)
-    NAMESPACE : null,
-    ADOPTED_STYLESHEET : null
+    DEBUG:true,
+    ROUTER : 'system.http.Router',
+    IMPORT_MAPS:true,
+    USES_NAMESPACE_FOR_TAGNAMES : true
 });
 
 //
@@ -1456,6 +1457,7 @@ global.Application = global.Application||core.ui.Application;
 // import 'src/core/ui/World.js';
 // import 'src/system/mainloop.min.js';
 
+
 ;async function adoptDocumentStylesheet(url) {
     var proto = IHtmlComponent.prototype;
     if (url) {
@@ -1472,55 +1474,123 @@ global.Application = global.Application||core.ui.Application;
 
 setTimeout(() => {
     var url;
-    if (Config.ADOPTED_STYLESHEET) {
-        var nsPath = Config.NAMESPACE ? Config.NAMESPACE.replace(/\./g, "/") + "/" : "";
-        if (/^[.\/]/.test(Config.ADOPTED_STYLESHEET)) {
+    if (Config.CSSFILENAME) {
+        let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+        var nsPath = ns ? ns.replace(/\./g, "/") + "/" : "";
+        if (/^[.\/]/.test(Config.CSSFILENAME)) {
             // Explicit prefix (/, ./, ../) — resolve relative to current page
-            url = new URL(Config.ADOPTED_STYLESHEET, location.href).href;
+            url = new URL(Config.CSSFILENAME, location.href).href;
         } else {
             // No prefix — load from namespace's src path
-            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.ADOPTED_STYLESHEET, new URL(Config.ROOTPATH, location.href).href).href;
+            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, location.href).href).href;
         }
         url = url.replace(/\/src\/src\//, "/src/");
-        var preload = document.createElement('link');
-            preload.rel = 'preload';
-            preload.as = 'style';
-            preload.href = url;
-            document.head.appendChild(preload);
+        // var preload = document.createElement('link');
+        //     preload.rel = 'preload';
+        //     preload.as = 'style';
+        //     preload.href = url;
+        //     document.head.appendChild(preload);
     }
     setTimeout(() => {
         adoptDocumentStylesheet(url);
-    }, 10);
+    }, 0);
 }, kernel_script?.attributes["data-kernel"] ? 0 : 50); // Immediate adoption if kernel script is present, otherwise delay to allow for potential late configuration
 
 
 document.addEventListener("DOMContentLoaded", async e => {
-  setTimeout(() => {
+  setTimeout(()=>{
+    // Only run ResourceLoader in content pages, not in frameset shells
     const isFramesetShell = document.querySelector('iframe#mainFrame');
     if (!isFramesetShell) {
-      if (Config.ENABLE_SPLASH) {
-        const loader = new ResourceLoader();
-        try { loader.init() } catch(e) { console.error(e) }
-      } else {
-        window.dispatchEvent(new CustomEvent("page:rendered", {
-          detail: location.href,
-          bubbles: true,
-          cancelable: true
-        }));
-      }
+        if(Config?.ENABLE_SPLASH == undefined || Config?.ENABLE_SPLASH){
+            const loader = new ResourceLoader();
+            try{loader.init()}catch (e) {console.error(e)} 
+        }
+        else {
+            window.dispatchEvent(new CustomEvent("page:rendered"), {
+                detail: location.href,
+                bubbles: true,
+                cancelable: true
+            });
+        }
     }
-  }, 300);
+  }, 300)
+  
+  
+  //TODO: Fix this
+  globalThis.Session = (top.Session || globalThis.Session);
+  let assetsloaded = false;
+
+  try{await initImportMap();}catch(e){}
+  await wait(10);
 
 
-  try { await initImportMap(); } catch(e) {}
-  await sleep (50);
-  setTimeout(() => document.body.style.opacity = 1, 300);
+  if(Config.SPLASH){
+    let path = Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js";
+    try{await import(path)}catch(e){console.error(e); assetsloaded=true}
+    var Splash = classof(Config.SPLASH)
+    if(Splash){
+        var splash = document.body.querySelector(`#splash, [namespace='${Config.SPLASH}']`)||new Splash;
+            splash.addEventListener("loaded", e=> assetsloaded=true, true)
+            splash.setAttribute("duration", Config.SPLASH_FADE_DELAY)
+        document.body.appendChild(splash);
+        document.body.style.opacity=1;
+    }else {assetsloaded=true}
+  } else {
+    assetsloaded=true; 
+    setTimeout(()=>document.body.style.opacity=1, 300)
+  };
 
-  async function bootup() {
-    const ns = Config.NAMESPACE;
+  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+
+//   async function bootup() {
+//     if (ns && Config.DYNAMICLOAD) {
+//       if(Config.APP_WAITS_ON_SPLASH && !assetsloaded){
+//         await sleep(100);
+//         bootup();
+//         return;
+//       }
+//       else {
+//         var filename = Config.FILENAME||(location.pathname.split("/").pop()||"index.html").replace(/\.html?$/i, ".*js");
+//         var filename_path = "../../" + Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + filename;
+//         var path = Config.USE_COMPRESSED_BUILD ? 
+//           filename_path.replace("*", Config.DEBUG ? "src.":"min."):
+//           filename_path.replace("*","");
+//           path = path.replace(/\/\//g, "/"); 
+
+//         await import(path).then(async function init(){
+//           if(!NSRegistry[ns]) {
+//             await wait(50);init();return;
+//           }
+//           let app = window.application = (
+//             window.application||new NSRegistry[ns](document)
+//           );
+//           if(typeof World =="function" && app instanceof World) {
+//             window.world=app;
+//             let loop = MainLoop;
+//             app.onUpdate      && loop.setBegin(app.onUpdate);
+//             app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
+//             app.onDraw        && loop.setDraw(app.onDraw);
+//             app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
+//             loop.setSimulationTimestep(app.getSimulationTimestep());
+//           }
+//         });
+//       }
+//     }
+//     else {
+//       let app = new NSRegistry['core.ui.Application'](document);
+//     }
+//   };
+
+//   bootup();
+// }, false);
+
+
+async function bootup() {
+    // const ns = Config.NAMESPACE;
     var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
 
-    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.CONTROLLER, new URL(Config.ROOTPATH, location.href).href);
+    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, location.href).href);
         url = new URL(url.href.replace(/\/src\/src\//, "/src/"));
 
     console.log("Bootloader: Loading controller from", url);
