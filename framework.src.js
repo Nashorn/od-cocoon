@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.2.0.04162026"
+    version : "8.2.1.05192026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -720,7 +720,8 @@ namespace `core.ui` (
                     
 
                     var NSPATH = ns.replace(/\./g, "/") + "/";
-                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
+                    // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
+                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, document.baseURI).href);
 
                     try {
                         var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
@@ -1250,7 +1251,8 @@ namespace `core.ui` (
                     var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
                         cssPath = cssPath.replace(/\/\//g, "/");
                     var NSPATH = this.namespace.replace(/\./g, "/") + "/";
-                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, location.href).href);
+                 // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, location.href).href);
+                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
 
                     try {
                         var _module = await this.importCSS(url.href, this.constructor, {with: { type: "css" } });
@@ -1479,10 +1481,12 @@ setTimeout(() => {
         var nsPath = ns ? ns.replace(/\./g, "/") + "/" : "";
         if (/^[.\/]/.test(Config.CSSFILENAME)) {
             // Explicit prefix (/, ./, ../) — resolve relative to current page
-            url = new URL(Config.CSSFILENAME, location.href).href;
+            // url = new URL(Config.CSSFILENAME, location.href).href;
+            url = new URL(Config.CSSFILENAME, document.baseURI).href;
         } else {
             // No prefix — load from namespace's src path
-            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, location.href).href).href;
+            // url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, location.href).href).href;
+            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, document.baseURI).href).href;
         }
         url = url.replace(/\/src\/src\//, "/src/");
         // var preload = document.createElement('link');
@@ -1590,8 +1594,9 @@ async function bootup() {
     // const ns = Config.NAMESPACE;
     var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
 
-    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, location.href).href);
-        url = new URL(url.href.replace(/\/src\/src\//, "/src/"));
+    // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, location.href).href);
+    //     url = new URL(url.href.replace(/\/src\/src\//, "/src/"));
+    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, document.baseURI).href);
 
     console.log("Bootloader: Loading controller from", url);
     if (ns && Config.DYNAMICLOAD) {
