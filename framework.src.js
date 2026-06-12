@@ -1,7 +1,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.2.1.05192026"
+    version : "8.2.2.06122026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -20,7 +20,9 @@ class ConfigurationManager {
         const _userSet = new Set();
         const _aliases = {
             CSSFILENAME: "ADOPTED_STYLESHEET",
+            ADOPTED_STYLESHEET: "CSSFILENAME",
             FILENAME:    "CONTROLLER",
+            CONTROLLER:   "FILENAME"
         };
         const _deprecated = new Set(Object.keys(_aliases));
         const _attrMap = {
@@ -35,16 +37,18 @@ class ConfigurationManager {
             DEBUG:                "data-debug",
             SPLASH_TIMEOUT:       "data-splash-timeout",
             CRITICAL_RESOURCES:   "data-critical-resources",
-            IMPORT_MAPS:          "data-import-maps"
+            IMPORT_MAPS:          "data-import-maps",
+            FILENAME:             "data-controller"
         };
         return new Proxy(this, {
             get: (obj, prop) => {
+                var origProp = prop;
                 if (prop in _aliases) prop = _aliases[prop];
                 // const kernel_script = document.head?.querySelector("script[data-kernel]");
                 
                 // Pass through: symbols, internal props, unmapped keys, or explicitly set values
                 if (typeof prop !== "string" || prop.startsWith("_") || !(prop in _attrMap) || _userSet.has(prop)) {
-                    return obj[prop];
+                    return obj[prop] || obj[origProp];
                 }
                 // NAMESPACE: body attribute takes priority over script attribute
                 if (prop === "NAMESPACE") {
@@ -54,7 +58,7 @@ class ConfigurationManager {
                 // Script attribute fallback, then declared default
                 
                 const attrVal = kernel_script?.attributes[_attrMap[prop]]?.value;
-                return attrVal !== undefined ? attrVal : obj[prop];
+                return attrVal !== undefined ? attrVal : obj[prop]||obj[origProp];
             },
             set: (obj, prop, value) => {
                 if(this._frozen) {
@@ -101,7 +105,8 @@ globalThis.Config = globalThis.Config || new ConfigurationManager({
     DEBUG:true,
     ROUTER : 'system.http.Router',
     IMPORT_MAPS:true,
-    USES_NAMESPACE_FOR_TAGNAMES : true
+    USES_NAMESPACE_FOR_TAGNAMES : true,
+    TEST: "This is a test value"
 });
 
 //
@@ -1456,8 +1461,32 @@ namespace `core.ui` (
 	}
 );
 global.Application = global.Application||core.ui.Application;
-// import 'src/core/ui/World.js';
-// import 'src/system/mainloop.min.js';
+
+namespace `core.ui` (
+    class World extends core.ui.Application {
+        async onConnected(data){
+            await super.onConnected(data);
+            MainLoop.start();
+        }
+        onUpdate(accumilated, delta){}
+        onFixedUpdate(){}
+        onDraw(interpolation){}
+        onUpdateEnd(fps, panic){
+            if (panic) { var discardedTime = Math.round(MainLoop.resetFrameDelta()) }
+        }
+        getSimulationTimestep(){ return 1000/120 }
+    }
+);
+global.World = global.World||core.ui.World;
+/**
+ * mainloop.js 1.0.4-20210711
+ *
+ * @author Isaac Sukin (http://www.isaacsukin.com/)
+ * @license MIT
+ */
+
+!function(t){var n=1e3/60,e=0,i=0,o=60,u=.9,r=1e3,f=0,s=0,a=0,c=0,m=!1,d=!1,l=!1,p="object"==typeof window?window:t,h=p.requestAnimationFrame||(b=Date.now(),function(t){return y=Date.now(),A=Math.max(0,n-(y-b)),b=y+A,setTimeout(function(){t(y+A)},A)}),w=p.cancelAnimationFrame||clearTimeout,p=function(){},F=p,M=p,g=p,x=p,S,b,y,A;function D(t){if(S=h(D),!(t<i+c)){for(e+=t-i,F(i=t,e),f+r<t&&(o=u*s*1e3/(t-f)+(1-u)*o,f=t,s=0),s++,a=0;n<=e;)if(M(n),e-=n,240<=++a){l=!0;break}g(e/n),x(o,l),l=!1}}t.MainLoop={getSimulationTimestep:function(){return n},setSimulationTimestep:function(t){return n=t,this},getFPS:function(){return o},getMaxAllowedFPS:function(){return 1e3/c},setMaxAllowedFPS:function(t){return 0===(t=void 0===t?1/0:t)?this.stop():c=1e3/t,this},resetFrameDelta:function(){var t=e;return e=0,t},setBegin:function(t){return F=t||F,this},setUpdate:function(t){return M=t||M,this},setDraw:function(t){return g=t||g,this},setEnd:function(t){return x=t||x,this},start:function(){return d||(d=!0,S=h(function(t){g(1),m=!0,f=i=t,s=0,S=h(D)})),this},stop:function(){return d=m=!1,w(S),this},isRunning:function(){return m}},"function"==typeof define&&define.amd?define(t.MainLoop):"object"==typeof module&&null!==module&&"object"==typeof module.exports&&(module.exports=t.MainLoop)}(this);
+//# sourceMappingURL=mainloop.min.js.map
 
 
 ;async function adoptDocumentStylesheet(url) {
@@ -1477,7 +1506,7 @@ global.Application = global.Application||core.ui.Application;
 setTimeout(() => {
     var url;
     if (Config.CSSFILENAME) {
-        let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+        let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
         var nsPath = ns ? ns.replace(/\./g, "/") + "/" : "";
         if (/^[.\/]/.test(Config.CSSFILENAME)) {
             // Explicit prefix (/, ./, ../) — resolve relative to current page
@@ -1545,7 +1574,7 @@ document.addEventListener("DOMContentLoaded", async e => {
     setTimeout(()=>document.body.style.opacity=1, 300)
   };
 
-  let ns = (document.head.querySelector("script[namespace]")||document.body).getAttribute("namespace")||Config.NAMESPACE;
+  let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
 
 //   async function bootup() {
 //     if (ns && Config.DYNAMICLOAD) {
