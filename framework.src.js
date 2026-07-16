@@ -1,10 +1,10 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.2.2.06122026"
+    version : "8.5.0.07122026"
 };
 console.log("v"+global.arc.version);
-const kernel_script = document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
+const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
 
 class ConfigurationManager {
     constructor(data) {
@@ -20,9 +20,11 @@ class ConfigurationManager {
         const _userSet = new Set();
         const _aliases = {
             CSSFILENAME: "ADOPTED_STYLESHEET",
+            FILENAME:    "CONTROLLER"
+        };
+        const _fallbacks = {
             ADOPTED_STYLESHEET: "CSSFILENAME",
-            FILENAME:    "CONTROLLER",
-            CONTROLLER:   "FILENAME"
+            CONTROLLER: "FILENAME"
         };
         const _deprecated = new Set(Object.keys(_aliases));
         const _attrMap = {
@@ -48,17 +50,17 @@ class ConfigurationManager {
                 
                 // Pass through: symbols, internal props, unmapped keys, or explicitly set values
                 if (typeof prop !== "string" || prop.startsWith("_") || !(prop in _attrMap) || _userSet.has(prop)) {
-                    return obj[prop] || obj[origProp];
+                    return obj[prop] ?? obj[origProp] ?? obj[_fallbacks[prop]];
                 }
                 // NAMESPACE: body attribute takes priority over script attribute
                 if (prop === "NAMESPACE") {
-                    var nsVal = kernel_script?.attributes[_attrMap[prop]]?.value || document.body?.attributes?.namespace?.value || obj[prop];
+                    var nsVal = kernel_script?.getAttribute(_attrMap[prop]) || document.body?.getAttribute("namespace") || obj[prop];
                     return nsVal;
                 }
                 // Script attribute fallback, then declared default
                 
-                const attrVal = kernel_script?.attributes[_attrMap[prop]]?.value;
-                return attrVal !== undefined ? attrVal : obj[prop]||obj[origProp];
+                const attrVal = kernel_script?.getAttribute(_attrMap[prop]);
+                return attrVal !== null && attrVal !== undefined ? attrVal : obj[prop] ?? obj[origProp] ?? obj[_fallbacks[prop]];
             },
             set: (obj, prop, value) => {
                 if(this._frozen) {
@@ -69,7 +71,10 @@ class ConfigurationManager {
                     console.warn(`Config.${prop} has been locked against changes`)
                     return true
                 }
-                if (_deprecated.has(prop)) `Config.${prop} is deprecated. Use Config.${_aliases[prop]} instead.`.deprecated();
+                if (_deprecated.has(prop)) {
+                    const msg = `Config.${prop} is deprecated. Use Config.${_aliases[prop]} instead.`;
+                    msg.deprecated ? msg.deprecated() : console.warn(`Deprecation: ${msg}`);
+                }
                 if (prop in _aliases) prop = _aliases[prop];
                 if (typeof prop === "string" && !prop.startsWith("_")) _userSet.add(prop);
                 obj[prop] = value;
@@ -95,7 +100,7 @@ globalThis.ConfigurationManager = ConfigurationManager;
 globalThis.Config = globalThis.Config || new ConfigurationManager({
     DYNAMICLOAD : true,
     CHARSET : "utf-8",
-    FILENAME : "index.*js",
+    FILENAME : (location.pathname.split("/").pop() || "index.html").replace(/\.html?$/i, ".*js"),
     ROOTPATH : "../../../",
     SRC_PATH : "/src/",
     ENVIRONMENT : "prod",
@@ -650,57 +655,6 @@ namespace `core.ui` (
             }    
         }
 
-        // async defineAncestralStylesheets() {
-        //     var ignore = ["WebComponent", "HtmlComponent", "Application", "HTMLElement", "IHtmlComponent", "_mixin_"];
-
-        //     for (let ancestor of this.constructor.ancestors) {
-        //         if (ancestor == this.constructor && !this.hasOwnSkin()) {
-        //             continue
-        //         }
-        //         if (ignore.includes(ancestor.name)) {
-        //             continue
-        //         }
-        //         if (!ancestor.prototype.hasOwnSkin()) {
-        //             break
-        //         }
-
-        //         var ns = ancestor.prototype.namespace;
-        //         var skin = ancestor.getSkin();
-        //         var pathname = window.location.pathname;
-        //             pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-        //         var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
-        //             cssPath = cssPath.replace(/\/\//g, "/");
-        //         var sheet;
-
-        //         try {
-        //             var _module = await this.importCSS(cssPath, ancestor,{with: { type: "css" } });
-        //             sheet = _module.default;
-        //         } catch (e) {console.warn(e);}
-
-        //         if(sheet && !this.inShadow()){
-        //             var shownError=false;
-        //             var rules = sheet.cssRules;
-        //             for(let rule of rules){
-        //                 if(rule?.selectorText?.includes(":host")){
-        //                     if(this instanceof Application) {
-        //                         !shownError && `Replace ':host' CSS declarations with ':root', in application, '${this.namespace}'`.deprecated("final")//console.error(`Replace ':host' declarations with ':root in application'`, this, sheet);
-        //                         shownError = true;
-        //                     }
-        //                     rule.selectorText = 
-        //                         rule.selectorText
-        //                             .replace(/\:host\(([^\)]*)\)/gm, (full, sel) => `:host${sel}`)
-        //                             .replace(/\:+host/gm, `.${ancestor.name}`);
-        //                 }
-        //             }
-        //         }
-
-        //         if(sheet){
-        //             sheet.constructor = ancestor;
-        //             sheet && this.stylesheets.add(sheet);
-        //         }
-        //     }
-        // }
-
         async defineAncestralStylesheets() {
             var ignore = ["WebComponent", "HtmlComponent", "Application", "HTMLElement", "IHtmlComponent", "_mixin_"];
 
@@ -711,22 +665,20 @@ namespace `core.ui` (
                 if (ignore.includes(ancestor.name)) {
                     continue
                 }
-                // if (!ancestor.prototype.hasOwnSkin()) {
-                //     break
-                // }
+
                 var sheet;
                 if(ancestor.prototype.hasOwnSkin()) {
                     var ns = ancestor.prototype.namespace;
                     var skin = ancestor.getSkin();
                     var pathname = window.location.pathname;
                         pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-                    var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
-                        cssPath = cssPath.replace(/\/\//g, "/");
+                    // var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
+                    //     cssPath = cssPath.replace(/\/\//g, "/");
                     
 
                     var NSPATH = ns.replace(/\./g, "/") + "/";
-                    // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, location.href).href);
-                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}index.css`, new URL(Config.ROOTPATH, document.baseURI).href);
+                    var stylesheet = this.getDefaultStylesheetFilename(ancestor);
+                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}${stylesheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
 
                     try {
                         var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
@@ -778,6 +730,20 @@ namespace `core.ui` (
 
         hasOwnSkin() {
             return this.constructor.skin||this.constructor.skin === undefined;
+        }
+
+        getDefaultStylesheetFilename(ancestor) {
+            if (ancestor == this.constructor && typeof Application == "function" && this instanceof Application) {
+                return this.getApplicationStylesheetFilename();
+            }
+            return "index.css";
+        }
+
+        getApplicationStylesheetFilename(filename = Config.FILENAME) {
+            return (filename || "index.*js")
+                .replace(/\.(src|min)\.js$/i, ".css")
+                .replace(/\.\*js$/i, ".css")
+                .replace(/\.js$/i, ".css");
         }
 
         static defineAncestors(){
@@ -852,7 +818,24 @@ namespace `core.ui` (
         }
 
         addEventListener(evtName, handler, bool=false, sel) {
-            if (sel) {
+            if (sel instanceof Node) {
+                // Delegate by node identity across shadow boundaries.
+                this.root.addEventListener(evtName, e => {
+                    var paths = e?.composedPath?.()||[];
+					var t = (paths.find(node => node === sel));
+					    t && (e.matchedTarget = t) && handler(e);
+                }, bool);
+            } else if (sel && this._arcSelectors(sel)) {
+                // >>> / ::document — let the selector engine resolve the real node
+                // (crossing shadow + same-origin iframe boundaries) and bind on it
+                // directly; composedPath can't reach across the iframe seam.
+                this.find(sel).then(target => {
+                    target && target.addEventListener(evtName, e => {
+                        e.matchedTarget = target;
+                        handler(e);
+                    }, bool);
+                });
+            } else if (sel) {
                 this.root.addEventListener(evtName, e => {
                     var paths = e?.composedPath?.()||[];
 					var t = (paths.find(node => node?.matches?.(sel)));
@@ -944,51 +927,17 @@ namespace `core.ui` (
         }
 
         async find(cssSel, scan_interval=300, scan_duration=3000) {
-            return new Promise(async (resolve, reject) => {
-                var el = this.querySelector(cssSel);
-                if(el) { resolve(el); return }
-                var timerid = setInterval(_ => {
-                    el = this.querySelector(cssSel);
-                    el && (clearInterval(timerid),resolve(el))
-                }, scan_interval);
-                setTimeout(_ =>(clearInterval(timerid), resolve(null)), scan_duration);
-            });
+            return this._waitFor(cssSel, false, 1, scan_duration);
         }
 
         async findAll(cssSel, {expect : count, scan_interval = 300, scan_duration = 3000} = {}) {
-            return new Promise((resolve, reject) => {
-                let nodes = Array.from(this.querySelectorAll(cssSel));
-                var interval_id;
-                var timer_id;
-                var observer;
-                var cleanup = () => {
-                    clearInterval(interval_id);
-                    clearInterval(timer_id);
-                }
-
-                this.subscribe("connected", e=> {
-                    cleanup();
-                    interval_id = setInterval(
-                        () => {
-                            nodes = Array.from(this.querySelectorAll(cssSel))
-                            if(count && nodes?.length >= count || !count && nodes?.length > 1 ) {
-                                cleanup();
-                                resolve(nodes);
-                                return
-                            }
-                        }, scan_interval
-                    );
-
-                    timer_id = setTimeout(
-                        () => {cleanup(); resolve(nodes); return}, scan_duration
-                    );
-                })
-            });
+            return this._waitFor(cssSel, true, count || 2, scan_duration);
         }
 
         querySelectorAll(cssSel) {
-            if (/\>{3}/.test(cssSel)) {
-                return this.$_(cssSel); // returns all matches as an array
+            const steps = this._arcSelectors(cssSel);
+            if (steps) {
+                return this.$_(steps); // Arc selectors return an array
             } else {
                 var res;
                 if (this.inShadow() || this.element) {
@@ -1002,8 +951,9 @@ namespace `core.ui` (
         }
 
         querySelector(cssSel) {
-            if (/\>{3}/.test(cssSel)) {
-                const res = this.$_(cssSel);
+            const steps = this._arcSelectors(cssSel);
+            if (steps) {
+                const res = this.$_(steps);
                 return res?.length ? res[0] : null;
             } else {
                 var res;
@@ -1017,32 +967,91 @@ namespace `core.ui` (
             }
         }
 
-        $(css) {
-            var res = this.$_(css);
-            return res?.length ? res[0]:null
+        _arcSelectors(css) {
+            const parts = css.split(/\s+(>>>|::document)\s+/);
+            return parts.length > 1 ? parts : null;
         }
 
-        $_(css) {
-            const selectors = css.split(/\s*>>>\s*/);
-            var length = selectors.length;
-            let roots = [this.root];
-            for (let i = 0; i < length; i++) {
-                const sel = selectors[i].trim();
-                let nextRoots = [];
-                for (const root of roots) {
-                    const nodes = Array.from(root.querySelectorAll(sel));
-                    if (i === length - 1) {
-                        nextRoots.push(...nodes);
-                    } else {
-                        var jlength = nodes.length;
-                        for (let j = 0; j < jlength; j++) {
-                            if (nodes[j].shadowRoot) nextRoots.push(nodes[j].shadowRoot);
-                        }
-                    }
+        $_(css, roots=[this.root], start=0, visit) {
+            const steps = typeof css == "string" ?
+                this._arcSelectors(css) || [css] : css;
+            for (let i = start; i < steps.length && roots.length; i += 2) {
+                visit?.(roots, i);
+                const selector = steps[i], operator = steps[i + 1], nodes = [];
+                for (const root of roots) nodes.push(...root.querySelectorAll(selector));
+                if (!operator) return nodes;
+
+                const previous = roots;
+                roots = [];
+                for (const node of nodes) {
+                    let root;
+                    try {
+                        root = operator == ">>>" ? node.shadowRoot :
+                            operator == "::document" ? node.contentDocument : null;
+                    } catch (e) {}
+                    if (root) roots.push(root);
+                    if (operator == "::document") visit?.(previous, i, node);
                 }
-                roots = nextRoots;
             }
-            return roots;
+            return [];
+        }
+
+        _waitFor(css, all, expect, duration) {
+            const steps = this._arcSelectors(css), arc = !!steps;
+            return new Promise(resolve => {
+                const observers = [], loads = [], watched = new WeakMap(), frames = new WeakSet();
+                let value = all ? [] : null, done = false;
+                const cleanup = () => {
+                    done = true;
+                    clearTimeout(timeout);
+                    for (const observer of observers) observer.disconnect();
+                    for (const pair of loads) pair[0].removeEventListener("load", pair[1]);
+                };
+                const finish = result => {
+                    value = all ? Array.from(result) : result;
+                    if ((all ? value.length >= expect : value)) {
+                        cleanup();
+                        resolve(value);
+                        return true;
+                    }
+                };
+                const run = (roots=[this.root], index=0) => {
+                    if (done) return;
+                    const result = arc ? this.$_(steps, roots, index, watch) :
+                        (all ? this.querySelectorAll(css) : this.querySelector(css));
+                    finish(all ? result : arc ? result[0] || null : result);
+                };
+                const watch = (roots, index, frame) => {
+                    if (frame) {
+                        if (frames.has(frame)) return;
+                        frames.add(frame);
+                        const listener = () => run(roots, index);
+                        frame.addEventListener("load", listener);
+                        loads.push([frame, listener]);
+                        return;
+                    }
+                    for (const root of roots) {
+                        let indexes = watched.get(root);
+                        if (!indexes) watched.set(root, indexes = new Set());
+                        if (indexes.has(index)) continue;
+                        indexes.add(index);
+                        const observer = new MutationObserver(() => run(roots, index));
+                        observer.observe(root, {childList:true, subtree:true});
+                        observers.push(observer);
+                    }
+                };
+                const timeout = setTimeout(() => {
+                    cleanup();
+                    resolve(value);
+                }, duration);
+                if (arc) run();
+                else {
+                    watch([this.root], 0);
+                    if (this.root != this) watch([this], 0);
+                    const result = all ? this.querySelectorAll(css) : this.querySelector(css);
+                    finish(result);
+                }
+            });
         }
  
         async disconnectedCallback(){
@@ -1164,53 +1173,15 @@ namespace `core.ui` (
             if(this.styles) {
                 var styles = this.styles;
                 for(let css of styles) {
-                    this.stylesheets.add(css)
+                    if(!this.stylesheets.includes(css)) {
+                        this.stylesheets.push(css)
+                    }
                 }
             }
             // Inline css() is now handled per-ancestor inside defineAncestralStylesheets()
             // to preserve correct interleaving: A.css → A.css() → B.css → B.css()
             await this.onAdoptStylesheets();
         }
-
-        // async loadStylesheets() {
-        //     if(this.styles) {
-        //         var styles = this.styles;
-        //         for(let css of styles) {
-        //             this.stylesheets.add(css)
-        //         }
-        //     }
-        //     await this.setInlineStylesheet()
-        //     await this.onAdoptStylesheets();
-        // }
-
-        // getCascadedCSS() {
-        //     let css = "";
-        //     const ancestors = this.constructor.ancestors || [];
-        //     for (let i = ancestors.length - 1; i >= 0; i--) {
-        //         const proto = ancestors[i].prototype;
-        //         if (proto) {
-        //             if (proto.hasOwnProperty("css")) {
-        //                 css += proto.css.call(this) + "\n";
-        //             } else if (proto.hasOwnProperty("cssStyle")) {
-        //                 // TODO - Optional: warn about deprecation
-        //                 `${ancestors[i].name || ancestors[i].constructor.name}: cssStyle() is deprecated. Please use css() instead.`.deprecated();
-        //                 css += proto.cssStyle.call(this) + "\n";
-        //             }
-        //         }
-        //     }
-        //     return css;
-        // }
-
-        // async setInlineStylesheet () {
-        //     if(this.constructor.csstext) {
-        //         var css = this.getCascadedCSS();
-        //         if(!css) { return }
-        //         var cctor = this.constructor;
-        //         css = await this.onTransformStyle(css, cctor);
-        //         css = this.createCSSStyleSheet(css, cctor);
-        //         this.stylesheets.push(css);
-        //     }
-        // }
 
         async onAppendStyle(stylesheet) {
             var root=this.shadowRoot||this.root;
@@ -1253,8 +1224,8 @@ namespace `core.ui` (
                 else {
                     var pathname = window.location.pathname;
                     pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-                    var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
-                        cssPath = cssPath.replace(/\/\//g, "/");
+                    // var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
+                    //     cssPath = cssPath.replace(/\/\//g, "/");
                     var NSPATH = this.namespace.replace(/\./g, "/") + "/";
                  // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, location.href).href);
                     var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
@@ -1322,6 +1293,7 @@ namespace `core.ui` (
     }
 );
 global.IHtmlComponent = core.ui.IHtmlComponent;
+
 
 namespace `core.ui` (
     class HtmlComponent extends IHtmlComponent {}
