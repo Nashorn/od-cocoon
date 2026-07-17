@@ -680,10 +680,16 @@ namespace `core.ui` (
                     var stylesheet = this.getDefaultStylesheetFilename(ancestor);
                     var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}${stylesheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
 
-                    try {
-                        var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
-                        sheet = _module.default;
-                    } catch (e) {console.warn(e);}
+                    // The app's own stylesheet may already be adopted at the
+                    // document level via data-adopted-stylesheet; if so, don't
+                    // load it a second time here.
+                    var isOwnTop = (ancestor == this.constructor);
+                    if (!(isOwnTop && this.shouldLoadOwnStyleSheet?.() === false)) {
+                        try {
+                            var _module = await this.importCSS(url.href, ancestor,{with: { type: "css" } });
+                            sheet = _module.default;
+                        } catch (e) {console.warn(e);}
+                    }
 
                     if(sheet && !this.inShadow()){
                         var shownError=false;
@@ -1181,6 +1187,22 @@ namespace `core.ui` (
             // Inline css() is now handled per-ancestor inside defineAncestralStylesheets()
             // to preserve correct interleaving: A.css → A.css() → B.css → B.css()
             await this.onAdoptStylesheets();
+            await this.adoptDocumentStyleSheets();
+        }
+
+        // Components that opt in (shouldAdoptDocumentStyleSheets() === true) pull the
+        // document-level adopted stylesheets into their shadow root so they inherit
+        // the app's shared styles. Default off, so components stay isolated.
+        shouldAdoptDocumentStyleSheets() { return false; }
+
+        async adoptDocumentStyleSheets() {
+            try {
+                if (this.shouldAdoptDocumentStyleSheets() && this.root?.adoptedStyleSheets) {
+                    this.root.adoptedStyleSheets.unshift(...document.adoptedStyleSheets);
+                }
+            } catch (e) {
+                console.warn("Error adopting document stylesheets", e);
+            }
         }
 
         async onAppendStyle(stylesheet) {
@@ -1313,6 +1335,13 @@ namespace `core.ui` (
 	    }
 
         onAwake(){}
+
+        // The app's own stylesheet is adopted early at the document level via the
+        // data-adopted-stylesheet script attribute. When that attribute already
+        // names this app's css, skip loading it again via the ancestral path.
+        shouldLoadOwnStyleSheet() {
+            return Config.ADOPTED_STYLESHEET !== this.getApplicationStylesheetFilename();
+        }
 
         onFixedUpdate (time) {
             if(this.isConnected) {
