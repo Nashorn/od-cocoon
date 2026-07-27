@@ -1,7 +1,8 @@
+//# allFunctionsCalledOnLoad
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.5.0.07122026"
+    version : "8.5.0.07272026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -448,6 +449,207 @@ Collection = window.Collection = domain.collections.Repository;
 // import 'src/system/machines/Automata.js';
 // import 'src/system/machines/State.js';
 // import 'src/system/http/Router.js';
+// SelectorResolver — cocoon's boundary-piercing selector engine, extracted into
+// a single cohesive, framework-agnostic class.
+//
+// It owns ALL selector logic (arc parsing, the >>> / ::document walk, querySelector
+// /querySelectorAll, and the async find/findAll/_waitFor). IHtmlComponent keeps only
+// thin one-line delegators to an instance of this (composition, has-a).
+//
+// PROPRIETARY SELECTOR GRAMMAR (the on-disk contract — must stay in lockstep):
+//   `A >>> B`         → descend from A into A.shadowRoot, then match B
+//   `A ::document B`  → descend from A into A.contentDocument (iframe), then match B
+//   both chain/nest arbitrarily (iframe-in-iframe, shadow-in-iframe, …).
+//
+// DUAL-BUNDLE: this file is a PLAIN class declaration (no `namespace`, no globals).
+// od-seam wraps each build in one shared IIFE scope, so the class is lexically
+// visible to sibling files in BOTH bundles:
+//   • arc-kernel  → concatenated into od-cocoon; IHtmlComponent references it.
+//   • DemoGeeni   → a copy under src/system/api/libs/ is seamed into preload.build.js;
+//                   the authoring overlay uses it in the isolated world.
+// Keep the two copies in sync manually for now.
+//
+// CONTEXT MODES:
+//   new SelectorResolver({ component })   → cocoon component; root/host/shadow/element
+//                                            are read LIVE off the component (never stale).
+//   new SelectorResolver({ root, host, element, shadow })  → explicit.
+//   new SelectorResolver()                → standalone: root = document (overlay default).
+class SelectorResolver {
+    constructor(ctx = {}) {
+        this._ctx = ctx || {};
+    }
+
+    // --- live context (component mode reads through to the component) ---
+    get root() {
+        const c = this._ctx.component;
+        return c ? c.root : (this._ctx.root || document);
+    }
+    // The element `super.querySelector*` was invoked on (the native fallback target).
+    // Component instances override querySelector*, so we must bypass the override.
+    get host() {
+        const c = this._ctx.component;
+        return c ? c : (this._ctx.host || null);
+    }
+    get element() {
+        const c = this._ctx.component;
+        return c ? c.element : (this._ctx.element || null);
+    }
+    get shadow() {
+        const c = this._ctx.component;
+        return c ? c.inShadow() : this._ctx.shadow;
+    }
+
+    // Native query that bypasses any cocoon override (mirrors `super.querySelector*`).
+    // Element instances → use the prototype to dodge the override; Document/ShadowRoot
+    // are already native.
+    _native(method, target, cssSel) {
+        if (!target) return method === 'querySelectorAll' ? [] : null;
+        if (target instanceof Element) return Element.prototype[method].call(target, cssSel);
+        return target[method](cssSel);
+    }
+
+    // Split a selector on the arc operators. Returns [seg, op, seg, op, …] or null
+    // when there are no boundaries to pierce (a plain CSS selector).
+    arcSelectors(css) {
+        const parts = css.split(/\s+(>>>|::document)\s+/);
+        return parts.length > 1 ? parts : null;
+    }
+
+    // The boundary-piercing walk (was `$_`): for each segment, query within the
+    // current roots, then descend into shadowRoot (>>>) / contentDocument (::document).
+    walk(css, roots = [this.root], start = 0, visit) {
+        const steps = typeof css == "string" ?
+            this.arcSelectors(css) || [css] : css;
+        for (let i = start; i < steps.length && roots.length; i += 2) {
+            visit?.(roots, i);
+            const selector = steps[i], operator = steps[i + 1], nodes = [];
+            for (const root of roots) nodes.push(...root.querySelectorAll(selector));
+            if (!operator) return nodes;
+
+            const previous = roots;
+            roots = [];
+            for (const node of nodes) {
+                let root;
+                try {
+                    root = operator == ">>>" ? node.shadowRoot :
+                        operator == "::document" ? node.contentDocument : null;
+                } catch (e) {}
+                if (root) roots.push(root);
+                if (operator == "::document") visit?.(previous, i, node);
+            }
+        }
+        return [];
+    }
+
+    querySelectorAll(cssSel) {
+        const steps = this.arcSelectors(cssSel);
+        if (steps) {
+            return this.walk(steps); // Arc selectors return an array
+        } else {
+            var res;
+            if (this.shadow || this.element) {
+                res = this.root.querySelectorAll(cssSel);
+            }
+            if (!res || !res?.length) {
+                res = this._native('querySelectorAll', this.host || this.root, cssSel);
+            }
+            return res;
+        }
+    }
+
+    querySelector(cssSel) {
+        const steps = this.arcSelectors(cssSel);
+        if (steps) {
+            const res = this.walk(steps);
+            return res?.length ? res[0] : null;
+        } else {
+            var res;
+            if (this.shadow || this.element) {
+                res = this.root.querySelector(cssSel);
+            }
+            if (!res) {
+                res = this._native('querySelector', this.host || this.root, cssSel);
+            }
+            return res;
+        }
+    }
+
+    // Convenience aliases for standalone callers (e.g. the authoring overlay) that
+    // want a settled, synchronous resolve without the find() wait machinery.
+    resolve(cssSel) { return this.querySelector(cssSel); }
+    resolveAll(cssSel) { return this.querySelectorAll(cssSel); }
+
+    async find(cssSel, scan_interval = 300, scan_duration = 3000) {
+        return this._waitFor(cssSel, false, 1, scan_duration);
+    }
+
+    async findAll(cssSel, { expect: count, scan_interval = 300, scan_duration = 3000 } = {}) {
+        return this._waitFor(cssSel, true, count || 2, scan_duration);
+    }
+
+    // Async resolve that awaits late-appearing nodes (mutations + iframe loads) up to
+    // `duration`. Host references map to the resolver's host (the component element),
+    // null in standalone mode.
+    _waitFor(css, all, expect, duration) {
+        const steps = this.arcSelectors(css), arc = !!steps;
+        const host = this.host;
+        return new Promise(resolve => {
+            const observers = [], loads = [], watched = new WeakMap(), frames = new WeakSet();
+            let value = all ? [] : null, done = false;
+            const cleanup = () => {
+                done = true;
+                clearTimeout(timeout);
+                for (const observer of observers) observer.disconnect();
+                for (const pair of loads) pair[0].removeEventListener("load", pair[1]);
+            };
+            const finish = result => {
+                value = all ? Array.from(result) : result;
+                if ((all ? value.length >= expect : value)) {
+                    cleanup();
+                    resolve(value);
+                    return true;
+                }
+            };
+            const run = (roots = [this.root], index = 0) => {
+                if (done) return;
+                const result = arc ? this.walk(steps, roots, index, watch) :
+                    (all ? this.querySelectorAll(css) : this.querySelector(css));
+                finish(all ? result : arc ? result[0] || null : result);
+            };
+            const watch = (roots, index, frame) => {
+                if (frame) {
+                    if (frames.has(frame)) return;
+                    frames.add(frame);
+                    const listener = () => run(roots, index);
+                    frame.addEventListener("load", listener);
+                    loads.push([frame, listener]);
+                    return;
+                }
+                for (const root of roots) {
+                    let indexes = watched.get(root);
+                    if (!indexes) watched.set(root, indexes = new Set());
+                    if (indexes.has(index)) continue;
+                    indexes.add(index);
+                    const observer = new MutationObserver(() => run(roots, index));
+                    observer.observe(root, {childList:true, subtree:true});
+                    observers.push(observer);
+                }
+            };
+            const timeout = setTimeout(() => {
+                cleanup();
+                resolve(value);
+            }, duration);
+            if (arc) run();
+            else {
+                watch([this.root], 0);
+                if (host && this.root != host) watch([host], 0);
+                const result = all ? this.querySelectorAll(css) : this.querySelector(css);
+                finish(result);
+            }
+        });
+    }
+}
+
 
 namespace `core.drivers.templating` (
     class Manager {
@@ -932,132 +1134,39 @@ namespace `core.ui` (
             })
         }
 
-        async find(cssSel, scan_interval=300, scan_duration=3000) {
-            return this._waitFor(cssSel, false, 1, scan_duration);
+        // Selector engine lives in SelectorResolver (composition). These are thin
+        // delegators; component-mode reads root/host/shadow/element live off `this`.
+        get _selectors() {
+            return this.__selectors ||
+                (this.__selectors = new SelectorResolver({ component: this }));
         }
 
-        async findAll(cssSel, {expect : count, scan_interval = 300, scan_duration = 3000} = {}) {
-            return this._waitFor(cssSel, true, count || 2, scan_duration);
+        async find(cssSel, scan_interval = 300, scan_duration = 3000) {
+            return this._selectors.find(cssSel, scan_interval, scan_duration);
+        }
+
+        async findAll(cssSel, opts) {
+            return this._selectors.findAll(cssSel, opts);
         }
 
         querySelectorAll(cssSel) {
-            const steps = this._arcSelectors(cssSel);
-            if (steps) {
-                return this.$_(steps); // Arc selectors return an array
-            } else {
-                var res;
-                if (this.inShadow() || this.element) {
-                    res = this.root.querySelectorAll(cssSel);
-                }
-                if (!res || !res?.length) {
-                    res = super.querySelectorAll(cssSel);
-                }
-                return res;
-            }
+            return this._selectors.querySelectorAll(cssSel);
         }
 
         querySelector(cssSel) {
-            const steps = this._arcSelectors(cssSel);
-            if (steps) {
-                const res = this.$_(steps);
-                return res?.length ? res[0] : null;
-            } else {
-                var res;
-                if (this.inShadow() || this.element) {
-                    res = this.root.querySelector(cssSel);
-                }
-                if (!res) {
-                    res = super.querySelector(cssSel);
-                }
-                return res;
-            }
+            return this._selectors.querySelector(cssSel);
         }
 
         _arcSelectors(css) {
-            const parts = css.split(/\s+(>>>|::document)\s+/);
-            return parts.length > 1 ? parts : null;
+            return this._selectors.arcSelectors(css);
         }
 
-        $_(css, roots=[this.root], start=0, visit) {
-            const steps = typeof css == "string" ?
-                this._arcSelectors(css) || [css] : css;
-            for (let i = start; i < steps.length && roots.length; i += 2) {
-                visit?.(roots, i);
-                const selector = steps[i], operator = steps[i + 1], nodes = [];
-                for (const root of roots) nodes.push(...root.querySelectorAll(selector));
-                if (!operator) return nodes;
-
-                const previous = roots;
-                roots = [];
-                for (const node of nodes) {
-                    let root;
-                    try {
-                        root = operator == ">>>" ? node.shadowRoot :
-                            operator == "::document" ? node.contentDocument : null;
-                    } catch (e) {}
-                    if (root) roots.push(root);
-                    if (operator == "::document") visit?.(previous, i, node);
-                }
-            }
-            return [];
+        $_(css, roots, start, visit) {
+            return this._selectors.walk(css, roots, start, visit);
         }
 
         _waitFor(css, all, expect, duration) {
-            const steps = this._arcSelectors(css), arc = !!steps;
-            return new Promise(resolve => {
-                const observers = [], loads = [], watched = new WeakMap(), frames = new WeakSet();
-                let value = all ? [] : null, done = false;
-                const cleanup = () => {
-                    done = true;
-                    clearTimeout(timeout);
-                    for (const observer of observers) observer.disconnect();
-                    for (const pair of loads) pair[0].removeEventListener("load", pair[1]);
-                };
-                const finish = result => {
-                    value = all ? Array.from(result) : result;
-                    if ((all ? value.length >= expect : value)) {
-                        cleanup();
-                        resolve(value);
-                        return true;
-                    }
-                };
-                const run = (roots=[this.root], index=0) => {
-                    if (done) return;
-                    const result = arc ? this.$_(steps, roots, index, watch) :
-                        (all ? this.querySelectorAll(css) : this.querySelector(css));
-                    finish(all ? result : arc ? result[0] || null : result);
-                };
-                const watch = (roots, index, frame) => {
-                    if (frame) {
-                        if (frames.has(frame)) return;
-                        frames.add(frame);
-                        const listener = () => run(roots, index);
-                        frame.addEventListener("load", listener);
-                        loads.push([frame, listener]);
-                        return;
-                    }
-                    for (const root of roots) {
-                        let indexes = watched.get(root);
-                        if (!indexes) watched.set(root, indexes = new Set());
-                        if (indexes.has(index)) continue;
-                        indexes.add(index);
-                        const observer = new MutationObserver(() => run(roots, index));
-                        observer.observe(root, {childList:true, subtree:true});
-                        observers.push(observer);
-                    }
-                };
-                const timeout = setTimeout(() => {
-                    cleanup();
-                    resolve(value);
-                }, duration);
-                if (arc) run();
-                else {
-                    watch([this.root], 0);
-                    if (this.root != this) watch([this], 0);
-                    const result = all ? this.querySelectorAll(css) : this.querySelector(css);
-                    finish(result);
-                }
-            });
+            return this._selectors._waitFor(css, all, expect, duration);
         }
  
         async disconnectedCallback(){
