@@ -2,7 +2,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.5.0.07272026"
+    version : "8.5.0.08172026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -511,7 +511,7 @@ class SelectorResolver {
     // Split a selector on the arc operators. Returns [seg, op, seg, op, …] or null
     // when there are no boundaries to pierce (a plain CSS selector).
     arcSelectors(css) {
-        const parts = css.split(/\s+(>>>|::document)\s+/);
+        const parts = css.split(/\s?(>>>|::document)\s?/);
         return parts.length > 1 ? parts : null;
     }
 
