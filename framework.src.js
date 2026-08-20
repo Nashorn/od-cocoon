@@ -2,7 +2,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.5.0.08172026"
+    version : "8.5.1.08202026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -1067,6 +1067,7 @@ namespace `core.ui` (
                 }
             }
             document.addEventListener(eventType, listener, capture);
+            return () => document.removeEventListener(eventType, listener, capture);
         }
 
         fire(type, data = {}) {
@@ -1170,6 +1171,7 @@ namespace `core.ui` (
         }
  
         async disconnectedCallback(){
+            this._unsubscribeSheets?.();
             await this.onDisconnected();
             this.onSleep();
         }
@@ -1307,11 +1309,22 @@ namespace `core.ui` (
         async adoptDocumentStyleSheets() {
             try {
                 if (this.shouldAdoptDocumentStyleSheets() && this.root?.adoptedStyleSheets) {
-                    this.root.adoptedStyleSheets.unshift(...document.adoptedStyleSheets);
+                    this._docSheetCount = 0;
+                    this._unsubscribeSheets = this.subscribe("stylesheet:adopted", e => this.onDocumentStylesheetAdopted(e));
                 }
             } catch (e) {
                 console.warn("Error adopting document stylesheets", e);
             }
+        }
+
+        // Document sheets stay ahead of the component's own, so the component
+        // keeps the last word in the cascade.
+        onDocumentStylesheetAdopted(event) {
+            var sheet = event.detail?.sheet;
+            if (!sheet || this.root.adoptedStyleSheets.includes(sheet)) { return }
+            var sheets = [...this.root.adoptedStyleSheets];
+                sheets.splice(this._docSheetCount++, 0, sheet);
+            this.root.adoptedStyleSheets = sheets;
         }
 
         async onAppendStyle(stylesheet) {
@@ -1606,6 +1619,7 @@ global.World = global.World||core.ui.World;
             const {default: sheet} = await proto.importCSS.call(proto, url);
             sheet.url = url;
             document.adoptedStyleSheets.push(sheet);
+            proto.fire.call(proto, "stylesheet:adopted", { sheet });
         } catch (e) {
             console.error(e);
         }
@@ -1613,7 +1627,10 @@ global.World = global.World||core.ui.World;
 }
 
 
-setTimeout(() => {
+;(function tryAdopt() {
+    // Config.CSSFILENAME can arrive from an inline script the parser has not
+    // reached yet; retry until it exists rather than guessing a delay.
+    if (!Config.CSSFILENAME && document.readyState === "loading") { return setTimeout(tryAdopt, 0) }
     var url;
     if (Config.CSSFILENAME) {
         let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
@@ -1634,10 +1651,8 @@ setTimeout(() => {
         //     preload.href = url;
         //     document.head.appendChild(preload);
     }
-    setTimeout(() => {
-        adoptDocumentStylesheet(url);
-    }, 0);
-}, kernel_script?.attributes["data-kernel"] ? 0 : 50); // Immediate adoption if kernel script is present, otherwise delay to allow for potential late configuration
+    adoptDocumentStylesheet(url);
+})();
 
 
 document.addEventListener("DOMContentLoaded", async e => {
