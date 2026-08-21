@@ -796,9 +796,44 @@ namespace `system.drivers.watchers` (
 );
 namespace `core.ui` (
     class IHtmlComponent extends HTMLElement {
+        /*
+            Styling surface.
+
+            Meant to be set or overridden by a component:
+
+                styles                          sheets this component adopts
+                cssStyle()                      inline css as a string
+                onTransformStyle(css, cls)      rewrite css before it is adopted
+                shouldAdoptDocumentStyleSheets()  which document sheets to pull in
+
+            Everything else here is the machinery those four drive, and a component
+            should not need to call it: loadStylesheets(), onAdoptStylesheets(),
+            loadStyleSheet(), onAppendStyle(), adoptDocumentStyleSheets(),
+            acceptsDocumentStyleSheet(),
+            onDocumentStylesheetAdopted(), defineAncestralStylesheets(), importCSS().
+        */
+
         static declarative = true;
         static csstext = true;
         lazy = this.hasAttribute("lazy") || false;
+
+        /*
+            Stylesheets this component adopts, in cascade order - the last entry
+            wins a tie. Entries may be:
+
+                "index.css"                 resolved against the component's
+                                            namespace folder
+                "https://cdn/icons.css"     absolute url, taken as-is
+                "/assets/theme.css"         "/", "./" and "../" are taken as-is
+                someCSSStyleSheet           a live sheet, adopted directly
+
+            Declared here so it exists before loadStylesheets() reads it. Use this
+            rather than stylesheets.add(), which is for foundation sheets that must
+            sit AHEAD of these - see loadStylesheets().
+
+                styles = ["index.css"];
+        */
+        styles = null;
 
         constructor(el,options) {
             super();
@@ -1286,6 +1321,26 @@ namespace `core.ui` (
                 this.root.setAttribute(name, val) : super.setAttribute(name, val)
         }
 
+        /*
+            Assembles the component's stylesheet list, then adopts it.
+
+            Cascade order in the resulting root, weakest first:
+
+                [ document sheets ] [ ancestral + .add() ] [ styles ]
+
+            Two channels feed the list, and the difference is priority, not taste:
+
+              .add()   unshifts, so it lands FIRST and is overridable. Foundations:
+                       ancestral sheets, inline css(), a vendor sheet the component
+                       then customises. Must run before this method - nothing reads
+                       the array again afterwards.
+
+              styles   pushes, so it lands LAST and wins ties. The component's own
+                       voice. A class field, so it is always in time.
+
+            Order only settles ties. Specificity still decides first, and a document
+            rule matching the host from outside beats anything in the shadow.
+        */
         async loadStylesheets() {
             if(this.styles) {
                 var styles = this.styles;
@@ -1301,9 +1356,18 @@ namespace `core.ui` (
             await this.adoptDocumentStyleSheets();
         }
 
-        // Components that opt in (shouldAdoptDocumentStyleSheets() === true) pull the
-        // document-level adopted stylesheets into their shadow root so they inherit
-        // the app's shared styles. Default off, so components stay isolated.
+        // Which document-level stylesheets this component pulls into its shadow root.
+        // Off by default, so components stay isolated. Sheets are matched by url and
+        // land ahead of the component's own, so its rules still win any tie.
+        //
+        //   return false                            // none (default)
+        //   return true                             // every document sheet
+        //   return ["tabler-icons"]                 // url contains this
+        //   return [/tabler/, "tokens.css"]         // any of these
+        //   return sheet => sheet.url?.endsWith(".theme.css")
+        //
+        // The publishing side is 'styles': an Application's root is the document, so
+        // styles = [url] there adopts at document level and announces it here.
         shouldAdoptDocumentStyleSheets() { return false; }
 
         async adoptDocumentStyleSheets() {
@@ -1319,15 +1383,28 @@ namespace `core.ui` (
 
         // Document sheets stay ahead of the component's own, so the component
         // keeps the last word in the cascade.
+        // Intent, in whichever shape suits the component: true adopts every document
+        // sheet, a string/RegExp (or array of them) matches against the sheet url,
+        // a function decides per sheet.
+        acceptsDocumentStyleSheet(sheet) {
+            var want = this.shouldAdoptDocumentStyleSheets();
+            if (!want) { return false }
+            if (want === true) { return true }
+            if (typeof want === "function") { return want(sheet) }
+            var href = sheet.url || sheet.href || "";
+            return [].concat(want).some(m => m instanceof RegExp ? m.test(href) : href.includes(m));
+        }
+
         onDocumentStylesheetAdopted(event) {
             var sheet = event.detail?.sheet;
             if (!sheet || this.root.adoptedStyleSheets.includes(sheet)) { return }
+            if (!this.acceptsDocumentStyleSheet(sheet)) { return }
             var sheets = [...this.root.adoptedStyleSheets];
                 sheets.splice(this._docSheetCount++, 0, sheet);
             this.root.adoptedStyleSheets = sheets;
         }
 
-        async onAppendStyle(stylesheet) {
+        async onAppendStyle(stylesheet, index = -1) {
             var root=this.shadowRoot||this.root;
             if(!root?.adoptedStyleSheets) {//when shadow dom is not supported
                 var styletag = document.head.querySelector(`style[namespace='${stylesheet.constructor.prototype.namespace}']`)
@@ -1339,20 +1416,47 @@ namespace `core.ui` (
                     stylesheet.appended = true;
             }
             else {
-                root.adoptedStyleSheets.push(//when shadow dom is supported
-                    stylesheet instanceof CSSStyleSheet ? 
-                        stylesheet : new CSSStyleSheet().replaceSync(stylesheet.innerText)
-                );
+                var sheet = stylesheet instanceof CSSStyleSheet ?
+                    stylesheet : new CSSStyleSheet().replaceSync(stylesheet.innerText);
+                if (index < 0) {
+                    root.adoptedStyleSheets.push(sheet);
+                }
+                else {
+                    root.adoptedStyleSheets = [
+                        ...root.adoptedStyleSheets.slice(0, index),
+                        sheet,
+                        ...root.adoptedStyleSheets.slice(index),
+                    ];
+                }
+                // Document-level sheets are shared: announce so shadow roots that
+                // opt in can adopt this one too.
+                if (root === document) { this.fire("stylesheet:adopted", { sheet }) }
             }
         }
 
 
+        /*
+            The adoption list, in cascade order.
+
+            add() UNSHIFTS on purpose: everything routed through it is a foundation
+            the component's own sheets must be able to override, so it has to sit
+            ahead of the `styles` entries that loadStylesheets() pushes on.
+
+            The initial walk in onAdoptStylesheets() happens once per connect, so an
+            add() after that adopts the sheet directly rather than waiting for a
+            second walk that never comes.
+        */
         get stylesheets() {
             this._stylesheets = this._stylesheets || [];
             if (!this._stylesheets.add) {
                 this._stylesheets.add = (sheet) => {
-                    if (!this._stylesheets.includes(sheet)) {
-                        this._stylesheets.unshift(sheet);
+                    if (this._stylesheets.includes(sheet)) { return }
+                    this._stylesheets.unshift(sheet);
+                    // Nothing walks the array again after onAdoptStylesheets(), so a
+                    // late add adopts itself - behind the document sheets, ahead of
+                    // the `styles` entries it must stay overridable by.
+                    if (this._stylesheetsLoaded) {
+                        this.loadStyleSheet(sheet, this._docSheetCount || 0);
                     }
                 }
             }
@@ -1360,29 +1464,39 @@ namespace `core.ui` (
         }
 
         async onAdoptStylesheets() {
-            var sheets = this.stylesheets;
-            for(let sheet of sheets){
-                if(sheet instanceof CSSStyleSheet){
-                    this.onAppendStyle(sheet);
-                }
-                else {
-                    var pathname = window.location.pathname;
-                    pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-                    // var cssPath = `${pathname}${Config.SRC_PATH}${this.namespace.replace(/\./g, "/")}/${sheet}`;
-                    //     cssPath = cssPath.replace(/\/\//g, "/");
-                    var NSPATH = this.namespace.replace(/\./g, "/") + "/";
-                 // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, location.href).href);
-                    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
+            for(let sheet of this.stylesheets){
+                await this.loadStyleSheet(sheet);
+            }
+            this._stylesheetsLoaded = true;
+        }
 
-                    try {
-                        var _module = await this.importCSS(url.href, this.constructor, {with: { type: "css" } });
-                        sheet = _module.default;
-                        sheet.constructor = this.constructor;
-                        this.onAppendStyle(sheet);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                }
+        /*
+            Resolves one entry and hands it to onAppendStyle().
+
+            index is the insertion point in the root's adopted list; the default
+            appends, which is what the initial walk wants. A late stylesheets.add()
+            passes an index so it lands in foundation position instead of winning.
+        */
+        async loadStyleSheet(sheet, index = -1) {
+            if(sheet instanceof CSSStyleSheet){
+                return this.onAppendStyle(sheet, index);
+            }
+
+            var NSPATH = this.namespace.replace(/\./g, "/") + "/";
+            // An absolute or explicitly prefixed entry names its own location;
+            // only a bare filename is resolved against the component's namespace.
+            var url = /^([a-z]+:)?\/\//i.test(sheet) || /^[.\/]/.test(sheet) ?
+                new URL(sheet, document.baseURI) :
+                new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
+
+            try {
+                var _module = await this.importCSS(url.href, this.constructor, {with: { type: "css" } });
+                sheet = _module.default;
+                sheet.constructor = this.constructor;
+                sheet.url = sheet.url || url.href;
+                this.onAppendStyle(sheet, index);
+            } catch (e) {
+                console.error(e);
             }
         }
 
