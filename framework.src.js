@@ -1790,7 +1790,7 @@ document.addEventListener("DOMContentLoaded", async e => {
   
   
   //TODO: Fix this
-  globalThis.Session = (top.Session || globalThis.Session);
+  globalThis.Session = ((() => { try { return top.Session; } catch (e) {} })() || globalThis.Session);
   let assetsloaded = false;
 
   try{await initImportMap();}catch(e){}
@@ -1943,7 +1943,7 @@ class ResourceLoader {
     }
 
     async calculateNetworkSpeed() {
-        return await top?.window.detectNetworkSpeed?.()||"fast"
+        try { return await top?.window.detectNetworkSpeed?.() || "fast" } catch (e) { return "fast" }
     }
 
     async getDebounceTime() {
