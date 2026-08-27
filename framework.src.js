@@ -2,7 +2,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.5.1.08202026"
+    version : "8.6.0.08272026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -911,7 +911,7 @@ namespace `core.ui` (
                         pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
                     // var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
                     //     cssPath = cssPath.replace(/\/\//g, "/");
-                    
+
 
                     var NSPATH = ns.replace(/\./g, "/") + "/";
                     var stylesheet = this.getDefaultStylesheetFilename(ancestor);
@@ -1231,24 +1231,35 @@ namespace `core.ui` (
         }
         
         async onConnected(data={}) { 
-            this.data = data;
-            await this.defineAncestralStylesheets();
-            await scheduler?.yield?.();
-            await this.loadStylesheets();
-            await scheduler?.yield?.();
-            await this.render(this.data);
-            await scheduler?.yield?.();
-            await this.setInternalAttributes();
-            await scheduler?.yield?.();
+            const token = {};
+            document.dispatchEvent(new CustomEvent("render:activity:start", {
+                detail: { token, kind: "component", target: this }
+            }));
+
             try {
-                this.internals?.states?.add("connected");
-            } 
-			catch {
-                this.internals?.states?.add("--connected");
+                this.data = data;
+                await this.defineAncestralStylesheets();
+                await scheduler?.yield?.();
+                await this.loadStylesheets();
+                await scheduler?.yield?.();
+                await this.render(this.data);
+                await scheduler?.yield?.();
+                await this.setInternalAttributes();
+                await scheduler?.yield?.();
+                try {
+                    this.internals?.states?.add("connected");
+                }
+                catch {
+                    this.internals?.states?.add("--connected");
+                }
+                await scheduler?.yield?.();
+                this.onAwake();
+                this.fire("connected");
+            } finally {
+                document.dispatchEvent(new CustomEvent("render:activity:end", {
+                    detail: { token, kind: "component", target: this }
+                }));
             }
-            await scheduler?.yield?.();
-            this.onAwake();
-            this.fire("connected");
         }
 
         onAwake(){
@@ -1533,20 +1544,31 @@ namespace `core.ui` (
 
         async importCSS(cssPath, ancestor, options) {
             cssPath = new URL(cssPath.replace(/\/src\/src\//, "/src/")).href;
-            if ('supports' in CSS && CSS.supports('color', 'var(--test)')) {
-                try {
-                    const dynamicImport = new Function('cssPath', 
-                        'return import(cssPath, {with: {type: "css"}})');
-                    return await dynamicImport(cssPath);
-                } catch (e) {
-                    console.warn(e);
-                }
-            }
+            const token = {};
+            document.dispatchEvent(new CustomEvent("render:activity:start", {
+                detail: { token, kind: "stylesheet", url: cssPath }
+            }));
 
-            const response = await fetch(cssPath);
-            const cssText = await response.text();
-            const sheet = this.createCSSStyleSheet(cssText, this.constructor);
-            return { default: sheet };
+            try {
+                if ('supports' in CSS && CSS.supports('color', 'var(--test)')) {
+                    try {
+                        const dynamicImport = new Function('cssPath',
+                            'return import(cssPath, {with: {type: "css"}})');
+                        return await dynamicImport(cssPath);
+                    } catch (e) {
+                        console.warn(e);
+                    }
+                }
+
+                const response = await fetch(cssPath);
+                const cssText = await response.text();
+                const sheet = this.createCSSStyleSheet(cssText, this.constructor);
+                return { default: sheet };
+            } finally {
+                document.dispatchEvent(new CustomEvent("render:activity:end", {
+                    detail: { token, kind: "stylesheet", url: cssPath }
+                }));
+            }
         }
     }
 );
@@ -1740,55 +1762,43 @@ global.World = global.World||core.ui.World;
     }
 }
 
-
-;(function tryAdopt() {
-    // Config.CSSFILENAME can arrive from an inline script the parser has not
-    // reached yet; retry until it exists rather than guessing a delay.
-    if (!Config.CSSFILENAME && document.readyState === "loading") { return setTimeout(tryAdopt, 0) }
+function tryAdopt(attempt = 0) {
+    if (!Config.CSSFILENAME && document.readyState === "loading" && attempt < 10) {
+        return setTimeout(() => tryAdopt(attempt + 1), 5);
+    }
     var url;
     if (Config.CSSFILENAME) {
         let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
         var nsPath = ns ? ns.replace(/\./g, "/") + "/" : "";
         if (/^[.\/]/.test(Config.CSSFILENAME)) {
-            // Explicit prefix (/, ./, ../) — resolve relative to current page
-            // url = new URL(Config.CSSFILENAME, location.href).href;
             url = new URL(Config.CSSFILENAME, document.baseURI).href;
         } else {
-            // No prefix — load from namespace's src path
-            // url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, location.href).href).href;
             url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, document.baseURI).href).href;
         }
         url = url.replace(/\/src\/src\//, "/src/");
-        // var preload = document.createElement('link');
-        //     preload.rel = 'preload';
-        //     preload.as = 'style';
-        //     preload.href = url;
-        //     document.head.appendChild(preload);
     }
     adoptDocumentStylesheet(url);
-})();
+}
+
+
+function isShell() {
+    var role = kernel_script?.getAttribute("data-frame-role")
+        || document.documentElement?.getAttribute("data-frame-role")
+        || Config.FRAME_ROLE;
+    if (role) { return String(role).toLowerCase() === "shell" }
+    return !!document.querySelector("iframe#mainFrame");//legacy fallback for shell detection
+}
+
+function getRenderObserver() {
+    var name = new URLSearchParams(location.search).get("loader");
+    try { name ||= new URLSearchParams(top.location.search).get("loader") } catch (e) {}
+    var observers = { ResourceLoader, PageRenderObserver };
+    name && !observers[name] && console.warn(`?loader=${name} is not a known observer. Using ResourceLoader.`);
+    return new (observers[name] || ResourceLoader)();
+}
 
 
 document.addEventListener("DOMContentLoaded", async e => {
-  setTimeout(()=>{
-    // Only run ResourceLoader in content pages, not in frameset shells
-    const isFramesetShell = document.querySelector('iframe#mainFrame');
-    if (!isFramesetShell) {
-        if(Config?.ENABLE_SPLASH == undefined || Config?.ENABLE_SPLASH){
-            const loader = new ResourceLoader();
-            try{loader.init()}catch (e) {console.error(e)} 
-        }
-        else {
-            window.dispatchEvent(new CustomEvent("page:rendered"), {
-                detail: location.href,
-                bubbles: true,
-                cancelable: true
-            });
-        }
-    }
-  }, 300)
-  
-  
   //TODO: Fix this
   globalThis.Session = ((() => { try { return top.Session; } catch (e) {} })() || globalThis.Session);
   let assetsloaded = false;
@@ -1796,83 +1806,18 @@ document.addEventListener("DOMContentLoaded", async e => {
   try{await initImportMap();}catch(e){}
   await wait(10);
 
-
-  if(Config.SPLASH){
-    let path = Config.SRC_PATH + Config.SPLASH.replace(/\./gm,"/") + "/index.js";
-    try{await import(path)}catch(e){console.error(e); assetsloaded=true}
-    var Splash = classof(Config.SPLASH)
-    if(Splash){
-        var splash = document.body.querySelector(`#splash, [namespace='${Config.SPLASH}']`)||new Splash;
-            splash.addEventListener("loaded", e=> assetsloaded=true, true)
-            splash.setAttribute("duration", Config.SPLASH_FADE_DELAY)
-        document.body.appendChild(splash);
-        document.body.style.opacity=1;
-    }else {assetsloaded=true}
-  } else {
-    assetsloaded=true; 
-    setTimeout(()=>document.body.style.opacity=1, 300)
-  };
-
-  let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
-
-//   async function bootup() {
-//     if (ns && Config.DYNAMICLOAD) {
-//       if(Config.APP_WAITS_ON_SPLASH && !assetsloaded){
-//         await sleep(100);
-//         bootup();
-//         return;
-//       }
-//       else {
-//         var filename = Config.FILENAME||(location.pathname.split("/").pop()||"index.html").replace(/\.html?$/i, ".*js");
-//         var filename_path = "../../" + Config.SRC_PATH + (ns.replace(/\./g, "/"))  + "/" + filename;
-//         var path = Config.USE_COMPRESSED_BUILD ? 
-//           filename_path.replace("*", Config.DEBUG ? "src.":"min."):
-//           filename_path.replace("*","");
-//           path = path.replace(/\/\//g, "/"); 
-
-//         await import(path).then(async function init(){
-//           if(!NSRegistry[ns]) {
-//             await wait(50);init();return;
-//           }
-//           let app = window.application = (
-//             window.application||new NSRegistry[ns](document)
-//           );
-//           if(typeof World =="function" && app instanceof World) {
-//             window.world=app;
-//             let loop = MainLoop;
-//             app.onUpdate      && loop.setBegin(app.onUpdate);
-//             app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
-//             app.onDraw        && loop.setDraw(app.onDraw);
-//             app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
-//             loop.setSimulationTimestep(app.getSimulationTimestep());
-//           }
-//         });
-//       }
-//     }
-//     else {
-//       let app = new NSRegistry['core.ui.Application'](document);
-//     }
-//   };
-
-//   bootup();
-// }, false);
-
+let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
 
 async function bootup() {
-    // const ns = Config.NAMESPACE;
     var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
-
-    // var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, location.href).href);
-    //     url = new URL(url.href.replace(/\/src\/src\//, "/src/"));
     var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, document.baseURI).href);
 
     console.log("Bootloader: Loading controller from", url);
     if (ns && Config.DYNAMICLOAD) {
-      var filename_path = url.href;//"../../" + Config.SRC_PATH + (ns.replace(/\./g, "/")) + "/" + Config.CONTROLLER;
+      var filename_path = url.href;
       var path = Config.USE_COMPRESSED_BUILD ?
         filename_path.replace("*", Config.DEBUG ? "src." : "min.") :
         filename_path.replace("*", "");
-        // path = path.replace(/\/\//g, "/");
         path = new URL(path);
       await import(path.href).then(async function init() {
         if (!NSRegistry[ns]) {
@@ -1899,6 +1844,217 @@ async function bootup() {
 
 
 
+
+class PageRenderObserver {
+    dispatch(evtName, detail = location.href) {
+        PageRenderObserver.dispatch(evtName, detail);
+    }
+
+    static dispatch(evtName, detail = location.href) {
+        window.dispatchEvent(new CustomEvent(evtName, {
+            detail: detail, bubbles: true, cancelable: true,
+        }));
+        if (window.parent && window.parent !== window) {
+            try { window.parent.dispatchEvent(new CustomEvent(evtName, { detail: detail })) } catch (e) {}
+        }
+    }
+
+    static QUIET_MS = 300;
+    static FLOOR_MS = 250;
+    static DEADLINE_MS = 20000;
+
+    constructor() {
+        this.observers = [];
+        this.pendingActivities = new Set();
+        this.inflight = 0;
+        this.done = false;
+        this.fontsReady = false;
+        this.blockedBy = "boot";
+    }
+
+    watch() {
+        if (this._watching) { return this }
+        this._watching = true;
+        this.armed = false;
+        this.started = performance.now();
+        this.lastActivity = this.started;
+        this._deadlineId = setTimeout(() => this.finalize("deadline"), this.deadline());
+        this.watchPerformance();
+        this.watchMutations();
+        this.watchNetwork();
+        this.watchFonts();
+        this._onActivityStart = event => {
+            var token = event.detail?.token;
+            if (!token) { return }
+            this.pendingActivities.add(token);
+            this.touch(event.detail.kind || "framework activity");
+            // if (Config.DEBUG && event.detail.kind === "component") {
+            //     console.log("component:rendering", event.detail.target);
+            // }
+        };
+        this._onActivityEnd = event => {
+            var token = event.detail?.token;
+            if (!token) { return }
+            this.pendingActivities.delete(token);
+            this.touch(event.detail.kind || "framework activity");
+            if (Config.DEBUG && event.detail.kind === "component") {
+                console.log("component:rendered", event.detail.target);
+            }
+        };
+        document.addEventListener("render:activity:start", this._onActivityStart);
+        document.addEventListener("render:activity:end", this._onActivityEnd);
+        this._tickId = setInterval(() => this.check(), 100);
+        return this;
+    }
+
+    async init() {
+        this.watch();
+        return this.armed ? this : this.arm();
+    }
+
+    arm() {
+        this.armed = true;
+        this.check();
+        return this;
+    }
+
+    stop() {
+        this.done = true;
+        clearTimeout(this._deadlineId);
+        clearInterval(this._tickId);
+        this.teardown();
+    }
+
+    deadline() {
+        return Number(Config.RENDER_OBSERVER_TIMEOUT) || PageRenderObserver.DEADLINE_MS;
+    }
+
+    touch(source) {
+        this.lastActivity = performance.now();
+        this.blockedBy = source;
+    }
+
+    watchPerformance() {
+        for (let type of ["resource", "layout-shift", "largest-contentful-paint", "paint"]) {
+            try {
+                var observer = new PerformanceObserver(list => {
+                    if (list.getEntries().length) { this.touch(type) }
+                });
+                observer.observe({ type: type, buffered: true });
+                this.observers.push(observer);
+            } catch (e) { /* unsupported entry type: contributes nothing, blocks nothing */ }
+        }
+    }
+
+    watchMutations() {
+        try {
+            this._mutations = new MutationObserver(() => this.touch("dom"));
+            this._mutations.observe(document.documentElement, {
+                childList: true, subtree: true, attributes: true, characterData: true,
+            });
+        } catch (e) {}
+    }
+
+    watchNetwork() {
+        var self = this;
+
+        this._fetch = window.fetch;
+        if (typeof this._fetch === "function") {
+            window.fetch = function (...args) {
+                self.inflight++;
+                self.touch("fetch");
+                return self._fetch.apply(this, args).finally(() => {
+                    self.inflight--;
+                    self.touch("fetch");
+                });
+            };
+        }
+
+        this._xhrSend = window.XMLHttpRequest?.prototype?.send;
+        if (typeof this._xhrSend === "function") {
+            var send = this._xhrSend;
+            window.XMLHttpRequest.prototype.send = function (...args) {
+                self.inflight++;
+                self.touch("xhr");
+                this.addEventListener("loadend", () => {
+                    self.inflight--;
+                    self.touch("xhr");
+                }, { once: true });
+                return send.apply(this, args);
+            };
+        }
+    }
+
+    teardown() {
+        this.observers.forEach(o => { try { o.disconnect() } catch (e) {} });
+        try { this._mutations?.disconnect() } catch (e) {}
+        document.removeEventListener("render:activity:start", this._onActivityStart);
+        document.removeEventListener("render:activity:end", this._onActivityEnd);
+        this.restoreNetwork();
+    }
+
+    restoreNetwork() {
+        if (this._fetch) { window.fetch = this._fetch }
+        if (this._xhrSend) { window.XMLHttpRequest.prototype.send = this._xhrSend }
+    }
+
+    watchFonts() {
+        if (!document.fonts) { this.fontsReady = true; return }
+        document.fonts.ready.then(() => { this.fontsReady = true; this.touch("fonts") })
+                            .catch(() => { this.fontsReady = true });
+    }
+
+    check() {
+        if (this.done || !this.armed) { return }
+        var now = performance.now();
+        if (now - this.started < PageRenderObserver.FLOOR_MS) { this.blockedBy = "floor"; return }
+        if (this.pendingActivities.size) { this.blockedBy = "framework activity"; return }
+        if (!this.fontsReady) { this.blockedBy = "fonts"; return }
+        if (this.inflight > 0) { this.blockedBy = "network"; return }
+        if (now - this.lastActivity < PageRenderObserver.QUIET_MS) { this.blockedBy = "no activity"; return }
+        this.finalize("settled");
+    }
+
+    finalize(reason) {
+        if (this.done) { return }
+        if (!this.armed) { this.stop(); return }
+        if (document.readyState === "loading") {
+            if (!this._finalizeOnDOMContentLoaded) {
+                this._finalizeOnDOMContentLoaded = true;
+                document.addEventListener("DOMContentLoaded", () => {
+                    this._finalizeOnDOMContentLoaded = false;
+                    this.finalize(reason);
+                }, { once: true });
+            }
+            return
+        }
+        this.done = true;
+        clearTimeout(this._deadlineId);
+        clearInterval(this._tickId);
+        this.teardown();
+
+        var detail = {
+            reason: reason,
+            elapsed: Math.round(performance.now() - this.started),
+            blockedBy: this.blockedBy,
+            href: location.href,
+        };
+        if (Config.DEBUG) {
+            console.log(`page:rendered (${reason}) after ${detail.elapsed}ms, last blocker: ${detail.blockedBy}`);
+        }
+
+        this.dispatch("page:pre:rendered", detail);
+
+        var fired = false;
+        var announce = () => {
+            if (fired) { return }
+            fired = true;
+            this.dispatch("page:rendered", detail);
+        };
+        requestAnimationFrame(() => requestAnimationFrame(announce));
+        setTimeout(announce, 50);
+    }
+}
 
 class ResourceLoader {
     constructor() {
@@ -1974,7 +2130,7 @@ class ResourceLoader {
                 const currentProgress = this.calculateProgress();
                 if (currentProgress !== this.lastProgress) {
                     this.lastProgress = currentProgress;
-                    
+
                     // Dispatch preloaded event once at 75% progress
                     if (!this.preloadedDispatched && currentProgress >= 75) {
                         this.preloadedDispatched = true;
@@ -1998,13 +2154,13 @@ class ResourceLoader {
         }
         if (this.isAllCriticalResourcesLoaded()) {
             this.criticalResourcesLoaded = true;
-            
+
             // Dispatch critical resources loaded event once
             if (!this.criticalLoadedDispatched) {
                 this.criticalLoadedDispatched = true;
                 this.dispatch("page:critical:loaded");
             }
-            
+
             this.debouncedUpdate();
         }
     }
@@ -2030,24 +2186,29 @@ class ResourceLoader {
         }
     }
 
-    dispatch(evtName){
-        window.dispatchEvent(new CustomEvent(evtName), {
-            detail: location.href,
+    dispatch(evtName, detail = location.href){
+        window.dispatchEvent(new CustomEvent(evtName, {
+            detail: detail,
             bubbles: true,
             cancelable: true
-        });
+        }));
     }
 
     finalize(reason) {
+        if (document.readyState === "loading") {
+            if (!this._finalizeOnDOMContentLoaded) {
+                this._finalizeOnDOMContentLoaded = true;
+                document.addEventListener("DOMContentLoaded", () => {
+                    this._finalizeOnDOMContentLoaded = false;
+                    this.finalize(reason);
+                }, { once: true });
+            }
+            return
+        }
         this.dispatch("page:pre:rendered");
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    // window.dispatchEvent(new CustomEvent("page:rendered"), {
-                    //     detail: location.href,
-                    //     bubbles: true,
-                    //     cancelable: true
-                    // });
                     this.dispatch("page:rendered");
                     if(reason ==='timeout' && this.requiredCriticalResources.size !== this.criticalResources.size){
                         console.group("🚨 ResourceLoader: Finalized due to timeout");
@@ -2063,10 +2224,30 @@ class ResourceLoader {
                         console.error(`Missing ${this.requiredCriticalResources.size - this.criticalResources.size} critical resources`);
                         console.groupEnd();
                     }
-                }, Config.SPLASH_TIMEOUT); 
+                }, Config.SPLASH_TIMEOUT);
                 this.observer.disconnect();
             });
         });
     }
 };
+
+window.addEventListener("page:rendered", e => document.body.style.opacity = 1, { once: true });
+
+globalThis.__pageRenderObserver = (function () {
+    // Top-level pages and direct child frames have parent === top; block frames nested any deeper.
+    if (isShell() || window.parent !== window.top) { return null }
+    try {
+        var observer = getRenderObserver();
+        observer.init().catch(e =>
+            console.error("Render observer initialization failed", e)
+        );
+        return observer;
+    } catch (e) {
+        console.error("RenderObserver", e);
+        return null;
+    }
+})();
+
+tryAdopt();
+
  })(this)
