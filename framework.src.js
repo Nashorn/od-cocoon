@@ -911,7 +911,7 @@ namespace `core.ui` (
                         pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
                     // var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
                     //     cssPath = cssPath.replace(/\/\//g, "/");
-
+                    
 
                     var NSPATH = ns.replace(/\./g, "/") + "/";
                     var stylesheet = this.getDefaultStylesheetFilename(ancestor);
@@ -1789,16 +1789,8 @@ function isShell() {
     return !!document.querySelector("iframe#mainFrame");//legacy fallback for shell detection
 }
 
-function getRenderObserver() {
-    var name = new URLSearchParams(location.search).get("loader");
-    try { name ||= new URLSearchParams(top.location.search).get("loader") } catch (e) {}
-    var observers = { ResourceLoader, PageRenderObserver };
-    name && !observers[name] && console.warn(`?loader=${name} is not a known observer. Using ResourceLoader.`);
-    return new (observers[name] || ResourceLoader)();
-}
-
-
 document.addEventListener("DOMContentLoaded", async e => {
+  document.body.style.opacity = 1
   //TODO: Fix this
   globalThis.Session = ((() => { try { return top.Session; } catch (e) {} })() || globalThis.Session);
   let assetsloaded = false;
@@ -1948,9 +1940,16 @@ class PageRenderObserver {
 
     watchMutations() {
         try {
-            this._mutations = new MutationObserver(() => this.touch("dom"));
+            this._mutations = new MutationObserver(records => {
+                if (records.some(record =>
+                    record.type === "childList" &&
+                    (record.addedNodes.length || record.removedNodes.length)
+                )) {
+                    this.touch("dom");
+                }
+            });
             this._mutations.observe(document.documentElement, {
-                childList: true, subtree: true, attributes: true, characterData: true,
+                childList: true, subtree: true,
             });
         } catch (e) {}
     }
@@ -2011,7 +2010,7 @@ class PageRenderObserver {
         if (this.pendingActivities.size) { this.blockedBy = "framework activity"; return }
         if (!this.fontsReady) { this.blockedBy = "fonts"; return }
         if (this.inflight > 0) { this.blockedBy = "network"; return }
-        if (now - this.lastActivity < PageRenderObserver.QUIET_MS) { this.blockedBy = "no activity"; return }
+        if (now - this.lastActivity < PageRenderObserver.QUIET_MS) { this.blockedBy = "recent activity"; return }
         this.finalize("settled");
     }
 
@@ -2056,189 +2055,15 @@ class PageRenderObserver {
     }
 }
 
-class ResourceLoader {
-    constructor() {
-        this.totalResources = 0;
-        this.loadedResources = 0;
-        this.totalLoadTime = 0;
-        this.criticalResourcesLoaded = false;
-        this.lastProgress = 0;
-        this.preloadedDispatched = false;
-        this.criticalLoadedDispatched = false;
-        this.criticalResources = new Set(); // Tracks loaded critical resources
-        this.requiredCriticalResources = new Set();
-    }
-
-    async init() {
-        this.debouncedUpdate = this.updateProgress.debounce(await this.getDebounceTime());
-        this.observer = new PerformanceObserver(this.handleEntries.bind(this));
-        this.observer.observe({ type: 'resource', buffered: true });
-
-        this.parseCriticalResources();
-        // --- Fallback Timeout: ---
-        var timeOut = await this.getTimeoutDuration();
-        this._timeoutId = setTimeout(() => this.finalize('timeout'), timeOut);
-
-        return this;
-    }
-
-    parseCriticalResources() {
-        if (!Config.CRITICAL_RESOURCES) return;
-        const criticalPatterns = Config.CRITICAL_RESOURCES.split('|');
-        this.requiredCriticalResources = new Set(criticalPatterns);
-    }
-
-    async getTimeoutDuration() {
-        const speed = await this.calculateNetworkSpeed();
-        const timeouts = {
-            fast: window.location.protocol === "file:" ? 500 : 15000,    // 15 seconds for fast connections
-            medium: 30000,  // 30 seconds for medium connections
-            slow: 60000     // 60 seconds for slow connections
-        };
-        return timeouts[speed] || 30000; // Default to 30 seconds
-    }
-
-    async calculateNetworkSpeed() {
-        try { return await top?.window.detectNetworkSpeed?.() || "fast" } catch (e) { return "fast" }
-    }
-
-    async getDebounceTime() {
-        const speed = await this.calculateNetworkSpeed();
-        const times = {
-            fast: this.criticalResourcesLoaded ? 100 : 100,
-            medium: this.criticalResourcesLoaded ? 800 : 800,
-            slow: this.criticalResourcesLoaded ? 1500 : 2000
-        };
-        return times[speed] || 1000;
-    }
-
-    calculateProgress() {
-        var progress = Math.min(Math.round((this.loadedResources / Math.max(this.totalResources, 1)) * 100), 100);
-        return progress;
-    }
-
-    handleEntries = async (list) => {
-        const entries = list.getEntriesByType('resource');
-        this.totalResources += entries.length;
-
-        for (let entry of entries) {
-            if (entry.responseEnd > 0) {
-                this.loadedResources++;
-
-                this.trackCriticalResource(entry.name);
-
-                const currentProgress = this.calculateProgress();
-                if (currentProgress !== this.lastProgress) {
-                    this.lastProgress = currentProgress;
-
-                    // Dispatch preloaded event once at 75% progress
-                    if (!this.preloadedDispatched && currentProgress >= 75) {
-                        this.preloadedDispatched = true;
-                        this.dispatch("page:initial:loaded");
-                    }
-                }
-
-                this.debouncedUpdate();
-                await scheduler?.yield?.();
-            }
-        }
-    }
-
-    trackCriticalResource(resourceName) {
-        for (let criticalPattern of this.requiredCriticalResources) {
-            const regEx = new RegExp(criticalPattern);
-            if (regEx.test(resourceName)) {
-                this.criticalResources.add(criticalPattern);
-                break;
-            }
-        }
-        if (this.isAllCriticalResourcesLoaded()) {
-            this.criticalResourcesLoaded = true;
-
-            // Dispatch critical resources loaded event once
-            if (!this.criticalLoadedDispatched) {
-                this.criticalLoadedDispatched = true;
-                this.dispatch("page:critical:loaded");
-            }
-
-            this.debouncedUpdate();
-        }
-    }
-
-    isAllCriticalResourcesLoaded() {
-        if (this.requiredCriticalResources.size === 0) return true;
-        return this.requiredCriticalResources.size === this.criticalResources.size;
-    }
-
-    updateProgress = () => {
-        this.parseCriticalResources();
-        const percent = this.calculateProgress();
-        if (percent === 100) {
-            // If there are critical resources, require them to be loaded
-            if (this.requiredCriticalResources.size > 0) {
-                if (this.criticalResourcesLoaded) {
-                    this.finalize();
-                }
-            } else {
-                // No critical resources: finalize as soon as all resources loaded
-                this.finalize();
-            }
-        }
-    }
-
-    dispatch(evtName, detail = location.href){
-        window.dispatchEvent(new CustomEvent(evtName, {
-            detail: detail,
-            bubbles: true,
-            cancelable: true
-        }));
-    }
-
-    finalize(reason) {
-        if (document.readyState === "loading") {
-            if (!this._finalizeOnDOMContentLoaded) {
-                this._finalizeOnDOMContentLoaded = true;
-                document.addEventListener("DOMContentLoaded", () => {
-                    this._finalizeOnDOMContentLoaded = false;
-                    this.finalize(reason);
-                }, { once: true });
-            }
-            return
-        }
-        this.dispatch("page:pre:rendered");
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                setTimeout(() => {
-                    this.dispatch("page:rendered");
-                    if(reason ==='timeout' && this.requiredCriticalResources.size !== this.criticalResources.size){
-                        console.group("🚨 ResourceLoader: Finalized due to timeout");
-                        // Create comparison table
-                        const resourceComparison = {};
-                        this.requiredCriticalResources.forEach(resource => {
-                            resourceComparison[resource] = {
-                                Required: "✓",
-                                Loaded: this.criticalResources.has(resource) ? "✓" : "❌"
-                            };
-                        });
-                        console.table(resourceComparison);
-                        console.error(`Missing ${this.requiredCriticalResources.size - this.criticalResources.size} critical resources`);
-                        console.groupEnd();
-                    }
-                }, Config.SPLASH_TIMEOUT);
-                this.observer.disconnect();
-            });
-        });
-    }
-};
-
 window.addEventListener("page:rendered", e => document.body.style.opacity = 1, { once: true });
 
 globalThis.__pageRenderObserver = (function () {
     // Top-level pages and direct child frames have parent === top; block frames nested any deeper.
-    if (isShell() || window.parent !== window.top) { return null }
+    // if (isShell() || window.parent !== window.top) { return null }
+    if (isShell()) { return null }
     try {
-        var observer = getRenderObserver();
-        observer.init().catch(e =>
+        var observer = new PageRenderObserver();
+        observer.init().catch(e => 
             console.error("Render observer initialization failed", e)
         );
         return observer;
