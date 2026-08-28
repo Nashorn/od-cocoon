@@ -2,7 +2,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.6.0.08272026"
+    version : "8.6.1.08282026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
@@ -217,33 +217,33 @@ Function.prototype.debounce = function (delay, immediate=true) {
 window.classof = function(ns){ return NSRegistry[ns] }
 
 
-async function initImportMap () {
-  window.importmap={};
-  async function importmap(){
-      if(!Config.IMPORT_MAPS){return}
-      var importMapScript = document.head.querySelector("script[type='importmap']");
-      if( importMapScript && importMapScript.textContent) {
-        window.importmap = JSON.parse(importMapScript.textContent).imports;
-      }
-      else {
-        importMapScript && importMapScript.remove();
-        let data = await (await fetch(Config.ROOTPATH+".importmap")).text();
-          data = data||"{}";
-        var s = document.createElement("script");
-            s.setAttribute("type", "importmap");
-            s.textContent = data;
-        document.head.append(s)
-        window.importmap = JSON.parse(data).imports;
-      }
+async function initImportMap() {
+  window.importmap = {};
+  if (!Config.IMPORT_MAPS) { return }
+
+  try {
+    var script = document.head.querySelector("script[type='importmap']");
+    var data = script?.textContent?.trim();
+
+    if (!data) {
+      data = (await (await fetch(Config.ROOTPATH + ".importmap")).text()).trim() || "{}";
+      script?.remove();
+      script = document.createElement("script");
+      script.type = "importmap";
+      script.textContent = data;
+      document.head.append(script);
+    }
+
+    window.importmap = JSON.parse(data).imports || {};
+  } catch (e) {
+    console.error("initImportMap()", e);
   }
-  try{await importmap();}catch(e){console.error("initImportMap()",e)}
 };
 
 
 if (!('scheduler' in globalThis)) {
   globalThis.scheduler = {
       yield: () => new Promise(resolve => {
-          // Use setTimeout with 0ms to yield to the browser's event loop
           setTimeout(resolve, 0);
       })
   };
@@ -1239,20 +1239,15 @@ namespace `core.ui` (
             try {
                 this.data = data;
                 await this.defineAncestralStylesheets();
-                await scheduler?.yield?.();
                 await this.loadStylesheets();
-                await scheduler?.yield?.();
                 await this.render(this.data);
-                await scheduler?.yield?.();
                 await this.setInternalAttributes();
-                await scheduler?.yield?.();
                 try {
                     this.internals?.states?.add("connected");
                 }
                 catch {
                     this.internals?.states?.add("--connected");
                 }
-                await scheduler?.yield?.();
                 this.onAwake();
                 this.fire("connected");
             } finally {
@@ -1304,14 +1299,10 @@ namespace `core.ui` (
                 await this.parseInnerHTML(engine, data);
             }
             else if((!this.hasDeclarativeTemplate) || this.hasOwnTemplate()){
-                await scheduler?.yield?.();
                 var template = await this.loadTemplate(data);
-                await scheduler?.yield?.();
                 var {fragment} = await engine.parse(template, data, this);
-				await scheduler?.yield?.();
                 this.root.innerHTML = ""; 
                 this.root.appendChild(fragment);
-                await scheduler?.yield?.();
                 await this.parseInnerHTML(engine, data);
             }
             this.onRendered();
@@ -1763,21 +1754,48 @@ global.World = global.World||core.ui.World;
 }
 
 function tryAdopt(attempt = 0) {
-    if (!Config.CSSFILENAME && document.readyState === "loading" && attempt < 10) {
+    if (!Config?.CSSFILENAME && document.readyState === "loading" && attempt < 10) {
         return setTimeout(() => tryAdopt(attempt + 1), 5);
     }
     var url;
-    if (Config.CSSFILENAME) {
+    if (Config?.CSSFILENAME) {
         let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
         var nsPath = ns ? ns.replace(/\./g, "/") + "/" : "";
-        if (/^[.\/]/.test(Config.CSSFILENAME)) {
-            url = new URL(Config.CSSFILENAME, document.baseURI).href;
+        if (/^[.\/]/.test(Config?.CSSFILENAME)) {
+            url = new URL(Config?.CSSFILENAME, document.baseURI).href;
         } else {
-            url = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.CSSFILENAME, new URL(Config.ROOTPATH, document.baseURI).href).href;
+            url = new URL(Config?.SRC_PATH.replace(/^\//, "") + nsPath + Config?.CSSFILENAME, new URL(Config?.ROOTPATH, document.baseURI).href).href;
         }
         url = url.replace(/\/src\/src\//, "/src/");
     }
     adoptDocumentStylesheet(url);
+}
+
+function getNamespace() {
+    return (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
+}
+
+function getControllerURL(ns = getNamespace()) {
+    if (!ns || !Config.DYNAMICLOAD) { return null }
+    var nsPath = ns.replace(/\./g, "/") + "/";
+    var filename = new URL(Config.SRC_PATH.replace(/^\//, "") + nsPath + Config.FILENAME, new URL(Config.ROOTPATH, document.baseURI).href).href;
+    return new URL(Config.USE_COMPRESSED_BUILD ?
+        filename.replace("*", Config.DEBUG ? "src." : "min.") :
+        filename.replace("*", ""));
+}
+
+async function preloadController(ready) {
+    try {
+        await ready;
+        var url = getControllerURL();
+        if (!url) { return }
+        var link = document.createElement("link");
+        link.rel = "modulepreload";
+        link.href = url.href;
+        document.head.append(link);
+    } catch (e) {
+        console.error("preloadController()", e);
+    }
 }
 
 
@@ -1785,56 +1803,57 @@ function isShell() {
     var role = kernel_script?.getAttribute("data-frame-role")
         || document.documentElement?.getAttribute("data-frame-role")
         || Config.FRAME_ROLE;
-    if (role) { return String(role).toLowerCase() === "shell" }
+    if (role) { return role.toLowerCase() === "shell" }
     return !!document.querySelector("iframe#mainFrame");//legacy fallback for shell detection
 }
 
 document.addEventListener("DOMContentLoaded", async e => {
-  document.body.style.opacity = 1
-  //TODO: Fix this
-  globalThis.Session = ((() => { try { return top.Session; } catch (e) {} })() || globalThis.Session);
-  let assetsloaded = false;
+  const token = {};
+  document.dispatchEvent(new CustomEvent("render:activity:start", {
+    detail: { token, kind: "boot" }
+  }));
 
-  try{await initImportMap();}catch(e){}
-  await wait(10);
+  try {
+    //TODO: Fix this
+    globalThis.Session = ((() => { try { return top.Session; } catch (e) {} })() || globalThis.Session);
+    let assetsloaded = false;
 
-let ns = (document.head.querySelector("script[namespace]")||document.body)?.getAttribute?.("namespace")||Config.NAMESPACE;
+    await importMapReady;
 
-async function bootup() {
-    var NSPATH = ns ? ns.replace(/\./g, "/") + "/" : "";
-    var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + Config.FILENAME, new URL(Config.ROOTPATH, document.baseURI).href);
+    let ns = getNamespace();
 
-    console.log("Bootloader: Loading controller from", url);
-    if (ns && Config.DYNAMICLOAD) {
-      var filename_path = url.href;
-      var path = Config.USE_COMPRESSED_BUILD ?
-        filename_path.replace("*", Config.DEBUG ? "src." : "min.") :
-        filename_path.replace("*", "");
-        path = new URL(path);
-      await import(path.href).then(async function init() {
-        if (!NSRegistry[ns]) {
-          await wait(50); init(); return;
-        }
-        let app = window.application = (window.application || new NSRegistry[ns](document));
-        if (typeof World == "function" && app instanceof World) {
-          window.world = app;
-          let loop = MainLoop;
-          app.onUpdate      && loop.setBegin(app.onUpdate);
-          app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
-          app.onDraw        && loop.setDraw(app.onDraw);
-          app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
-          loop.setSimulationTimestep(app.getSimulationTimestep());
-        }
-      });
-    } else {
-      let app = new NSRegistry['core.ui.Application'](document);
-    }
-  };
+    async function bootup() {
+      var path = getControllerURL(ns);
+      console.log("Bootloader: Loading controller from", path);
+      if (path) {
+        await import(path.href).then(async function init() {
+          if (!NSRegistry[ns]) {
+            await wait(50);
+            return init();
+          }
+          let app = window.application = (window.application || new NSRegistry[ns](document));
+          if (typeof World == "function" && app instanceof World) {
+            window.world = app;
+            let loop = MainLoop;
+            app.onUpdate      && loop.setBegin(app.onUpdate);
+            app.onFixedUpdate && loop.setUpdate(app.onFixedUpdate);
+            app.onDraw        && loop.setDraw(app.onDraw);
+            app.onUpdateEnd   && loop.setEnd(app.onUpdateEnd);
+            loop.setSimulationTimestep(app.getSimulationTimestep());
+          }
+        });
+      } else {
+        let app = new NSRegistry['core.ui.Application'](document);
+      }
+    };
 
-  bootup();
+    await bootup();
+  } finally {
+    document.dispatchEvent(new CustomEvent("render:activity:end", {
+      detail: { token, kind: "boot" }
+    }));
+  }
 }, false);
-
-
 
 
 class PageRenderObserver {
@@ -1846,14 +1865,17 @@ class PageRenderObserver {
         window.dispatchEvent(new CustomEvent(evtName, {
             detail: detail, bubbles: true, cancelable: true,
         }));
-        if (window.parent && window.parent !== window) {
-            try { window.parent.dispatchEvent(new CustomEvent(evtName, { detail: detail })) } catch (e) {}
+
+        const isMainPage = window !== window.top && window.parent === window.top;
+        if (evtName === "page:rendered" && isMainPage) {
+            try {
+                window.top.dispatchEvent(new window.top.CustomEvent(evtName, { detail: detail }));
+            } catch (e) {}
         }
     }
 
-    static QUIET_MS = 300;
-    static FLOOR_MS = 250;
-    static DEADLINE_MS = 20000;
+    static QUIET_MS = 300;      /* Quiet period since last activity */
+    static DEADLINE_MS = 60000; /* Maximum wait time */
 
     constructor() {
         this.observers = [];
@@ -1880,18 +1902,12 @@ class PageRenderObserver {
             if (!token) { return }
             this.pendingActivities.add(token);
             this.touch(event.detail.kind || "framework activity");
-            // if (Config.DEBUG && event.detail.kind === "component") {
-            //     console.log("component:rendering", event.detail.target);
-            // }
         };
         this._onActivityEnd = event => {
             var token = event.detail?.token;
             if (!token) { return }
             this.pendingActivities.delete(token);
             this.touch(event.detail.kind || "framework activity");
-            if (Config.DEBUG && event.detail.kind === "component") {
-                console.log("component:rendered", event.detail.target);
-            }
         };
         document.addEventListener("render:activity:start", this._onActivityStart);
         document.addEventListener("render:activity:end", this._onActivityEnd);
@@ -1918,7 +1934,7 @@ class PageRenderObserver {
     }
 
     deadline() {
-        return Number(Config.RENDER_OBSERVER_TIMEOUT) || PageRenderObserver.DEADLINE_MS;
+        return Number(PageRenderObserver.DEADLINE_MS);
     }
 
     touch(source) {
@@ -1934,29 +1950,22 @@ class PageRenderObserver {
                 });
                 observer.observe({ type: type, buffered: true });
                 this.observers.push(observer);
-            } catch (e) { /* unsupported entry type: contributes nothing, blocks nothing */ }
+            } catch (e) { }
         }
     }
 
     watchMutations() {
         try {
-            this._mutations = new MutationObserver(records => {
-                if (records.some(record =>
-                    record.type === "childList" &&
-                    (record.addedNodes.length || record.removedNodes.length)
-                )) {
-                    this.touch("dom");
-                }
-            });
+            this._mutations = new MutationObserver(() => this.touch("dom"));
             this._mutations.observe(document.documentElement, {
-                childList: true, subtree: true,
+                childList: true,
+                subtree: true
             });
         } catch (e) {}
     }
 
     watchNetwork() {
         var self = this;
-
         this._fetch = window.fetch;
         if (typeof this._fetch === "function") {
             window.fetch = function (...args) {
@@ -2006,7 +2015,6 @@ class PageRenderObserver {
     check() {
         if (this.done || !this.armed) { return }
         var now = performance.now();
-        if (now - this.started < PageRenderObserver.FLOOR_MS) { this.blockedBy = "floor"; return }
         if (this.pendingActivities.size) { this.blockedBy = "framework activity"; return }
         if (!this.fontsReady) { this.blockedBy = "fonts"; return }
         if (this.inflight > 0) { this.blockedBy = "network"; return }
@@ -2018,11 +2026,15 @@ class PageRenderObserver {
         if (this.done) { return }
         if (!this.armed) { this.stop(); return }
         if (document.readyState === "loading") {
+            if (reason === "deadline") { this._finalizeReason = reason }
+            else { this._finalizeReason ||= reason }
             if (!this._finalizeOnDOMContentLoaded) {
                 this._finalizeOnDOMContentLoaded = true;
                 document.addEventListener("DOMContentLoaded", () => {
                     this._finalizeOnDOMContentLoaded = false;
-                    this.finalize(reason);
+                    var pendingReason = this._finalizeReason;
+                    this._finalizeReason = null;
+                    pendingReason === "deadline" ? this.finalize(pendingReason) : this.check();
                 }, { once: true });
             }
             return
@@ -2074,5 +2086,7 @@ globalThis.__pageRenderObserver = (function () {
 })();
 
 tryAdopt();
+const importMapReady = initImportMap();
+preloadController(importMapReady);
 
  })(this)
