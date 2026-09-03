@@ -435,43 +435,16 @@ namespace `domain.collections` (
 Collection = window.Collection = domain.collections.Repository;
 // import 'src/system/machines/Automata.js';
 // import 'src/system/machines/State.js';
-// SelectorResolver — cocoon's boundary-piercing selector engine, extracted into
-// a single cohesive, framework-agnostic class.
-//
-// It owns ALL selector logic (arc parsing, the >>> / ::document walk, querySelector
-// /querySelectorAll, and the async find/findAll/_waitFor). IHtmlComponent keeps only
-// thin one-line delegators to an instance of this (composition, has-a).
-//
-// PROPRIETARY SELECTOR GRAMMAR (the on-disk contract — must stay in lockstep):
-//   `A >>> B`         → descend from A into A.shadowRoot, then match B
-//   `A ::document B`  → descend from A into A.contentDocument (iframe), then match B
-//   both chain/nest arbitrarily (iframe-in-iframe, shadow-in-iframe, …).
-//
-// DUAL-BUNDLE: this file is a PLAIN class declaration (no `namespace`, no globals).
-// od-seam wraps each build in one shared IIFE scope, so the class is lexically
-// visible to sibling files in BOTH bundles:
-//   • arc-kernel  → concatenated into od-cocoon; IHtmlComponent references it.
-//   • DemoGeeni   → a copy under src/system/api/libs/ is seamed into preload.build.js;
-//                   the authoring overlay uses it in the isolated world.
-// Keep the two copies in sync manually for now.
-//
-// CONTEXT MODES:
-//   new SelectorResolver({ component })   → cocoon component; root/host/shadow/element
-//                                            are read LIVE off the component (never stale).
-//   new SelectorResolver({ root, host, element, shadow })  → explicit.
-//   new SelectorResolver()                → standalone: root = document (overlay default).
 class SelectorResolver {
     constructor(ctx = {}) {
         this._ctx = ctx || {};
     }
 
-    // --- live context (component mode reads through to the component) ---
     get root() {
         const c = this._ctx.component;
         return c ? c.root : (this._ctx.root || document);
     }
-    // The element `super.querySelector*` was invoked on (the native fallback target).
-    // Component instances override querySelector*, so we must bypass the override.
+
     get host() {
         const c = this._ctx.component;
         return c ? c : (this._ctx.host || null);
@@ -485,24 +458,18 @@ class SelectorResolver {
         return c ? c.inShadow() : this._ctx.shadow;
     }
 
-    // Native query that bypasses any cocoon override (mirrors `super.querySelector*`).
-    // Element instances → use the prototype to dodge the override; Document/ShadowRoot
-    // are already native.
+
     _native(method, target, cssSel) {
         if (!target) return method === 'querySelectorAll' ? [] : null;
         if (target instanceof Element) return Element.prototype[method].call(target, cssSel);
         return target[method](cssSel);
     }
 
-    // Split a selector on the arc operators. Returns [seg, op, seg, op, …] or null
-    // when there are no boundaries to pierce (a plain CSS selector).
     arcSelectors(css) {
         const parts = css.split(/\s?(>>>|::document)\s?/);
         return parts.length > 1 ? parts : null;
     }
 
-    // The boundary-piercing walk (was `$_`): for each segment, query within the
-    // current roots, then descend into shadowRoot (>>>) / contentDocument (::document).
     walk(css, roots = [this.root], start = 0, visit) {
         const steps = typeof css == "string" ?
             this.arcSelectors(css) || [css] : css;
@@ -560,8 +527,6 @@ class SelectorResolver {
         }
     }
 
-    // Convenience aliases for standalone callers (e.g. the authoring overlay) that
-    // want a settled, synchronous resolve without the find() wait machinery.
     resolve(cssSel) { return this.querySelector(cssSel); }
     resolveAll(cssSel) { return this.querySelectorAll(cssSel); }
 
@@ -573,9 +538,6 @@ class SelectorResolver {
         return this._waitFor(cssSel, true, count || 2, scan_duration);
     }
 
-    // Async resolve that awaits late-appearing nodes (mutations + iframe loads) up to
-    // `duration`. Host references map to the resolver's host (the component element),
-    // null in standalone mode.
     _waitFor(css, all, expect, duration) {
         const steps = this.arcSelectors(css), arc = !!steps;
         const host = this.host;
@@ -782,43 +744,9 @@ namespace `system.drivers.watchers` (
 );
 namespace `core.ui` (
     class IHtmlComponent extends HTMLElement {
-        /*
-            Styling surface.
-
-            Meant to be set or overridden by a component:
-
-                styles                          sheets this component adopts
-                cssStyle()                      inline css as a string
-                onTransformStyle(css, cls)      rewrite css before it is adopted
-                shouldAdoptDocumentStyleSheets()  which document sheets to pull in
-
-            Everything else here is the machinery those four drive, and a component
-            should not need to call it: loadStylesheets(), onAdoptStylesheets(),
-            loadStyleSheet(), onAppendStyle(), adoptDocumentStyleSheets(),
-            acceptsDocumentStyleSheet(),
-            onDocumentStylesheetAdopted(), defineAncestralStylesheets(), importCSS().
-        */
-
         static declarative = true;
         static csstext = true;
         lazy = this.hasAttribute("lazy") || false;
-
-        /*
-            Stylesheets this component adopts, in cascade order - the last entry
-            wins a tie. Entries may be:
-
-                "index.css"                 resolved against the component's
-                                            namespace folder
-                "https://cdn/icons.css"     absolute url, taken as-is
-                "/assets/theme.css"         "/", "./" and "../" are taken as-is
-                someCSSStyleSheet           a live sheet, adopted directly
-
-            Declared here so it exists before loadStylesheets() reads it. Use this
-            rather than stylesheets.add(), which is for foundation sheets that must
-            sit AHEAD of these - see loadStylesheets().
-
-                styles = ["index.css"];
-        */
         styles = null;
 
         constructor(el,options) {
@@ -902,17 +830,10 @@ namespace `core.ui` (
                     var skin = ancestor.getSkin();
                     var pathname = window.location.pathname;
                         pathname = pathname.substring(0, pathname.lastIndexOf(Config.SRC_PATH)+1);
-                    // var cssPath = `${pathname}${Config.SRC_PATH}${ns.replace(/\./gim, "/")}/${skin.path}index.css`;
-                    //     cssPath = cssPath.replace(/\/\//g, "/");
-                    
-
                     var NSPATH = ns.replace(/\./g, "/") + "/";
                     var stylesheet = this.getDefaultStylesheetFilename(ancestor);
                     var url = new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${skin.path}${stylesheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
 
-                    // The app's own stylesheet may already be adopted at the
-                    // document level via data-adopted-stylesheet; if so, don't
-                    // load it a second time here.
                     var isOwnTop = (ancestor == this.constructor);
                     if (!(isOwnTop && this.shouldLoadOwnStyleSheet?.() === false)) {
                         try {
@@ -939,8 +860,6 @@ namespace `core.ui` (
                     }
                 }
 
-                // Unshift inline css() BEFORE unshifting the file sheet so that
-                // after both unshifts the per-ancestor order is: [file.css, inline.css()]
                 if (this.constructor.csstext) {
                     const proto = ancestor.prototype;
                     let inlineCss = null;
@@ -1055,16 +974,12 @@ namespace `core.ui` (
 
         addEventListener(evtName, handler, bool=false, sel) {
             if (sel instanceof Node) {
-                // Delegate by node identity across shadow boundaries.
                 this.root.addEventListener(evtName, e => {
                     var paths = e?.composedPath?.()||[];
 					var t = (paths.find(node => node === sel));
 					    t && (e.matchedTarget = t) && handler(e);
                 }, bool);
             } else if (sel && this._arcSelectors(sel)) {
-                // >>> / ::document — let the selector engine resolve the real node
-                // (crossing shadow + same-origin iframe boundaries) and bind on it
-                // directly; composedPath can't reach across the iframe seam.
                 this.find(sel).then(target => {
                     target && target.addEventListener(evtName, e => {
                         e.matchedTarget = target;
@@ -1147,8 +1062,6 @@ namespace `core.ui` (
             return this._template = tem;
         }
 
-        // Selector engine lives in SelectorResolver (composition). These are thin
-        // delegators; component-mode reads root/host/shadow/element live off `this`.
         get _selectors() {
             return this.__selectors ||
                 (this.__selectors = new SelectorResolver({ component: this }));
@@ -1296,26 +1209,6 @@ namespace `core.ui` (
                 this.root.setAttribute(name, val) : super.setAttribute(name, val)
         }
 
-        /*
-            Assembles the component's stylesheet list, then adopts it.
-
-            Cascade order in the resulting root, weakest first:
-
-                [ document sheets ] [ ancestral + .add() ] [ styles ]
-
-            Two channels feed the list, and the difference is priority, not taste:
-
-              .add()   unshifts, so it lands FIRST and is overridable. Foundations:
-                       ancestral sheets, inline css(), a vendor sheet the component
-                       then customises. Must run before this method - nothing reads
-                       the array again afterwards.
-
-              styles   pushes, so it lands LAST and wins ties. The component's own
-                       voice. A class field, so it is always in time.
-
-            Order only settles ties. Specificity still decides first, and a document
-            rule matching the host from outside beats anything in the shadow.
-        */
         async loadStylesheets() {
             if(this.styles) {
                 var styles = this.styles;
@@ -1325,24 +1218,10 @@ namespace `core.ui` (
                     }
                 }
             }
-            // Inline css() is now handled per-ancestor inside defineAncestralStylesheets()
-            // to preserve correct interleaving: A.css → A.css() → B.css → B.css()
             await this.onAdoptStylesheets();
             await this.adoptDocumentStyleSheets();
         }
 
-        // Which document-level stylesheets this component pulls into its shadow root.
-        // Off by default, so components stay isolated. Sheets are matched by url and
-        // land ahead of the component's own, so its rules still win any tie.
-        //
-        //   return false                            // none (default)
-        //   return true                             // every document sheet
-        //   return ["tabler-icons"]                 // url contains this
-        //   return [/tabler/, "tokens.css"]         // any of these
-        //   return sheet => sheet.url?.endsWith(".theme.css")
-        //
-        // The publishing side is 'styles': an Application's root is the document, so
-        // styles = [url] there adopts at document level and announces it here.
         shouldAdoptDocumentStyleSheets() { return false; }
 
         async adoptDocumentStyleSheets() {
@@ -1356,11 +1235,6 @@ namespace `core.ui` (
             }
         }
 
-        // Document sheets stay ahead of the component's own, so the component
-        // keeps the last word in the cascade.
-        // Intent, in whichever shape suits the component: true adopts every document
-        // sheet, a string/RegExp (or array of them) matches against the sheet url,
-        // a function decides per sheet.
         acceptsDocumentStyleSheet(sheet) {
             var want = this.shouldAdoptDocumentStyleSheets();
             if (!want) { return false }
@@ -1403,33 +1277,17 @@ namespace `core.ui` (
                         ...root.adoptedStyleSheets.slice(index),
                     ];
                 }
-                // Document-level sheets are shared: announce so shadow roots that
-                // opt in can adopt this one too.
+
                 if (root === document) { this.fire("stylesheet:adopted", { sheet }) }
             }
         }
 
-
-        /*
-            The adoption list, in cascade order.
-
-            add() UNSHIFTS on purpose: everything routed through it is a foundation
-            the component's own sheets must be able to override, so it has to sit
-            ahead of the `styles` entries that loadStylesheets() pushes on.
-
-            The initial walk in onAdoptStylesheets() happens once per connect, so an
-            add() after that adopts the sheet directly rather than waiting for a
-            second walk that never comes.
-        */
         get stylesheets() {
             this._stylesheets = this._stylesheets || [];
             if (!this._stylesheets.add) {
                 this._stylesheets.add = (sheet) => {
                     if (this._stylesheets.includes(sheet)) { return }
                     this._stylesheets.unshift(sheet);
-                    // Nothing walks the array again after onAdoptStylesheets(), so a
-                    // late add adopts itself - behind the document sheets, ahead of
-                    // the `styles` entries it must stay overridable by.
                     if (this._stylesheetsLoaded) {
                         this.loadStyleSheet(sheet, this._docSheetCount || 0);
                     }
@@ -1445,21 +1303,12 @@ namespace `core.ui` (
             this._stylesheetsLoaded = true;
         }
 
-        /*
-            Resolves one entry and hands it to onAppendStyle().
-
-            index is the insertion point in the root's adopted list; the default
-            appends, which is what the initial walk wants. A late stylesheets.add()
-            passes an index so it lands in foundation position instead of winning.
-        */
         async loadStyleSheet(sheet, index = -1) {
             if(sheet instanceof CSSStyleSheet){
                 return this.onAppendStyle(sheet, index);
             }
 
             var NSPATH = this.namespace.replace(/\./g, "/") + "/";
-            // An absolute or explicitly prefixed entry names its own location;
-            // only a bare filename is resolved against the component's namespace.
             var url = /^([a-z]+:)?\/\//i.test(sheet) || /^[.\/]/.test(sheet) ?
                 new URL(sheet, document.baseURI) :
                 new URL(Config.SRC_PATH.replace(/^\//, "") + NSPATH + `${sheet}`, new URL(Config.ROOTPATH, document.baseURI).href);
