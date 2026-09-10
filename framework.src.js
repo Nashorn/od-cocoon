@@ -110,47 +110,35 @@ globalThis.Config = globalThis.Config || new ConfigurationManager({
 });
 
 //
-// Added non-enumerable (defineProperty, not `=`) — a plain assignment here would
-// pollute every string's for-in enumeration on the host page, since these live on
-// String.prototype for the life of the document.
-;Object.defineProperty(String.prototype, "toNode", {
-  value: function(fragment=false){
-    var n = document.createRange().createContextualFragment(this.toString())
-    return fragment?n:n.firstElementChild;
-  },
-  writable: true, configurable: true, enumerable: false
-});
+//
+;String.prototype.toNode = function(fragment=false){
+  var n = document.createRange().createContextualFragment(this.toString())
+  return fragment?n:n.firstElementChild;
+}
 
-;Object.defineProperty(String.prototype, "decode", {
-  value: (function() {
-    const decoder = document.createElement('textarea');
-    return function(type="html") {
-      decoder.innerHTML = this.toString();
-      const result = decoder.value;
-      decoder.innerHTML = ''; // Reset for next use
-      return result;
-    };
-  })(),
-  writable: true, configurable: true, enumerable: false
-});
+;String.prototype.decode = (function() {
+  const decoder = document.createElement('textarea');
+  return function(type="html") {
+    decoder.innerHTML = this.toString();
+    const result = decoder.value;
+    decoder.innerHTML = ''; // Reset for next use
+    return result;
+  };
+})();
 
-;Object.defineProperty(String.prototype, "deprecated", {
-  value: function(type) {
-    let color = type == "final" ? 'background: red; color: black' : 'background: yellow; color: black';
-    console.log('%c Deprecation: ', color, this.toString());
-  },
-  writable: true, configurable: true, enumerable: false
-});
+
+;String.prototype.deprecated = function(type) {
+  let color = type == "final" ? 'background: red; color: black' : 'background: yellow; color: black';
+  console.log('%c Deprecation: ', color, this.toString());
+}
 //
 document.on = (evtName, handler, bool=false, el) => {
     document.addEventListener(evtName, handler, bool, el);
 }
 
-// NOTE: previously this also did `document.appendChild = (el) => document.body.appendChild(el)`,
-// unconditionally shadowing the native Document#appendChild on the host page's own
-// `document` global. Nothing in this framework called it — it was pure global-namespace
-// pollution (any host-page script calling the real document.appendChild(...) would
-// have been silently redirected). Removed.
+document.appendChild = (el) => {
+    document.body.appendChild(el);
+}
 ;var wait;var sleep;
 
 wait = sleep = ms => new Promise((r, j)=>setTimeout(r, ms));
@@ -167,10 +155,7 @@ function reflect(target, source) {
     target.traits[source.constructor.name]=source.constructor;
 };
 
-// Non-enumerable: a plain `=` assignment here would make every function's
-// for-in enumeration on the host page yield "with"/"debounce".
-Object.defineProperty(Function.prototype, "with", {
-  value: function(...mixin) {
+Function.prototype.with = function(...mixin) {
     const isNativeBuiltin = (cls) =>
         typeof cls === "function" &&
         /^HTML.*Element$/.test(cls.name) &&
@@ -198,12 +183,9 @@ Object.defineProperty(Function.prototype, "with", {
     }
     
     return _mixin_;
-  },
-  writable: true, configurable: true, enumerable: false
-});
+};
 
-Object.defineProperty(Function.prototype, "debounce", {
-  value: function (delay, immediate=true) {
+Function.prototype.debounce = function (delay, immediate=true) {
     let timeout;
     const func = this;
     if(immediate) {
@@ -213,9 +195,7 @@ Object.defineProperty(Function.prototype, "debounce", {
         clearTimeout(timeout);
         timeout = setTimeout(() => func.apply(this, args), delay);
     };
-  },
-  writable: true, configurable: true, enumerable: false
-});
+};
 
 
 //
@@ -1712,6 +1692,7 @@ class PageRenderObserver {
     constructor() {
         this.observers = [];
         this.pendingActivities = new Set();
+        this.inflight = 0;
         this.done = false;
         this.fontsReady = false;
         this.blockedBy = "boot";
@@ -1726,6 +1707,7 @@ class PageRenderObserver {
         this._deadlineId = setTimeout(() => this.finalize("deadline"), this.deadline());
         this.watchPerformance();
         this.watchMutations();
+        this.watchNetwork();
         this.watchFonts();
         this._onActivityStart = event => {
             var token = event.detail?.token;
@@ -1794,19 +1776,46 @@ class PageRenderObserver {
         } catch (e) {}
     }
 
-    // Previously wrapped window.fetch and XMLHttpRequest.prototype.send globally to
-    // count in-flight requests. That patched the host page's own network globals for up to
-    // DEADLINE_MS (60s) on every captured page — any host script that feature-detects native
-    // fetch/XHR (e.g. `fetch.toString().includes('[native code]')`) sees a wrapped function
-    // and can take a degraded/broken code path. The "resource"-type PerformanceObserver in
-    // watchPerformance() already fires on fetch/XHR completion, which is enough to keep
-    // extending the quiet window (touch()) without touching any global.
+    watchNetwork() {
+        var self = this;
+        this._fetch = window.fetch;
+        if (typeof this._fetch === "function") {
+            window.fetch = function (...args) {
+                self.inflight++;
+                self.touch("fetch");
+                return self._fetch.apply(this, args).finally(() => {
+                    self.inflight--;
+                    self.touch("fetch");
+                });
+            };
+        }
+
+        this._xhrSend = window.XMLHttpRequest?.prototype?.send;
+        if (typeof this._xhrSend === "function") {
+            var send = this._xhrSend;
+            window.XMLHttpRequest.prototype.send = function (...args) {
+                self.inflight++;
+                self.touch("xhr");
+                this.addEventListener("loadend", () => {
+                    self.inflight--;
+                    self.touch("xhr");
+                }, { once: true });
+                return send.apply(this, args);
+            };
+        }
+    }
 
     teardown() {
         this.observers.forEach(o => { try { o.disconnect() } catch (e) {} });
         try { this._mutations?.disconnect() } catch (e) {}
         document.removeEventListener("render:activity:start", this._onActivityStart);
         document.removeEventListener("render:activity:end", this._onActivityEnd);
+        this.restoreNetwork();
+    }
+
+    restoreNetwork() {
+        if (this._fetch) { window.fetch = this._fetch }
+        if (this._xhrSend) { window.XMLHttpRequest.prototype.send = this._xhrSend }
     }
 
     watchFonts() {
@@ -1820,6 +1829,7 @@ class PageRenderObserver {
         var now = performance.now();
         if (this.pendingActivities.size) { this.blockedBy = "framework activity"; return }
         if (!this.fontsReady) { this.blockedBy = "fonts"; return }
+        if (this.inflight > 0) { this.blockedBy = "network"; return }
         if (now - this.lastActivity < PageRenderObserver.QUIET_MS) { this.blockedBy = "recent activity"; return }
         this.finalize("settled");
     }
