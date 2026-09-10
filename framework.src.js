@@ -1686,13 +1686,14 @@ class PageRenderObserver {
         }
     }
 
+    static NETWORK_WAIT_MS = 2000; /* Extra network allowance after first visual quiet */
     static QUIET_MS = 300;      /* Quiet period since last activity */
     static DEADLINE_MS = 60000; /* Maximum wait time */
 
     constructor() {
         this.observers = [];
         this.pendingActivities = new Set();
-        this.inflight = 0;
+        this.lastNetworkActivity = -Infinity;
         this.done = false;
         this.fontsReady = false;
         this.blockedBy = "boot";
@@ -1755,7 +1756,7 @@ class PageRenderObserver {
     }
 
     watchPerformance() {
-        for (let type of ["resource", "layout-shift", "largest-contentful-paint", "paint"]) {
+        for (let type of ["layout-shift", "largest-contentful-paint", "paint"]) {
             try {
                 var observer = new PerformanceObserver(list => {
                     if (list.getEntries().length) { this.touch(type) }
@@ -1777,32 +1778,16 @@ class PageRenderObserver {
     }
 
     watchNetwork() {
-        var self = this;
-        this._fetch = window.fetch;
-        if (typeof this._fetch === "function") {
-            window.fetch = function (...args) {
-                self.inflight++;
-                self.touch("fetch");
-                return self._fetch.apply(this, args).finally(() => {
-                    self.inflight--;
-                    self.touch("fetch");
-                });
-            };
-        }
-
-        this._xhrSend = window.XMLHttpRequest?.prototype?.send;
-        if (typeof this._xhrSend === "function") {
-            var send = this._xhrSend;
-            window.XMLHttpRequest.prototype.send = function (...args) {
-                self.inflight++;
-                self.touch("xhr");
-                this.addEventListener("loadend", () => {
-                    self.inflight--;
-                    self.touch("xhr");
-                }, { once: true });
-                return send.apply(this, args);
-            };
-        }
+        try {
+            var observer = new PerformanceObserver(list => {
+                // Completed resources are a soft signal, never a count of pending requests.
+                for (var entry of list.getEntriesByType("resource")) {
+                    this.lastNetworkActivity = Math.max(this.lastNetworkActivity, entry.responseEnd);
+                }
+            });
+            observer.observe({ type: "resource", buffered: true });
+            this.observers.push(observer);
+        } catch (e) {}
     }
 
     teardown() {
@@ -1810,12 +1795,6 @@ class PageRenderObserver {
         try { this._mutations?.disconnect() } catch (e) {}
         document.removeEventListener("render:activity:start", this._onActivityStart);
         document.removeEventListener("render:activity:end", this._onActivityEnd);
-        this.restoreNetwork();
-    }
-
-    restoreNetwork() {
-        if (this._fetch) { window.fetch = this._fetch }
-        if (this._xhrSend) { window.XMLHttpRequest.prototype.send = this._xhrSend }
     }
 
     watchFonts() {
@@ -1829,8 +1808,14 @@ class PageRenderObserver {
         var now = performance.now();
         if (this.pendingActivities.size) { this.blockedBy = "framework activity"; return }
         if (!this.fontsReady) { this.blockedBy = "fonts"; return }
-        if (this.inflight > 0) { this.blockedBy = "network"; return }
         if (now - this.lastActivity < PageRenderObserver.QUIET_MS) { this.blockedBy = "recent activity"; return }
+        // Start once; subsequent DOM changes still require quiet but never renew this allowance.
+        this.networkWaitStarted ??= now;
+        if (now - this.lastNetworkActivity < PageRenderObserver.QUIET_MS &&
+            now - this.networkWaitStarted < PageRenderObserver.NETWORK_WAIT_MS) {
+            this.blockedBy = "network";
+            return;
+        }
         this.finalize("settled");
     }
 
@@ -1897,8 +1882,9 @@ globalThis.__pageRenderObserver = (function () {
     }
 })();
 
-tryAdopt();
 const importMapReady = initImportMap();
+// Register the import map before stylesheet adoption can start a module import.
+importMapReady.then(() => tryAdopt());
 preloadController(importMapReady);
 
  })(this)
