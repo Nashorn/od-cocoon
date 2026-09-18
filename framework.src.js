@@ -2,7 +2,7 @@
 (async (global)=>{ 
 global = globalThis;
 global.arc = {
-    version : "8.6.0.09032026"
+    version : "8.6.0.09182026"
 };
 console.log("v"+global.arc.version);
 const kernel_script = document.currentScript || document.head?.querySelector("script[data-kernel], script[data-namespace], script[src*='framework.src.js']");
